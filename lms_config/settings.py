@@ -47,6 +47,9 @@ INSTALLED_APPS = [
     'drf_spectacular',
 ]
 
+AUTH_USER_MODEL = 'accounts.User'
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -76,7 +79,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'lms_config.wsgi.application'
 
-AUTH_USER_MODEL = 'accounts.User'
+
 
 
 # Database
