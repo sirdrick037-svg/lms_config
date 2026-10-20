@@ -14,24 +14,19 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = [
-            "id",
-            "username",
-            "email",
-            "password",
-            "role",
-        ]
+        fields = ["id", "username", "email", "password"]
         read_only_fields = ["id"]
 
     def validate_email(self, value):
         value = value.strip().lower()
-
         if User.objects.filter(email__iexact=value).exists():
             raise serializers.ValidationError(
                 "An account with this email already exists."
             )
-
         return value
 
     def create(self, validated_data):
-        return User.objects.create_user(**validated_data)
+        return User.objects.create_user(
+            **validated_data,
+            role=User.Role.STUDENT,
+        )
