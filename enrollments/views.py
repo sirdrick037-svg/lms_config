@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.utils import timezone
-from rest_framework import generics
+from rest_framework import generics, serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from .models import Enrollment, LessonProgress
@@ -66,7 +66,8 @@ class LessonProgressListCreateView(generics.ListCreateAPIView):
             completed_at=timezone.now(),
         )
 
-class LessonProgressDetailView(generics.RetrieveUpdateAPIView):
+
+class LessonProgressListCreateView(generics.ListCreateAPIView):
     serializer_class = LessonProgressSerializer
     permission_classes = [IsAuthenticated]
 
@@ -75,13 +76,35 @@ class LessonProgressDetailView(generics.RetrieveUpdateAPIView):
             enrollment__student=self.request.user
         ).select_related("enrollment", "lesson", "lesson__course")
 
-    def perform_update(self, serializer):
+    def perform_create(self, serializer):
+        enrollment = serializer.validated_data["enrollment"]
+        lesson = serializer.validated_data["lesson"]
+
+        # Only allow progress for the logged-in student's enrollment.
+        if enrollment.student_id != self.request.user.id:
+            raise PermissionDenied(
+                "You can only track progress for your own enrollments."
+            )
+
+        # The lesson must belong to the enrolled course.
+        if enrollment.course_id != lesson.course_id:
+            raise PermissionDenied(
+                "This lesson does not belong to your enrolled course."
+            )
+
+        # Prevent duplicate progress records for the same lesson.
+        if LessonProgress.objects.filter(
+            enrollment=enrollment,
+            lesson=lesson,
+        ).exists():
+            raise serializers.ValidationError(
+                {"lesson": "A progress record already exists for this lesson."}
+            )
+
         is_completed = serializer.validated_data.get(
-            "is_completed",
-            serializer.instance.is_completed,
+            "is_completed", False
         )
 
         serializer.save(
             completed_at=timezone.now() if is_completed else None
         )
-    
