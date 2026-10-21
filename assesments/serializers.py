@@ -19,6 +19,23 @@ class QuestionSerializer(serializers.ModelSerializer):
         read_only_fields = ["id"]
 
 
+class QuestionWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Question
+        fields = [
+            "id",
+            "quiz",
+            "text",
+            "option_a",
+            "option_b",
+            "option_c",
+            "option_d",
+            "correct_answer",
+        ]
+        read_only_fields = ["id"]
+
+
+
 class QuizSerializer(serializers.ModelSerializer):
     questions = QuestionSerializer(many=True, read_only=True)
 
