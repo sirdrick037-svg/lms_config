@@ -1,4 +1,3 @@
-
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
@@ -19,11 +18,14 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     def validate_email(self, value):
         value = value.strip().lower()
+
         if User.objects.filter(email__iexact=value).exists():
             raise serializers.ValidationError(
                 "An account with this email already exists."
             )
+
         return value
+
     def validate_username(self, value):
         value = value.strip()
 
