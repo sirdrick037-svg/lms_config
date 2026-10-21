@@ -63,3 +63,20 @@ class LessonProgressSerializer(serializers.ModelSerializer):
             "course_title",
             "completed_at",
         ]
+
+def validate(self, attrs):
+    enrollment = attrs.get(
+        "enrollment",
+        getattr(self.instance, "enrollment", None),
+    )
+    lesson = attrs.get(
+        "lesson",
+        getattr(self.instance, "lesson", None),
+    )
+
+    if enrollment and lesson and enrollment.course_id != lesson.course_id:
+        raise serializers.ValidationError({
+            "lesson": "The lesson must belong to the enrolled course."
+        })
+
+    return attrs
