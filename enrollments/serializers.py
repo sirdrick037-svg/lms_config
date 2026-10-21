@@ -59,7 +59,6 @@ class LessonProgressSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = [
             "id",
-            "enrollment",
             "lesson_title",
             "course_title",
             "completed_at",
