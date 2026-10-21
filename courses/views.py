@@ -1,21 +1,30 @@
-from django.shortcuts import render
 
 from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.expectations import PermissionDenied
+from rest_framework.exceptions import PermissionDenied
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 from .models import Course, Lesson
 from .serializers import CourseSerializer, LessonSerializer
 
-# Create your views here.
+
 class CourseListCreateView(generics.ListCreateAPIView):
-    queryset = Course.objects.select_related("instructor").all()
     serializer_class = CourseSerializer
     permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        user = self.request.user
+        queryset = Course.objects.select_related("instructor")
+
+        if user.is_staff:
+            return queryset
+
+        if user.role == "INSTRUCTOR":
+            return queryset.filter(instructor=user)
+
+        return queryset.filter(is_published=True)
+
     def perform_create(self, serializer):
         if self.request.user.role != "INSTRUCTOR":
-            from rest_framework.exceptions import PermissionDenied
             raise PermissionDenied(
                 "Only instructors can create courses."
             )
@@ -24,30 +33,71 @@ class CourseListCreateView(generics.ListCreateAPIView):
 
 
 class CourseDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Course.objects.select_related("instructor").all()
     serializer_class = CourseSerializer
     permission_classes = [IsAuthenticated]
 
-    def get_permissions(self):
-        if self.request.method in ["PUT", "PATCH", "DELETE"]:
-            from rest_framework.permissions import IsAdminUser
-            return [IsAuthenticated(), IsAdminUser()]
-        return super().get_permissions()
+    def get_queryset(self):
+        user = self.request.user
+        queryset = Course.objects.select_related("instructor")
 
-    
+        if user.is_staff:
+            return queryset
+
+        if user.role == "INSTRUCTOR":
+            return queryset.filter(instructor=user)
+
+        return queryset.filter(is_published=True)
+
+    def _check_course_permission(self):
+        course = self.get_object()
+        user = self.request.user
+
+        if not user.is_staff and (
+            user.role != "INSTRUCTOR"
+            or course.instructor_id != user.id
+        ):
+            raise PermissionDenied(
+                "You can only modify your own courses."
+            )
+
+    def update(self, request, *args, **kwargs):
+        self._check_course_permission()
+        return super().update(request, *args, **kwargs)
+
+    def partial_update(self, request, *args, **kwargs):
+        self._check_course_permission()
+        return super().partial_update(request, *args, **kwargs)
+
+    def destroy(self, request, *args, **kwargs):
+        self._check_course_permission()
+        return super().destroy(request, *args, **kwargs)
+
+
 class LessonListCreateView(generics.ListCreateAPIView):
     serializer_class = LessonSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Lesson.objects.select_related("course").all()
+        user = self.request.user
+        queryset = Lesson.objects.select_related("course")
+
+        if user.is_staff:
+            return queryset
+
+        if user.role == "INSTRUCTOR":
+            return queryset.filter(course__instructor=user)
+
+        return queryset.filter(
+            course__is_published=True
+        )
 
     def perform_create(self, serializer):
         course = serializer.validated_data["course"]
+        user = self.request.user
 
         if (
-            self.request.user.role != "INSTRUCTOR"
-            or course.instructor_id != self.request.user.id
+            user.role != "INSTRUCTOR"
+            or course.instructor_id != user.id
         ):
             raise PermissionDenied(
                 "You can only add lessons to your own courses."
@@ -61,20 +111,30 @@ class LessonDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Lesson.objects.select_related("course").all()
+        user = self.request.user
+        queryset = Lesson.objects.select_related("course")
+
+        if user.is_staff:
+            return queryset
+
+        if user.role == "INSTRUCTOR":
+            return queryset.filter(course__instructor=user)
+
+        return queryset.filter(
+            course__is_published=True
+        )
 
     def _check_course_instructor(self):
         lesson = self.get_object()
+        user = self.request.user
 
-        if (
-            self.request.user.role != "INSTRUCTOR"
-            or lesson.course.instructor_id != self.request.user.id
+        if not user.is_staff and (
+            user.role != "INSTRUCTOR"
+            or lesson.course.instructor_id != user.id
         ):
             raise PermissionDenied(
-                "Only the course instructor can modify this lesson."
+                "You can only modify lessons in your own courses."
             )
-
-        return lesson
 
     def update(self, request, *args, **kwargs):
         self._check_course_instructor()
@@ -87,4 +147,3 @@ class LessonDetailView(generics.RetrieveUpdateDestroyAPIView):
     def destroy(self, request, *args, **kwargs):
         self._check_course_instructor()
         return super().destroy(request, *args, **kwargs)
-
