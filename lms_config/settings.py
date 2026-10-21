@@ -151,4 +151,15 @@ REST_FRAMEWORK = {
         'rest_framework.filters.SearchFilter',
         'rest_framework.filters.OrderingFilter',
     ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Learning Management System API",
+    "DESCRIPTION": (
+        "API for student accounts, courses, lessons, "
+        "enrollments, progress tracking, and assessments."
+    ),
+    "VERSION": "1.0.0",
 }
