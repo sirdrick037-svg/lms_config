@@ -1,11 +1,14 @@
-from django.shortcuts import render
+
 from django.utils import timezone
+
 from rest_framework import generics, serializers
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.permissions import IsAuthenticated
+
 from .models import Enrollment, LessonProgress
 from .serializers import EnrollmentSerializer, LessonProgressSerializer
-# Create your views here.
+
+
 class EnrollmentListCreateView(generics.ListCreateAPIView):
     serializer_class = EnrollmentSerializer
     permission_classes = [IsAuthenticated]
@@ -16,15 +19,27 @@ class EnrollmentListCreateView(generics.ListCreateAPIView):
         ).select_related("course", "student")
 
     def perform_create(self, serializer):
+        user = self.request.user
         course = serializer.validated_data["course"]
 
-        if self.request.user.role != "STUDENT":
-            raise ValidationError("Only students can enroll in courses.")
+        if user.role != "STUDENT":
+            raise PermissionDenied(
+                "Only students can enroll in courses."
+            )
 
         if not course.is_published:
-            raise ValidationError("You can only enroll in published courses.")
+            raise ValidationError(
+                "You can only enroll in published courses."
+            )
 
-        serializer.save(student=self.request.user)
+        if Enrollment.objects.filter(
+            student=user, course=course
+        ).exists():
+            raise ValidationError(
+                {"course": "You are already enrolled in this course."}
+            )
+
+        serializer.save(student=user)
 
 
 class EnrollmentDetailView(generics.RetrieveAPIView):
@@ -47,27 +62,41 @@ class LessonProgressListCreateView(generics.ListCreateAPIView):
         ).select_related("enrollment", "lesson", "lesson__course")
 
     def perform_create(self, serializer):
-        enrollment = serializer.validated_data.get("enrollment")
+        user = self.request.user
+        enrollment = serializer.validated_data["enrollment"]
         lesson = serializer.validated_data["lesson"]
+        is_completed = serializer.validated_data.get(
+            "is_completed", False
+        )
 
-        if enrollment is None:
-            raise ValidationError("An enrollment is required.")
+        if user.role != "STUDENT":
+            raise PermissionDenied(
+                "Only students can track lesson progress."
+            )
 
-        if enrollment.student_id != self.request.user.id:
-            raise ValidationError("You cannot use another student's enrollment.")
+        if enrollment.student_id != user.id:
+            raise PermissionDenied(
+                "You can only track progress for your own enrollments."
+            )
 
         if enrollment.course_id != lesson.course_id:
             raise ValidationError(
-                "The lesson must belong to your enrolled course."
+                {"lesson": "The lesson must belong to your enrolled course."}
+            )
+
+        if LessonProgress.objects.filter(
+            enrollment=enrollment, lesson=lesson
+        ).exists():
+            raise ValidationError(
+                {"lesson": "A progress record already exists for this lesson."}
             )
 
         serializer.save(
-            enrollment=enrollment,
-            completed_at=timezone.now(),
+            completed_at=timezone.now() if is_completed else None
         )
 
 
-class LessonProgressListCreateView(generics.ListCreateAPIView):
+class LessonProgressDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = LessonProgressSerializer
     permission_classes = [IsAuthenticated]
 
@@ -76,35 +105,17 @@ class LessonProgressListCreateView(generics.ListCreateAPIView):
             enrollment__student=self.request.user
         ).select_related("enrollment", "lesson", "lesson__course")
 
-    def perform_create(self, serializer):
-        enrollment = serializer.validated_data["enrollment"]
-        lesson = serializer.validated_data["lesson"]
-
-        # Only allow progress for the logged-in student's enrollment.
-        if enrollment.student_id != self.request.user.id:
-            raise PermissionDenied(
-                "You can only track progress for your own enrollments."
-            )
-
-        # The lesson must belong to the enrolled course.
-        if enrollment.course_id != lesson.course_id:
-            raise PermissionDenied(
-                "This lesson does not belong to your enrolled course."
-            )
-
-        # Prevent duplicate progress records for the same lesson.
-        if LessonProgress.objects.filter(
-            enrollment=enrollment,
-            lesson=lesson,
-        ).exists():
-            raise serializers.ValidationError(
-                {"lesson": "A progress record already exists for this lesson."}
-            )
-
+    def perform_update(self, serializer):
         is_completed = serializer.validated_data.get(
-            "is_completed", False
+            "is_completed",
+            serializer.instance.is_completed,
         )
 
-        serializer.save(
-            completed_at=timezone.now() if is_completed else None
-        )
+        if is_completed and not serializer.instance.is_completed:
+            completed_at = timezone.now()
+        elif not is_completed:
+            completed_at = None
+        else:
+            completed_at = serializer.instance.completed_at
+
+        serializer.save(completed_at=completed_at)
