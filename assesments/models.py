@@ -1,7 +1,16 @@
-from django.db import models
 from django.conf import settings
+from django.core.validators import MaxValueValidator
 from django.db import models
-# Create your models here.
+
+
+ANSWER_CHOICES = [
+    ("A", "Option A"),
+    ("B", "Option B"),
+    ("C", "Option C"),
+    ("D", "Option D"),
+]
+
+
 class Quiz(models.Model):
     course = models.ForeignKey(
         "courses.Course",
@@ -10,7 +19,10 @@ class Quiz(models.Model):
     )
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True)
-    passing_score = models.PositiveIntegerField(default=50)
+    passing_score = models.PositiveIntegerField(
+        default=50,
+        validators=[MaxValueValidator(100)],
+    )
     is_published = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -31,12 +43,7 @@ class Question(models.Model):
     option_d = models.CharField(max_length=255)
     correct_answer = models.CharField(
         max_length=1,
-        choices=[
-            ("A", "Option A"),
-            ("B", "Option B"),
-            ("C", "Option C"),
-            ("D", "Option D"),
-        ],
+        choices=ANSWER_CHOICES,
     )
 
     def __str__(self):
@@ -76,12 +83,7 @@ class Answer(models.Model):
     )
     selected_answer = models.CharField(
         max_length=1,
-        choices=[
-            ("A", "Option A"),
-            ("B", "Option B"),
-            ("C", "Option C"),
-            ("D", "Option D"),
-        ],
+        choices=ANSWER_CHOICES,
     )
     is_correct = models.BooleanField(default=False)
 
