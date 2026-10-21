@@ -1,4 +1,4 @@
-
+from django.shortcuts import get_object_or_404
 from django.db import transaction
 from django.utils import timezone
 
@@ -89,8 +89,6 @@ class QuizDetailView(generics.RetrieveUpdateDestroyAPIView):
         self._check_instructor()
         return super().destroy(request, *args, **kwargs)
 
-
-
 class QuestionListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
@@ -105,10 +103,10 @@ class QuestionListCreateView(generics.ListCreateAPIView):
             return queryset
 
         if user.role == "INSTRUCTOR":
-            return queryset.filter(quiz__course__instructor=user)
+            return queryset.filter(
+                quiz__course__instructor=user
+            )
 
-        # Students can see questions only for published quizzes
-        # in published courses.
         return queryset.filter(
             quiz__is_published=True,
             quiz__course__is_published=True,
@@ -120,8 +118,9 @@ class QuestionListCreateView(generics.ListCreateAPIView):
         return QuestionSerializer
 
     def perform_create(self, serializer):
-        quiz = generics.get_object_or_404(
-            Quiz, pk=self.kwargs["quiz_id"]
+        quiz = get_object_or_404(
+            Quiz,
+            pk=self.kwargs["quiz_id"],
         )
 
         if (
@@ -133,6 +132,8 @@ class QuestionListCreateView(generics.ListCreateAPIView):
             )
 
         serializer.save(quiz=quiz)
+
+
 
 
 class QuizAttemptListCreateView(generics.ListCreateAPIView):
