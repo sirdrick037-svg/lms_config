@@ -35,3 +35,53 @@ class EnrollmentDetailView(generics.RetrieveAPIView):
         return Enrollment.objects.filter(
             student=self.request.user
         ).select_related("course", "student")
+
+
+class LessonProgressListCreateView(generics.ListCreateAPIView):
+    serializer_class = LessonProgressSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return LessonProgress.objects.filter(
+            enrollment__student=self.request.user
+        ).select_related("enrollment", "lesson", "lesson__course")
+
+    def perform_create(self, serializer):
+        enrollment = serializer.validated_data.get("enrollment")
+        lesson = serializer.validated_data["lesson"]
+
+        if enrollment is None:
+            raise ValidationError("An enrollment is required.")
+
+        if enrollment.student_id != self.request.user.id:
+            raise ValidationError("You cannot use another student's enrollment.")
+
+        if enrollment.course_id != lesson.course_id:
+            raise ValidationError(
+                "The lesson must belong to your enrolled course."
+            )
+
+        serializer.save(
+            enrollment=enrollment,
+            completed_at=timezone.now(),
+        )
+
+class LessonProgressDetailView(generics.RetrieveUpdateAPIView):
+    serializer_class = LessonProgressSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return LessonProgress.objects.filter(
+            enrollment__student=self.request.user
+        ).select_related("enrollment", "lesson", "lesson__course")
+
+    def perform_update(self, serializer):
+        is_completed = serializer.validated_data.get(
+            "is_completed",
+            serializer.instance.is_completed,
+        )
+
+        serializer.save(
+            completed_at=timezone.now() if is_completed else None
+        )
+    
