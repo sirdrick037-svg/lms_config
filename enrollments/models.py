@@ -27,3 +27,34 @@ class Enrollment(models.Model):
 
     def __str__(self):
         return f"{self.student.username} - {self.course.title}"
+
+    
+class LessonProgress(models.Model):
+    enrollment = models.ForeignKey(
+        Enrollment,
+        on_delete=models.CASCADE,
+        related_name="lesson_progress",
+    )
+    lesson = models.ForeignKey(
+        "courses.Lesson",
+        on_delete=models.CASCADE,
+        related_name="progress_records",
+    )
+    is_completed = models.BooleanField(default=False)
+    completed_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["enrollment", "lesson"],
+                name="unique_enrollment_lesson_progress",
+            )
+        ]
+
+    def __str__(self):
+        return (
+            f"{self.enrollment.student.username} - "
+            f"{self.lesson.title} - "
+            f"{'Completed' if self.is_completed else 'Incomplete'}"
+        )
+
