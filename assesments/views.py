@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Quiz, Question, QuizAttempt, Answer
-from .serializers import QuizSerializer, QuestionSerializer, QuizAttemptSerializer
+from .serializers import QuizSerializer, QuestionSerializer, QuizAttemptSerializer, QuestionWriteSerializer, AnswerSerializer
 # Create your views here.
 
 class QuizListCreateView(generics.ListCreateAPIView):
@@ -90,14 +90,34 @@ class QuizDetailView(generics.RetrieveUpdateDestroyAPIView):
         return super().destroy(request, *args, **kwargs)
 
 
+
 class QuestionListCreateView(generics.ListCreateAPIView):
-    serializer_class = QuestionSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Question.objects.filter(
+        user = self.request.user
+
+        queryset = Question.objects.filter(
             quiz_id=self.kwargs["quiz_id"]
         ).select_related("quiz", "quiz__course")
+
+        if user.is_staff:
+            return queryset
+
+        if user.role == "INSTRUCTOR":
+            return queryset.filter(quiz__course__instructor=user)
+
+        # Students can see questions only for published quizzes
+        # in published courses.
+        return queryset.filter(
+            quiz__is_published=True,
+            quiz__course__is_published=True,
+        )
+
+    def get_serializer_class(self):
+        if self.request.method == "POST":
+            return QuestionWriteSerializer
+        return QuestionSerializer
 
     def perform_create(self, serializer):
         quiz = generics.get_object_or_404(
