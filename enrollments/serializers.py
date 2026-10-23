@@ -30,11 +30,13 @@ class EnrollmentSerializer(serializers.ModelSerializer):
             "enrolled_at",
         ]
 
-    def create(self, validated_data):
-        return Enrollment.objects.create(
-            student=self.context["request"].user,
-            **validated_data,
-        )
+      
+def create(self, validated_data):
+    validated_data.pop("student", None)
+    return Enrollment.objects.create(
+        student=self.context["request"].user,
+        **validated_data
+    )
 
 class LessonProgressSerializer(serializers.ModelSerializer):
     lesson_title = serializers.CharField(
