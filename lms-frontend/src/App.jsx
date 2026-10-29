@@ -1,122 +1,100 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className="app">
+      <nav className="navbar">
+        <h2 className="logo">LearnHub<span>.</span></h2>
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+        <div className="nav-links">
+          <a href="#home">Home</a>
+          <a href="#courses">Courses</a>
+          <a href="#about">About</a>
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+        <div className="nav-buttons">
+          <button className="login-btn">Log In</button>
+          <button className="signup-btn">Get Started</button>
+        </div>
+      </nav>
+
+      <main>
+        <section className="hero" id="home">
+          <div className="hero-content">
+            <p className="eyebrow">YOUR JOURNEY STARTS HERE</p>
+
+            <h1>
+              Learn new skills.
+              <br />
+              Build your <span>future.</span>
+            </h1>
+
+            <p className="hero-description">
+              Explore online courses, learn at your own pace,
+              and develop the skills you need to succeed.
+            </p>
+
+            <div className="hero-buttons">
+              <button className="signup-btn">Explore Courses →</button>
+              <button className="outline-btn">Join as a Student</button>
+            </div>
+
+            <div className="hero-stats">
+              <div>
+                <strong>Learn</strong>
+                <p>At your own pace</p>
+              </div>
+              <div>
+                <strong>Practice</strong>
+                <p>Test your knowledge</p>
+              </div>
+              <div>
+                <strong>Grow</strong>
+                <p>Build your future</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="hero-visual">
+            <div className="visual-icon">🎓</div>
+            <h3>Your next chapter starts today.</h3>
+            <p>Discover courses. Master skills. Reach your goals.</p>
+            <div className="visual-decoration">LEARN • PRACTICE • SUCCEED</div>
+          </div>
+        </section>
+
+        <section className="features" id="courses">
+          <p className="eyebrow">WHY LEARN WITH US?</p>
+          <h2>A better way to learn</h2>
+
+          <div className="feature-grid">
+            <article className="feature-card">
+              <div className="feature-icon">📚</div>
+              <h3>Expert-led courses</h3>
+              <p>Explore subjects and build practical knowledge.</p>
+            </article>
+
+            <article className="feature-card">
+              <div className="feature-icon">📈</div>
+              <h3>Track your progress</h3>
+              <p>Follow your learning journey lesson by lesson.</p>
+            </article>
+
+            <article className="feature-card">
+              <div className="feature-icon">🏆</div>
+              <h3>Test your skills</h3>
+              <p>Complete assessments and see how much you learn.</p>
+            </article>
+          </div>
+        </section>
+      </main>
+
+      <footer id="about">
+        <p>© 2026 LearnHub. Built for curious minds.</p>
+      </footer>
+    </div>
+  );
 }
 
-export default App
+export default App;
