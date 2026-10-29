@@ -1,7 +1,7 @@
 
 from django.urls import path
 
-from .views import EnrollmentListCreateView, EnrollmentDetailView, LessonProgressListCreateView, LessonProgressDetailView, PaymentListCreateView
+from .views import EnrollmentListCreateView, EnrollmentDetailView, LessonProgressListCreateView, LessonProgressDetailView, PaymentListCreateView, MpesaCallbackView
 
 urlpatterns = [
     path("", EnrollmentListCreateView.as_view(), name="enrollment-list-create"),
@@ -9,4 +9,5 @@ urlpatterns = [
     path("progress/",LessonProgressListCreateView.as_view(),name="progress-list-create"),
     path("progress/<int:pk>/",LessonProgressDetailView.as_view(),name="progress-detail"),
     path("payments/", PaymentListCreateView.as_view(), name="payment-list-create"),
+    path("payments/callback/", MpesaCallbackView.as_view(), name="mpesa-callback"),
 ]
