@@ -1,6 +1,6 @@
 
 from rest_framework import serializers
-from .models import Enrollment, LessonProgress
+from .models import Enrollment, LessonProgress, Payment
 
 
 class EnrollmentSerializer(serializers.ModelSerializer):
@@ -30,13 +30,13 @@ class EnrollmentSerializer(serializers.ModelSerializer):
             "enrolled_at",
         ]
 
-      
-def create(self, validated_data):
-    validated_data.pop("student", None)
-    return Enrollment.objects.create(
-        student=self.context["request"].user,
-        **validated_data
-    )
+    def create(self, validated_data):
+        validated_data.pop("student", None)
+        return Enrollment.objects.create(
+            student=self.context["request"].user,
+            **validated_data
+        )
+
 
 class LessonProgressSerializer(serializers.ModelSerializer):
     lesson_title = serializers.CharField(
@@ -66,19 +66,59 @@ class LessonProgressSerializer(serializers.ModelSerializer):
             "completed_at",
         ]
 
-def validate(self, attrs):
-    enrollment = attrs.get(
-        "enrollment",
-        getattr(self.instance, "enrollment", None),
-    )
-    lesson = attrs.get(
-        "lesson",
-        getattr(self.instance, "lesson", None),
+    def validate(self, attrs):
+        enrollment = attrs.get(
+            "enrollment",
+            getattr(self.instance, "enrollment", None),
+        )
+        lesson = attrs.get(
+            "lesson",
+            getattr(self.instance, "lesson", None),
+        )
+
+        if (
+            enrollment
+            and lesson
+            and enrollment.course_id != lesson.course_id
+        ):
+            raise serializers.ValidationError({
+                "lesson": "The lesson must belong to the enrolled course."
+            })
+
+        return attrs
+
+
+class PaymentSerializer(serializers.ModelSerializer):
+    course_title = serializers.CharField(
+        source="course.title",
+        read_only=True,
     )
 
-    if enrollment and lesson and enrollment.course_id != lesson.course_id:
-        raise serializers.ValidationError({
-            "lesson": "The lesson must belong to the enrolled course."
-        })
-
-    return attrs
+    class Meta:
+        model = Payment
+        fields = [
+            "id",
+            "student",
+            "course",
+            "course_title",
+            "amount",
+            "method",
+            "status",
+            "phone_number",
+            "checkout_request_id",
+            "mpesa_receipt_number",
+            "created_at",
+            "updated_at",
+        ]
+        read_only_fields = [
+            "id",
+            "student",
+            "course_title",
+            "amount",
+            "method",
+            "status",
+            "checkout_request_id",
+            "mpesa_receipt_number",
+            "created_at",
+            "updated_at",
+        ]
