@@ -57,7 +57,7 @@ function App() {
           </div>
 
           <div className="hero-visual">
-            <div className="visual-icon">🎓</div>
+            <div className="visual-icon"></div>
             <h3>Your next chapter starts today.</h3>
             <p>Discover courses. Master skills. Reach your goals.</p>
             <div className="visual-decoration">LEARN • PRACTICE • SUCCEED</div>
@@ -70,19 +70,19 @@ function App() {
 
           <div className="feature-grid">
             <article className="feature-card">
-              <div className="feature-icon">📚</div>
+              <div className="feature-icon"></div>
               <h3>Expert-led courses</h3>
               <p>Explore subjects and build practical knowledge.</p>
             </article>
 
             <article className="feature-card">
-              <div className="feature-icon">📈</div>
+              <div className="feature-icon"></div>
               <h3>Track your progress</h3>
               <p>Follow your learning journey lesson by lesson.</p>
             </article>
 
             <article className="feature-card">
-              <div className="feature-icon">🏆</div>
+              <div className="feature-icon"></div>
               <h3>Test your skills</h3>
               <p>Complete assessments and see how much you learn.</p>
             </article>
