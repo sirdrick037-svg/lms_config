@@ -15,6 +15,7 @@ class CourseSerializer(serializers.ModelSerializer):
             "id",
             "title",
             "description",
+            "price",
             "instructor",
             "instructor_username",
             "is_published",
@@ -29,7 +30,7 @@ class CourseSerializer(serializers.ModelSerializer):
             "updated_at",
         ]
 
-    
+
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
@@ -43,4 +44,3 @@ class LessonSerializer(serializers.ModelSerializer):
             "updated_at",
         ]
         read_only_fields = ["id", "created_at", "updated_at"]
-    
