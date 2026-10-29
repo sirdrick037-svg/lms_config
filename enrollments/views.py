@@ -1,12 +1,17 @@
 
 from django.utils import timezone
 
-from rest_framework import generics, serializers
+from rest_framework import generics
 from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.permissions import IsAuthenticated
 
-from .models import Enrollment, LessonProgress
-from .serializers import EnrollmentSerializer, LessonProgressSerializer
+from courses.models import Course
+from .models import Enrollment, LessonProgress, Payment
+from .serializers import (
+    EnrollmentSerializer,
+    LessonProgressSerializer,
+    PaymentSerializer,
+)
 
 
 class EnrollmentListCreateView(generics.ListCreateAPIView):
@@ -38,6 +43,22 @@ class EnrollmentListCreateView(generics.ListCreateAPIView):
             raise ValidationError(
                 {"course": "You are already enrolled in this course."}
             )
+
+        # Paid courses require a successful payment first.
+        if course.price > 0:
+            has_paid = Payment.objects.filter(
+                student=user,
+                course=course,
+                status=Payment.Status.SUCCESS,
+            ).exists()
+
+            if not has_paid:
+                raise ValidationError({
+                    "payment": (
+                        "Please complete payment before enrolling "
+                        "in this course."
+                    )
+                })
 
         serializer.save(student=user)
 
@@ -80,23 +101,25 @@ class LessonProgressListCreateView(generics.ListCreateAPIView):
             )
 
         if enrollment.course_id != lesson.course_id:
-            raise ValidationError(
-                {"lesson": "The lesson must belong to your enrolled course."}
-            )
+            raise ValidationError({
+                "lesson": "The lesson must belong to your enrolled course."
+            })
 
         if LessonProgress.objects.filter(
             enrollment=enrollment, lesson=lesson
         ).exists():
-            raise ValidationError(
-                {"lesson": "A progress record already exists for this lesson."}
-            )
+            raise ValidationError({
+                "lesson": "A progress record already exists for this lesson."
+            })
 
         serializer.save(
             completed_at=timezone.now() if is_completed else None
         )
 
 
-class LessonProgressDetailView(generics.RetrieveUpdateDestroyAPIView):
+class LessonProgressDetailView(
+    generics.RetrieveUpdateDestroyAPIView
+):
     serializer_class = LessonProgressSerializer
     permission_classes = [IsAuthenticated]
 
@@ -119,3 +142,49 @@ class LessonProgressDetailView(generics.RetrieveUpdateDestroyAPIView):
             completed_at = serializer.instance.completed_at
 
         serializer.save(completed_at=completed_at)
+
+
+class PaymentListCreateView(generics.ListCreateAPIView):
+    serializer_class = PaymentSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Payment.objects.filter(
+            student=self.request.user
+        ).select_related("course", "student")
+
+    def perform_create(self, serializer):
+        user = self.request.user
+        course = serializer.validated_data["course"]
+        phone_number = serializer.validated_data["phone_number"]
+
+        if user.role != "STUDENT":
+            raise PermissionDenied(
+                "Only students can initiate course payments."
+            )
+
+        if not course.is_published:
+            raise ValidationError(
+                "You can only pay for published courses."
+            )
+
+        if course.price <= 0:
+            raise ValidationError(
+                "This course does not require payment."
+            )
+
+        if Enrollment.objects.filter(
+            student=user,
+            course=course,
+        ).exists():
+            raise ValidationError(
+                "You are already enrolled in this course."
+            )
+
+        serializer.save(
+            student=user,
+            amount=course.price,
+            method=Payment.Method.MPESA,
+            status=Payment.Status.PENDING,
+            phone_number=phone_number,
+        )
