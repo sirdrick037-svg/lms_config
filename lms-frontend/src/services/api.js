@@ -1,4 +1,3 @@
-
 import axios from "axios";
 
 const api = axios.create({
@@ -7,6 +6,15 @@ const api = axios.create({
 
 export const getCourses = async () => {
   const response = await api.get("courses/");
+  return response.data;
+};
+
+export const loginUser = async (email, password) => {
+  const response = await api.post("auth/token/", {
+    email,
+    password,
+  });
+
   return response.data;
 };
 
