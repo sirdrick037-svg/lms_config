@@ -1,30 +1,18 @@
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import Home from "./pages/Home";
 import "./App.css";
 
 function App() {
   return (
-    <>
+    <div className="app">
       <Header />
-
       <main className="main-content">
-        <section className="welcome-section">
-          <h1>Welcome to LearnHub</h1>
-
-          <p>
-            Learn new skills, explore exciting courses,
-            and build your future with us.
-          </p>
-
-          <button className="explore-btn">
-            Explore Courses
-          </button>
-        </section>
+        <Home />
       </main>
-
       <Footer />
-    </>
+    </div>
   );
 }
 
