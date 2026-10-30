@@ -1,25 +1,27 @@
 
+import { Link } from "react-router-dom";
+
 function Header() {
   return (
     <header className="header">
-      <div className="logo">
+      <Link to="/" className="logo">
         LearnHub<span>.</span>
-      </div>
+      </Link>
 
       <nav className="navbar">
-        <a href="/">Home</a>
-        <a href="/courses">Courses</a>
-        <a href="/about">About</a>
+        <Link to="/">Home</Link>
+        <Link to="/courses">Courses</Link>
+        <Link to="/about">About</Link>
       </nav>
 
       <div className="header-buttons">
-        <a href="/login" className="login-btn">
+        <Link to="/login" className="login-btn">
           Login
-        </a>
+        </Link>
 
-        <a href="/register" className="register-btn">
+        <Link to="/register" className="register-btn">
           Get Started
-        </a>
+        </Link>
       </div>
     </header>
   );
