@@ -45,12 +45,14 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'drf_spectacular',
+    'corsheaders',
 ]
 
 AUTH_USER_MODEL = 'accounts.User'
 
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -171,4 +173,9 @@ MPESA_SHORTCODE = config("MPESA_SHORTCODE")
 MPESA_PASSKEY = config("MPESA_PASSKEY")
 
 MPESA_CALLBACK_URL = config("MPESA_CALLBACK_URL")
+
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+]
 
