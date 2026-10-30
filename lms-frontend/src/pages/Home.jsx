@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 
 const courses = [
   {
@@ -37,9 +38,9 @@ function Home() {
             and take the next step towards achieving your goals.
           </p>
 
-          <a href="/courses" className="explore-btn">
-            Explore Courses →
-          </a>
+           <Link to="/courses" className="hero-btn">
+               Explore Courses
+        </Link>
         </div>
 
         <div className="hero-image">
