@@ -1,27 +1,24 @@
-import { Link } from "react-router-dom";
 
-const courses = [
-  {
-    title: "Python Programming",
-    category: "Programming",
-    description: "Learn Python from the basics to practical programming.",
-    level: "Beginner",
-  },
-  {
-    title: "Database Management",
-    category: "Technology",
-    description: "Understand databases, SQL and data management.",
-    level: "Intermediate",
-  },
-  {
-    title: "Cybersecurity",
-    category: "Security",
-    description: "Discover network security and online protection.",
-    level: "Beginner",
-  },
-];
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { getCourses } from "../services/api";
 
 function Home() {
+  const [courses, setCourses] = useState([]);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const data = await getCourses();
+        setCourses(data.results || data);
+      } catch (error) {
+        console.error("Unable to load courses:", error);
+      }
+    };
+
+    fetchCourses();
+  }, []);
+
   return (
     <div className="home-page">
       <section className="hero-section">
@@ -38,9 +35,9 @@ function Home() {
             and take the next step towards achieving your goals.
           </p>
 
-           <Link to="/courses" className="hero-btn">
-               Explore Courses
-        </Link>
+          <Link to="/courses" className="hero-btn">
+            Explore Courses
+          </Link>
         </div>
 
         <div className="hero-image">
@@ -60,9 +57,9 @@ function Home() {
         </div>
 
         <div className="courses-grid">
-          {courses.map((course, index) => (
-            <article className="course-card" key={index}>
-              <div className="course-icon">{course.icon}</div>
+          {courses.slice(0, 3).map((course) => (
+            <article className="course-card" key={course.id}>
+              <div className="course-icon">📚</div>
 
               <span className="course-category">
                 {course.category}
@@ -73,17 +70,20 @@ function Home() {
               <p>{course.description}</p>
 
               <div className="course-card-bottom">
-                <span>{course.level}</span>
-                <a href="/courses">Learn More →</a>
+                <span>{course.level || "Available"}</span>
+
+                <Link to={`/courses/${course.id}`}>
+                  Learn More →
+                </Link>
               </div>
             </article>
           ))}
         </div>
 
         <div className="all-courses">
-          <a href="/courses" className="outline-course-btn">
+          <Link to="/courses" className="outline-course-btn">
             View All Courses
-          </a>
+          </Link>
         </div>
       </section>
 
@@ -96,17 +96,23 @@ function Home() {
         <div className="why-grid">
           <div>
             <h3>Quality Courses</h3>
-            <p>Learn through organised lessons and useful learning materials.</p>
+            <p>
+              Learn through organised lessons and useful learning materials.
+            </p>
           </div>
 
           <div>
             <h3>Track Progress</h3>
-            <p>Monitor your learning progress as you complete lessons.</p>
+            <p>
+              Monitor your learning progress as you complete lessons.
+            </p>
           </div>
 
           <div>
-            <h3> Test Your Knowledge</h3>
-            <p>Take quizzes and assessments to measure your understanding.</p>
+            <h3>Test Your Knowledge</h3>
+            <p>
+              Take quizzes and assessments to measure your understanding.
+            </p>
           </div>
         </div>
       </section>
