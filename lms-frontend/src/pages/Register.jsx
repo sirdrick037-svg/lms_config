@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { registerUser } from "../services/api";
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -7,7 +8,7 @@ function Register() {
     email: "",
     password: "",
   });
-
+}
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -15,58 +16,25 @@ function Register() {
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(formData);
-  };
+   const handleSubmit = async (e) => {
+  e.preventDefault();
 
-  return (
-    <div className="auth-page">
-      <div className="auth-card">
-        <h1>Create Account</h1>
-        <p>Join LearnHub and start learning today.</p>
+  try {
+    const response = await registerUser(formData);
 
-        <form onSubmit={handleSubmit}>
-          <label>Username</label>
-          <input
-            type="text"
-            name="username"
-            placeholder="Enter username"
-            value={formData.username}
-            onChange={handleChange}
-            required
-          />
+    console.log("Registration successful:", response);
 
-          <label>Email Address</label>
-          <input
-            type="email"
-            name="email"
-            placeholder="Enter email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
+    alert("Account created successfully! Please log in.");
+  } catch (error) {
+    console.error("Registration error:", error.response?.data);
 
-          <label>Password</label>
-          <input
-            type="password"
-            name="password"
-            placeholder="Create password (minimum 8 characters)"
-            value={formData.password}
-            onChange={handleChange}
-            minLength={8}
-            required
-          />
-
-          <button type="submit">Create Account</button>
-        </form>
-
-        <p className="auth-link">
-          Already have an account? <Link to="/login">Login</Link>
-        </p>
-      </div>
-    </div>
-  );
-}
+    alert(
+      error.response?.data?.email?.[0] ||
+      error.response?.data?.username?.[0] ||
+      error.response?.data?.password?.[0] ||
+      "Registration failed. Please try again."
+    );
+  }
+};
 
 export default Register;
