@@ -210,3 +210,216 @@
     gap: 18px;
   }
 }
+
+/* Homepage hero */
+.hero-section {
+  padding: 90px 8%;
+  min-height: 480px;
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  align-items: center;
+  gap: 50px;
+  background: linear-gradient(120deg, #eff6ff, #ffffff);
+}
+
+.hero-label,
+.section-heading span {
+  color: #2563eb;
+  font-weight: 700;
+  letter-spacing: 2px;
+  font-size: 13px;
+}
+
+.hero-text h1 {
+  font-size: clamp(36px, 4.5vw, 54px);
+  line-height: 1.2;
+  color: #17365d;
+  margin: 20px 0;
+}
+
+.hero-text h1 span {
+  color: #2563eb;
+}
+
+.hero-text p {
+  color: #64748b;
+  font-size: 17px;
+  line-height: 1.8;
+  margin-bottom: 30px;
+  max-width: 520px;
+}
+
+.hero-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.learning-card {
+  background: white;
+  padding: 55px 35px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 15px 45px rgba(23, 54, 93, 0.12);
+  max-width: 340px;
+}
+
+.learning-icon {
+  font-size: 75px;
+  margin-bottom: 20px;
+}
+
+.learning-card h2 {
+  color: #17365d;
+  margin-bottom: 12px;
+}
+
+.learning-card p {
+  color: #64748b;
+  line-height: 1.6;
+}
+
+/* Courses */
+.courses-section,
+.why-section {
+  padding: 85px 8%;
+}
+
+.section-heading {
+  text-align: center;
+  margin-bottom: 45px;
+}
+
+.section-heading h2 {
+  color: #17365d;
+  font-size: 32px;
+  margin: 15px 0;
+}
+
+.section-heading p {
+  color: #64748b;
+}
+
+.courses-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+}
+
+.course-card {
+  padding: 30px;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  background: white;
+  transition: 0.3s;
+}
+
+.course-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+.course-icon {
+  font-size: 42px;
+  margin-bottom: 20px;
+}
+
+.course-category {
+  color: #2563eb;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.course-card h3 {
+  color: #17365d;
+  margin: 12px 0;
+  font-size: 21px;
+}
+
+.course-card p {
+  color: #64748b;
+  line-height: 1.7;
+  min-height: 55px;
+}
+
+.course-card-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-top: 25px;
+  padding-top: 18px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.course-card-bottom span {
+  color: #64748b;
+  font-size: 13px;
+}
+
+.course-card-bottom a {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.all-courses {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.outline-course-btn {
+  display: inline-block;
+  border: 1px solid #2563eb;
+  color: #2563eb;
+  text-decoration: none;
+  padding: 13px 25px;
+  border-radius: 7px;
+  font-weight: 600;
+}
+
+/* Why LearnHub */
+.why-section {
+  background: #f8fafc;
+}
+
+.why-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+}
+
+.why-grid > div {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.why-grid h3 {
+  color: #17365d;
+  margin-bottom: 15px;
+}
+
+.why-grid p {
+  color: #64748b;
+  line-height: 1.7;
+}
+
+/* Responsive homepage */
+@media (max-width: 768px) {
+  .hero-section {
+    grid-template-columns: 1fr;
+    padding: 65px 7%;
+  }
+
+  .courses-grid,
+  .why-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .courses-section,
+  .why-section {
+    padding: 60px 7%;
+  }
+}
