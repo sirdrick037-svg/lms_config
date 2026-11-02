@@ -1,11 +1,70 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import {
+  getEnrollments,
+  getPayments,
+  getLessonProgress,
+} from "../services/api";
 
 function Dashboard() {
   const [studentName] = useState(
     localStorage.getItem("student_name") || "Student"
   );
+
+  const [enrollments, setEnrollments] = useState([]);
+  const [payments, setPayments] = useState([]);
+  const [progress, setProgress] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        const [enrollmentData, paymentData, progressData] =
+          await Promise.all([
+            getEnrollments(),
+            getPayments(),
+            getLessonProgress(),
+          ]);
+
+        setEnrollments(
+          enrollmentData.results || enrollmentData
+        );
+
+        setPayments(paymentData.results || paymentData);
+
+        setProgress(progressData.results || progressData);
+      } catch (err) {
+        setError(
+          "Unable to load dashboard information. Please log in again."
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, []);
+
+  const completedCourses = enrollments.filter((enrollment) => {
+    const courseProgress = progress.filter(
+      (item) => item.enrollment === enrollment.id
+    );
+
+    return (
+      courseProgress.length > 0 &&
+      courseProgress.every((item) => item.is_completed)
+    );
+  }).length;
+
+  const successfulPayments = payments.filter(
+    (payment) => payment.status === "SUCCESS"
+  ).length;
+
+  if (loading) {
+    return <p>Loading your dashboard...</p>;
+  }
 
   return (
     <div className="dashboard-page">
@@ -15,35 +74,63 @@ function Dashboard() {
         <p>Continue learning and building your future with SkillNest.</p>
       </section>
 
-      <section className="dashboard-stats">
-        <article className="dashboard-card">
-          <h3>My Courses</h3>
-          <h2>0</h2>
-          <p>Enrolled courses</p>
-        </article>
+      {error && <p className="error-message">{error}</p>}
 
-        <article className="dashboard-card">
-          <h3>Completed</h3>
-          <h2>0</h2>
-          <p>Completed courses</p>
-        </article>
+      {!error && (
+        <>
+          <section className="dashboard-stats">
+            <article className="dashboard-card">
+              <h3>My Courses</h3>
+              <h2>{enrollments.length}</h2>
+              <p>Enrolled courses</p>
+            </article>
 
-        <article className="dashboard-card">
-          <h3>Payments</h3>
-          <h2>0</h2>
-          <p>Successful payments</p>
-        </article>
-      </section>
+            <article className="dashboard-card">
+              <h3>Completed</h3>
+              <h2>{completedCourses}</h2>
+              <p>Completed courses</p>
+            </article>
 
-      <section className="dashboard-content">
-        <div>
-          <h2>My Learning</h2>
-          <p>You haven't enrolled in any courses yet.</p>
-          <Link to="/courses" className="dashboard-btn">
-            Explore Courses
-          </Link>
-        </div>
-      </section>
+            <article className="dashboard-card">
+              <h3>Payments</h3>
+              <h2>{successfulPayments}</h2>
+              <p>Successful payments</p>
+            </article>
+          </section>
+
+          <section className="dashboard-content">
+            <h2>My Learning</h2>
+
+            {enrollments.length === 0 ? (
+              <>
+                <p>You haven't enrolled in any courses yet.</p>
+                <Link to="/courses" className="dashboard-btn">
+                  Explore Courses
+                </Link>
+              </>
+            ) : (
+              <div className="courses-grid">
+                {enrollments.map((enrollment) => (
+                  <article
+                    className="course-card"
+                    key={enrollment.id}
+                  >
+                    <h3>
+                      {enrollment.course_title ||
+                        enrollment.course?.title ||
+                        "Enrolled Course"}
+                    </h3>
+
+                    <p>
+                      Course enrollment ID: {enrollment.id}
+                    </p>
+                  </article>
+                ))}
+              </div>
+            )}
+          </section>
+        </>
+      )}
     </div>
   );
 }
