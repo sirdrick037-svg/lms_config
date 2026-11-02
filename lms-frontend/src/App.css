@@ -855,3 +855,100 @@
 .logo:hover {
   text-decoration: none;
 }
+
+/* SKILLNEST COURSES PAGE */
+
+.courses-page {
+  background: #f7f5ef;
+  min-height: 100vh;
+}
+
+.courses-page-hero {
+  background: #e9eee5;
+  text-align: center;
+  padding: 75px 20px;
+}
+
+.courses-page-hero > span,
+.courses-page-heading > div > span {
+  color: #b46b4c;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.courses-page-hero h1 {
+  color: #243c35;
+  font-size: 40px;
+  margin: 15px 0;
+}
+
+.courses-page-hero p {
+  color: #718078;
+  font-size: 16px;
+  margin-bottom: 25px;
+}
+
+.course-search {
+  width: 100%;
+  max-width: 450px;
+  padding: 14px 18px;
+  border: 1px solid #d8ded5;
+  border-radius: 8px;
+  outline: none;
+  font-size: 15px;
+}
+
+.course-search:focus {
+  border-color: #315b4c;
+}
+
+.all-courses-section {
+  padding: 65px 6%;
+}
+
+.courses-page-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 35px;
+  gap: 15px;
+}
+
+.courses-page-heading h2 {
+  color: #243c35;
+  font-size: 30px;
+  margin-top: 10px;
+}
+
+.courses-page-heading > p {
+  color: #718078;
+}
+
+.course-availability {
+  display: block;
+  margin-top: 15px;
+  font-size: 13px;
+  color: #718078;
+}
+
+.no-courses {
+  text-align: center;
+  padding: 40px;
+  color: #718078;
+}
+
+@media (max-width: 600px) {
+  .courses-page-hero h1 {
+    font-size: 32px;
+  }
+
+  .courses-page-heading {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .all-courses-section {
+    padding: 45px 5%;
+  }
+}
