@@ -1043,4 +1043,30 @@
     padding: 40px 7% 20px;
   }
 }
+/* HEADER BRAND COLOURS */
 
+.logo {
+  color: #315b4c !important;
+  text-decoration: none !important;
+}
+
+.logo:hover {
+  color: #b46b4c !important;
+}
+
+.logo span {
+  display: none;
+}
+
+.header-buttons .register-btn {
+  background: #315b4c !important;
+  color: #ffffff !important;
+  border: 1px solid #315b4c !important;
+  text-decoration: none !important;
+}
+
+.header-buttons .register-btn:hover {
+  background: #b46b4c !important;
+  border-color: #b46b4c !important;
+  color: #ffffff !important;
+}
