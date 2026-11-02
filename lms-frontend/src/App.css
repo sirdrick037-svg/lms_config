@@ -487,3 +487,364 @@
   margin-top: 20px;
   text-align: center;
 }
+
+/* SKILLNEST HOMEPAGE DESIGN */
+
+.home-page {
+  background: #f7f5ef;
+  color: #243c35;
+  min-height: 100vh;
+}
+
+.hero-section {
+  background: #e9eee5;
+  padding: 85px 8%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 50px;
+}
+
+.hero-text {
+  max-width: 570px;
+}
+
+.hero-label,
+.section-heading span {
+  color: #b46b4c;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.hero-text h1 {
+  font-size: 48px;
+  line-height: 1.2;
+  margin: 20px 0;
+  color: #243c35;
+}
+
+.hero-text h1 span {
+  color: #b46b4c;
+  display: block;
+}
+
+.hero-text p {
+  font-size: 17px;
+  line-height: 1.8;
+  color: #64736b;
+  margin-bottom: 30px;
+}
+
+.hero-btn {
+  display: inline-block;
+  background: #315b4c;
+  color: white;
+  padding: 14px 25px;
+  border-radius: 7px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.hero-btn:hover {
+  background: #244537;
+  transform: translateY(-2px);
+}
+
+.hero-image {
+  background: #315b4c;
+  min-height: 270px;
+  min-width: 300px;
+  flex: 1;
+  max-width: 430px;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+}
+
+.learning-card {
+  text-align: center;
+  color: white;
+}
+
+.learning-icon {
+  font-size: 45px;
+  color: #e6b58d;
+}
+
+.learning-card h2 {
+  font-size: 25px;
+  margin: 15px 0;
+}
+
+.learning-card p {
+  color: #e1e9e3;
+}
+
+.courses-section {
+  background: #f7f5ef;
+  padding: 75px 6%;
+}
+
+.section-heading {
+  text-align: center;
+  margin-bottom: 45px;
+}
+
+.section-heading h2 {
+  font-size: 34px;
+  color: #243c35;
+  margin: 12px 0;
+}
+
+.section-heading p {
+  color: #718078;
+  font-size: 16px;
+}
+
+.courses-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 25px;
+}
+
+.course-card {
+  background: white;
+  border: 1px solid #e8e5dc;
+  border-radius: 13px;
+  padding: 30px;
+  min-height: 290px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+
+.course-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(36, 60, 53, 0.09);
+}
+
+.course-icon {
+  font-size: 25px;
+  color: #b46b4c;
+  margin-bottom: 15px;
+}
+
+.course-category {
+  color: #b46b4c;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.course-card h3 {
+  color: #243c35;
+  font-size: 21px;
+  margin: 12px 0;
+}
+
+.course-card p {
+  color: #718078;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.course-card-bottom {
+  border-top: 1px solid #eeeae2;
+  margin-top: auto;
+  padding-top: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.course-card-bottom > span {
+  color: #718078;
+  font-size: 14px;
+}
+
+.course-card-bottom button {
+  background: #315b4c;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.course-card-bottom button:hover {
+  background: #b46b4c;
+}
+
+.all-courses {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.outline-course-btn {
+  display: inline-block;
+  background: transparent;
+  color: #315b4c;
+  border: 1px solid #315b4c;
+  border-radius: 7px;
+  padding: 13px 25px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.outline-course-btn:hover {
+  background: #315b4c;
+  color: white;
+}
+
+.why-section {
+  background: #e9eee5;
+  padding: 70px 8%;
+}
+
+.why-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.why-grid > div {
+  background: white;
+  padding: 28px;
+  border-radius: 12px;
+}
+
+.why-grid h3 {
+  color: #315b4c;
+  margin-bottom: 12px;
+}
+
+.why-grid p {
+  color: #718078;
+  line-height: 1.7;
+}
+
+/* COURSE DETAILS POPUP */
+
+.course-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 35, 29, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  z-index: 1000;
+}
+
+.course-modal {
+  position: relative;
+  background: #fff;
+  width: 100%;
+  max-width: 520px;
+  padding: 40px;
+  border-radius: 14px;
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.2);
+}
+
+.close-modal {
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  border: none;
+  background: none;
+  color: #718078;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.modal-category {
+  color: #b46b4c;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.course-modal h2 {
+  color: #243c35;
+  margin: 15px 0;
+  font-size: 27px;
+}
+
+.modal-description {
+  color: #718078;
+  line-height: 1.8;
+  margin-bottom: 25px;
+}
+
+.modal-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+.modal-info span {
+  background: #e9eee5;
+  color: #315b4c;
+  padding: 9px 13px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.modal-close-btn {
+  background: #315b4c;
+  color: white;
+  border: none;
+  padding: 11px 25px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.modal-close-btn:hover {
+  background: #b46b4c;
+}
+
+/* RESPONSIVE DESIGN */
+
+@media (max-width: 900px) {
+  .courses-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .hero-text h1 {
+    font-size: 38px;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero-section {
+    flex-direction: column;
+    padding: 55px 7%;
+  }
+
+  .hero-text h1 {
+    font-size: 34px;
+  }
+
+  .hero-image {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .courses-grid,
+  .why-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .course-modal {
+    padding: 30px 22px;
+  }
+}
