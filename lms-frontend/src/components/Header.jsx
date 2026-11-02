@@ -21,7 +21,7 @@ function Header() {
   return (
     <header className="header">
       <Link to="/" className="logo">
-       SkillNest<span>.</span>
+       SkillNest
       </Link>
 
       <nav className="navbar">
