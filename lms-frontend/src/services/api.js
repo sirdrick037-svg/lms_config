@@ -1,25 +1,54 @@
+
 import axios from "axios";
 
 const api = axios.create({
   baseURL: "http://127.0.0.1:8000/api/",
 });
 
+// Automatically attach the logged-in student's token.
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("access_token");
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+});
+
+// Courses
 export const getCourses = async () => {
   const response = await api.get("courses/");
   return response.data;
 };
 
+// Login
 export const loginUser = async (email, password) => {
-  const response = await api.post("auth/token/", {
-    email,
-    password,
-  });
-
+  const response = await api.post("auth/token/", { email, password });
   return response.data;
 };
 
+// Registration
 export const registerUser = async (userData) => {
   const response = await api.post("auth/register/", userData);
+  return response.data;
+};
+
+// Student enrollments
+export const getEnrollments = async () => {
+  const response = await api.get("enrollments/");
+  return response.data;
+};
+
+// Student payments
+export const getPayments = async () => {
+  const response = await api.get("enrollments/payments/");
+  return response.data;
+};
+
+// Student lesson progress
+export const getLessonProgress = async () => {
+  const response = await api.get("enrollments/progress/");
   return response.data;
 };
 
