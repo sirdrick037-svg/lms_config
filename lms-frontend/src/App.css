@@ -1070,3 +1070,65 @@
   border-color: #b46b4c !important;
   color: #ffffff !important;
 }
+/* SKILLNEST LOGIN AND REGISTRATION STYLING */
+
+.auth-page {
+  background: #f7f5ef;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 50px 20px;
+}
+
+.auth-card {
+  background: #ffffff;
+  width: 100%;
+  max-width: 450px;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(36, 60, 53, 0.10);
+}
+
+.auth-card h1 {
+  color: #243c35;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.auth-card p {
+  color: #718078;
+}
+
+.auth-card label {
+  color: #243c35;
+}
+
+.auth-card input {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #d8ded5;
+  border-radius: 7px;
+  outline: none;
+  margin-top: 7px;
+}
+
+.auth-card input:focus {
+  border-color: #315b4c;
+}
+
+.auth-card button,
+.auth-card .login-btn {
+  background: #315b4c;
+  color: #ffffff;
+  border: none;
+  border-radius: 7px;
+  padding: 13px 20px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.auth-card button:hover,
+.auth-card .login-btn:hover {
+  background: #b46b4c;
+}
