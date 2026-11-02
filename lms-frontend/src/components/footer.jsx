@@ -1,26 +1,35 @@
 
+import { Link } from "react-router-dom";
+
 function Footer() {
   return (
     <footer className="footer">
       <div className="footer-content">
-        <div>
+
+        <div className="footer-brand">
           <h2>SkillNest<span>.</span></h2>
           <p>Learn new skills. Build your future.</p>
+          <p className="footer-description">
+            A place to discover knowledge, develop practical skills
+            and create new opportunities through learning.
+          </p>
         </div>
 
-        <div className="footer-links">
-          <a href="/">Home</a>
+        <div className="footer-navigation">
+          <h3>Quick Links</h3>
 
-          <a href="/courses">Courses</a>
-
-          <a href="/about">About Us</a>
-          
-          <a href="/contact">Contact</a>
+          <div className="footer-links">
+            <Link to="/">Home</Link>
+            <Link to="/courses">Courses</Link>
+            <Link to="/about">About Us</Link>
+            <Link to="/contact">Contact</Link>
+          </div>
         </div>
+
       </div>
 
       <div className="footer-bottom">
-        <p>© 2026 LearnHub. All rights reserved.</p>
+        <p>© 2026 SkillNest. All rights reserved.</p>
       </div>
     </footer>
   );
