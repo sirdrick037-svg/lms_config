@@ -21,7 +21,7 @@ function Header() {
   return (
     <header className="header">
       <Link to="/" className="logo">
-        LearnHub<span>.</span>
+       SkillNest<span>.</span>
       </Link>
 
       <nav className="navbar">

@@ -848,3 +848,10 @@
     padding: 30px 22px;
   }
 }
+.logo {
+  text-decoration: none;
+}
+
+.logo:hover {
+  text-decoration: none;
+}

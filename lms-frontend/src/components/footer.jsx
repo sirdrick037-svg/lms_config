@@ -4,7 +4,7 @@ function Footer() {
     <footer className="footer">
       <div className="footer-content">
         <div>
-          <h2>LearnHub<span>.</span></h2>
+          <h2>SkillNest<span>.</span></h2>
           <p>Learn new skills. Build your future.</p>
         </div>
 
