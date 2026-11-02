@@ -952,3 +952,61 @@
     padding: 45px 5%;
   }
 }
+
+/* SKILLNEST FOOTER */
+
+.footer {
+  background: #243c35;
+  color: #f7f5ef;
+  padding: 45px 8% 25px;
+  margin-top: 0;
+}
+
+.footer h3 {
+  color: #e6b58d;
+  margin-bottom: 15px;
+}
+
+.footer p {
+  color: #d4ddd6;
+  line-height: 1.7;
+}
+
+.footer a {
+  color: #e9eee5;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer a:hover {
+  color: #e6b58d;
+  text-decoration: none;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 25px;
+  margin: 20px 0;
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  margin-top: 25px;
+  padding-top: 20px;
+  text-align: center;
+  color: #bdc9c0;
+  font-size: 13px;
+}
+
+@media (max-width: 600px) {
+  .footer {
+    padding: 35px 6% 20px;
+    text-align: center;
+  }
+
+  .footer-links {
+    gap: 15px;
+  }
+}
