@@ -953,60 +953,94 @@
   }
 }
 
+
 /* SKILLNEST FOOTER */
 
 .footer {
   background: #243c35;
   color: #f7f5ef;
-  padding: 45px 8% 25px;
+  padding: 55px 8% 20px;
   margin-top: 0;
 }
 
-.footer h3 {
-  color: #e6b58d;
-  margin-bottom: 15px;
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 50px;
+  max-width: 1200px;
+  margin: auto;
 }
 
-.footer p {
+.footer-brand {
+  max-width: 400px;
+}
+
+.footer-brand h2 {
+  font-size: 28px;
+  color: #f7f5ef;
+  margin-bottom: 12px;
+}
+
+.footer-brand h2 span {
+  color: #e6b58d;
+}
+
+.footer-brand p {
   color: #d4ddd6;
   line-height: 1.7;
 }
 
-.footer a {
-  color: #e9eee5;
-  text-decoration: none;
-  transition: color 0.3s ease;
+.footer-description {
+  margin-top: 15px;
+  font-size: 14px;
+  max-width: 350px;
 }
 
-.footer a:hover {
+.footer-navigation h3 {
   color: #e6b58d;
-  text-decoration: none;
+  margin-bottom: 20px;
+  font-size: 17px;
 }
 
 .footer-links {
   display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 25px;
-  margin: 20px 0;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.footer-links a {
+  color: #e9eee5;
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: #e6b58d;
 }
 
 .footer-bottom {
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
-  margin-top: 25px;
+  max-width: 1200px;
+  margin: 40px auto 0;
   padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
   text-align: center;
+}
+
+.footer-bottom p {
   color: #bdc9c0;
   font-size: 13px;
 }
 
 @media (max-width: 600px) {
-  .footer {
-    padding: 35px 6% 20px;
-    text-align: center;
+  .footer-content {
+    flex-direction: column;
+    gap: 35px;
   }
 
-  .footer-links {
-    gap: 15px;
+  .footer {
+    padding: 40px 7% 20px;
   }
 }
+
