@@ -7,7 +7,7 @@ function Footer() {
       <div className="footer-content">
 
         <div className="footer-brand">
-          <h2>SkillNest<span>.</span></h2>
+          <h2>SkillNest</h2>
           <p>Learn new skills. Build your future.</p>
           <p className="footer-description">
             A place to discover knowledge, develop practical skills
