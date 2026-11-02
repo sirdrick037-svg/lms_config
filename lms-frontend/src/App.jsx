@@ -10,6 +10,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import CourseDetails from "./pages/CourseDetails";
 import About from "./pages/About";
+import Dashboard from "./pages/Dashboard";
 
 import "./App.css";
 
@@ -28,6 +29,7 @@ function App() {
             <Route path="/courses" element={<Courses />} />
             <Route path="/courses/:id" element={<CourseDetails />} />
             <Route path="/about" element={<About />} />
+            <Route path="/dashboard" element={<Dashboard />} />
           </Routes>
         </main>
 
