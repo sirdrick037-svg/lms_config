@@ -1299,3 +1299,107 @@
     padding: 55px 7%;
   }
 }
+/* SKILLNEST STUDENT DASHBOARD */
+
+.dashboard-page {
+  background: #f7f5ef;
+  min-height: 100vh;
+  padding-bottom: 70px;
+}
+
+.dashboard-welcome {
+  background: #e9eee5;
+  padding: 65px 8%;
+}
+
+.dashboard-welcome span {
+  color: #b46b4c;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.dashboard-welcome h1 {
+  color: #243c35;
+  font-size: 36px;
+  margin: 15px 0;
+}
+
+.dashboard-welcome p {
+  color: #718078;
+}
+
+.dashboard-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+  padding: 45px 8%;
+}
+
+.dashboard-card {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(36, 60, 53, 0.07);
+}
+
+.dashboard-card h3 {
+  color: #718078;
+  font-size: 15px;
+}
+
+.dashboard-card h2 {
+  color: #315b4c;
+  font-size: 32px;
+  margin: 15px 0 5px;
+}
+
+.dashboard-card p {
+  color: #718078;
+  font-size: 13px;
+}
+
+.dashboard-content {
+  margin: 0 8%;
+  background: #ffffff;
+  padding: 35px;
+  border-radius: 12px;
+}
+
+.dashboard-content h2 {
+  color: #243c35;
+  margin-bottom: 15px;
+}
+
+.dashboard-content p {
+  color: #718078;
+  margin-bottom: 25px;
+}
+
+.dashboard-btn {
+  display: inline-block;
+  background: #315b4c;
+  color: #ffffff;
+  padding: 13px 24px;
+  border-radius: 7px;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.dashboard-btn:hover {
+  background: #b46b4c;
+}
+
+@media (max-width: 700px) {
+  .dashboard-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-welcome h1 {
+    font-size: 28px;
+  }
+
+  .dashboard-content {
+    margin: 0 5%;
+  }
+}
