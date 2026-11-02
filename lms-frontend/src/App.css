@@ -1132,3 +1132,35 @@
 .auth-card .login-btn:hover {
   background: #b46b4c;
 }
+/* BOLDER LOGIN AND REGISTRATION BUTTONS */
+
+.header-buttons .login-btn,
+.header-buttons .register-btn {
+  background: #315b4c !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  font-size: 15px;
+  border: 1px solid #315b4c !important;
+  text-decoration: none !important;
+  padding: 11px 22px;
+  border-radius: 7px;
+}
+
+.header-buttons .login-btn:hover,
+.header-buttons .register-btn:hover {
+  background: #b46b4c !important;
+  border-color: #b46b4c !important;
+  color: #ffffff !important;
+}
+/* BOLDER LOGIN AND REGISTER LINKS */
+
+.auth-card a {
+  color: #315b4c !important;
+  font-weight: 700 !important;
+  text-decoration: none;
+}
+
+.auth-card a:hover {
+  color: #b46b4c !important;
+  text-decoration: underline;
+}
