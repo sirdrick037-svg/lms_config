@@ -257,6 +257,7 @@ class LessonProgressDetailView(
         serializer.save(completed_at=completed_at)
 
 
+
 class PaymentListCreateView(generics.ListCreateAPIView):
     serializer_class = PaymentSerializer
     permission_classes = [IsAuthenticated]
@@ -269,9 +270,7 @@ class PaymentListCreateView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         user = self.request.user
         course = serializer.validated_data["course"]
-        phone = normalize_phone(
-            serializer.validated_data["phone_number"]
-        )
+        phone = serializer.validated_data["phone_number"].strip()
 
         if user.role != "STUDENT":
             raise PermissionDenied(
@@ -295,6 +294,20 @@ class PaymentListCreateView(generics.ListCreateAPIView):
                 "You are already enrolled in this course."
             )
 
+        # DEMO PAYMENT MODE: No real M-Pesa transaction.
+        if settings.MPESA_DEMO_MODE:
+            serializer.save(
+                student=user,
+                amount=course.price,
+                method=Payment.Method.MPESA,
+                status=Payment.Status.SUCCESS,
+                phone_number=phone,
+            )
+            return
+
+        # LIVE M-Pesa payment mode.
+        phone = normalize_phone(phone)
+
         payment = serializer.save(
             student=user,
             amount=course.price,
@@ -305,22 +318,23 @@ class PaymentListCreateView(generics.ListCreateAPIView):
 
         try:
             initiate_stk_push(payment)
+
         except requests.RequestException:
             payment.status = Payment.Status.FAILED
             payment.save(update_fields=["status", "updated_at"])
             logger.exception("M-Pesa API request failed.")
             raise ValidationError(
-                "Could not contact M-Pesa. Check your sandbox settings "
-                "and server logs before retrying."
+                "Could not contact M-Pesa. Check your sandbox settings."
             )
+
         except (ValueError, KeyError):
             payment.status = Payment.Status.FAILED
             payment.save(update_fields=["status", "updated_at"])
             logger.exception("M-Pesa STK Push failed.")
             raise ValidationError(
-                "M-Pesa rejected the STK Push request. "
-                "Check your settings and server logs."
+                "M-Pesa rejected the STK Push request."
             )
+
 
 
 class MpesaCallbackView(APIView):
