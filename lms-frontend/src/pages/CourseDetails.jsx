@@ -19,6 +19,8 @@ function CourseDetails() {
   const [message, setMessage] = useState("");
   const [enrolling, setEnrolling] = useState(false);
   const [paymentSent, setPaymentSent] = useState(false);
+  const [showDemoPin, setShowDemoPin] = useState(false);
+  const [demoPin, setDemoPin] = useState("");
 
   useEffect(() => {
     const fetchCourseDetails = async () => {
@@ -89,6 +91,37 @@ const handlePayment = async () => {
     setEnrolling(false);
   }
 };
+
+   
+const handleDemoPinConfirmation = async () => {
+  if (!/^\d{4}$/.test(demoPin)) {
+    setMessage("Please enter any 4-digit demo PIN.");
+    return;
+  }
+
+  setEnrolling(true);
+  setMessage("");
+
+  try {
+    await enrollInCourse(Number(id));
+
+    setShowDemoPin(false);
+    setDemoPin("");
+    setPaymentSent(false);
+
+    setMessage(
+      "Demo payment confirmed! You are now successfully enrolled."
+    );
+  } catch (err) {
+    setMessage(
+      err.response?.data?.detail ||
+      "Unable to complete enrollment. Please try again."
+    );
+  } finally {
+    setEnrolling(false);
+  }
+};
+
 
 
   const handleCheckPayment = async () => {
@@ -217,7 +250,64 @@ const handlePayment = async () => {
           </div>
         )}
 
-        {message && <p className="enrollment-message">{message}</p>}
+        
+{showDemoPin && (
+  <div className="demo-pin-overlay">
+    <div className="demo-pin-card">
+      <div className="demo-mpesa-logo">M-PESA</div>
+
+      <h2>Payment Confirmation</h2>
+
+      <p>Confirm your demo payment for:</p>
+
+      <h3>{course.title}</h3>
+
+      <p className="demo-payment-amount">
+        KSh {Number(course.price).toLocaleString("en-KE")}
+      </p>
+
+      <label htmlFor="demoPin">Enter your 4-digit demo PIN</label>
+
+      <input
+        id="demoPin"
+        type="password"
+        inputMode="numeric"
+        maxLength="4"
+        placeholder="Enter any 4 digits"
+        value={demoPin}
+        onChange={(e) =>
+          setDemoPin(e.target.value.replace(/\D/g, ""))
+        }
+      />
+
+      <button
+        className="enroll-btn"
+        onClick={handleDemoPinConfirmation}
+        disabled={enrolling}
+      >
+        {enrolling ? "Confirming..." : "Confirm Payment"}
+      </button>
+
+      <button
+        className="demo-cancel-btn"
+        onClick={() => {
+          setShowDemoPin(false);
+          setDemoPin("");
+        }}
+      >
+        Cancel
+      </button>
+
+      <p className="demo-disclaimer">
+        Demo payment only. No real money will be charged.
+        This is not an official Safaricom M-Pesa prompt.
+      </p>
+    </div>
+  </div>
+)}
+
+{message && <p className="enrollment-message">{message}</p>}
+
 
         <Link to="/courses" className="login-btn">
           Back to Courses
