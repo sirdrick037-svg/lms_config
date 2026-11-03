@@ -19,8 +19,6 @@ function CourseDetails() {
   const [message, setMessage] = useState("");
   const [enrolling, setEnrolling] = useState(false);
   const [paymentSent, setPaymentSent] = useState(false);
-  const [showDemoPin, setShowDemoPin] = useState(false);
-  const [demoPin, setDemoPin] = useState("");
 
   useEffect(() => {
     const fetchCourseDetails = async () => {
@@ -32,7 +30,9 @@ function CourseDetails() {
         setLessons(lessonsResponse);
       } catch (err) {
         console.error("Course details error:", err);
-        setError("Unable to load course details. Please log in and try again.");
+        setError(
+          "Unable to load course details. Please log in and try again."
+        );
       } finally {
         setLoading(false);
       }
@@ -47,77 +47,45 @@ function CourseDetails() {
 
     try {
       await enrollInCourse(Number(id));
-      setMessage("Congratulations! You have successfully enrolled in this course.");
+      setMessage(
+        "Congratulations! You have successfully enrolled in this course."
+      );
     } catch (err) {
       setMessage(
         err.response?.data?.detail ||
-        "Unable to enroll. You may already be enrolled or need to log in."
+          "Unable to enroll. You may already be enrolled or need to log in."
       );
     } finally {
       setEnrolling(false);
     }
   };
 
-  
+  const handlePayment = async () => {
+    if (!phoneNumber.trim()) {
+      setMessage("Please enter your phone number.");
+      return;
+    }
 
-const handlePayment = async () => {
-  if (!phoneNumber.trim()) {
-    setMessage("Please enter your phone number.");
-    return;
-  }
+    setEnrolling(true);
+    setMessage("");
 
-  setEnrolling(true);
-  setMessage("");
+    try {
+      await initiatePayment(Number(id), phoneNumber);
 
-  try {
-    await initiatePayment(Number(id), phoneNumber);
+      setPaymentSent(true);
 
-    // Show the simulated M-Pesa PIN confirmation screen.
-    setShowDemoPin(true);
-    setDemoPin("");
-    setPaymentSent(true);
-  } catch (err) {
-    setMessage(
-      err.response?.data?.detail ||
-      "Unable to start demo payment. Please try again."
-    );
-  } finally {
-    setEnrolling(false);
-  }
-};
-
-
-   
-const handleDemoPinConfirmation = async () => {
-  if (!/^\d{4}$/.test(demoPin)) {
-    setMessage("Please enter any 4-digit demo PIN.");
-    return;
-  }
-
-  setEnrolling(true);
-  setMessage("");
-
-  try {
-    await enrollInCourse(Number(id));
-
-    setShowDemoPin(false);
-    setDemoPin("");
-    setPaymentSent(false);
-
-    setMessage(
-      "Demo payment confirmed! You are now successfully enrolled."
-    );
-  } catch (err) {
-    setMessage(
-      err.response?.data?.detail ||
-      "Unable to complete enrollment. Please try again."
-    );
-  } finally {
-    setEnrolling(false);
-  }
-};
-
-
+      setMessage(
+        "Payment request submitted. Please check your phone for an M-PESA prompt."
+      );
+    } catch (err) {
+      setMessage(
+        err.response?.data?.detail ||
+          "Unable to start payment. Please try again."
+      );
+    } finally {
+      setEnrolling(false);
+    }
+  };
 
   const handleCheckPayment = async () => {
     setEnrolling(true);
@@ -134,16 +102,21 @@ const handleDemoPinConfirmation = async () => {
       );
 
       if (!successfulPayment) {
-        setMessage("Payment has not been confirmed yet. Please wait and try again.");
+        setMessage(
+          "Payment has not been confirmed yet. Please wait and try again."
+        );
         return;
       }
 
       await enrollInCourse(Number(id));
-      setMessage("Payment confirmed! You have successfully enrolled in this course.");
+
+      setMessage(
+        "Payment confirmed! You have successfully enrolled in this course."
+      );
     } catch (err) {
       setMessage(
         err.response?.data?.detail ||
-        "Unable to complete enrollment. Please try again."
+          "Unable to complete enrollment. Please try again."
       );
     } finally {
       setEnrolling(false);
@@ -168,14 +141,21 @@ const handleDemoPinConfirmation = async () => {
         </p>
 
         <div className="course-details-info">
-          <p><strong>Instructor:</strong> {course.instructor_username}</p>
+          <p>
+            <strong>Instructor:</strong>{" "}
+            {course.instructor_username}
+          </p>
+
           <p>
             <strong>Price:</strong>{" "}
             {isFree
               ? "Free"
               : `KSh ${Number(course.price).toLocaleString("en-KE")}`}
           </p>
-          <p><strong>Total Lessons:</strong> {lessons.length}</p>
+
+          <p>
+            <strong>Total Lessons:</strong> {lessons.length}
+          </p>
         </div>
 
         <hr />
@@ -187,7 +167,10 @@ const handleDemoPinConfirmation = async () => {
             {lessons
               .sort((a, b) => a.order - b.order)
               .map((lesson, index) => (
-                <div className="course-lesson-item" key={lesson.id}>
+                <div
+                  className="course-lesson-item"
+                  key={lesson.id}
+                >
                   <div>
                     <span>Lesson {index + 1}</span>
                     <h3>{lesson.title}</h3>
@@ -214,7 +197,9 @@ const handleDemoPinConfirmation = async () => {
           </button>
         ) : (
           <div className="payment-section">
-            <label htmlFor="phoneNumber">M-Pesa Phone Number</label>
+            <label htmlFor="phoneNumber">
+              M-Pesa Phone Number
+            </label>
 
             <input
               id="phoneNumber"
@@ -231,7 +216,9 @@ const handleDemoPinConfirmation = async () => {
                 onClick={handlePayment}
                 disabled={enrolling}
               >
-                {enrolling ? "Please wait..." : "Pay with M-Pesa"}
+                {enrolling
+                  ? "Please wait..."
+                  : "Pay with M-Pesa"}
               </button>
             ) : (
               <button
@@ -239,70 +226,17 @@ const handleDemoPinConfirmation = async () => {
                 onClick={handleCheckPayment}
                 disabled={enrolling}
               >
-                {enrolling ? "Checking..." : "Check Payment & Enroll"}
+                {enrolling
+                  ? "Checking..."
+                  : "Check Payment & Enroll"}
               </button>
             )}
           </div>
         )}
 
-        
-{showDemoPin && (
-  <div className="demo-pin-overlay">
-    <div className="demo-pin-card">
-      <div className="demo-mpesa-logo">M-PESA</div>
-
-      <h2>Payment Confirmation</h2>
-
-      <p>Confirm your demo payment for:</p>
-
-      <h3>{course.title}</h3>
-
-      <p className="demo-payment-amount">
-        KSh {Number(course.price).toLocaleString("en-KE")}
-      </p>
-
-      <label htmlFor="demoPin">Enter your 4-digit demo PIN</label>
-
-      <input
-        id="demoPin"
-        type="password"
-        inputMode="numeric"
-        maxLength="4"
-        placeholder="Enter any 4 digits"
-        value={demoPin}
-        onChange={(e) =>
-          setDemoPin(e.target.value.replace(/\D/g, ""))
-        }
-      />
-
-      <button
-        className="enroll-btn"
-        onClick={handleDemoPinConfirmation}
-        disabled={enrolling}
-      >
-        {enrolling ? "Confirming..." : "Confirm Payment"}
-      </button>
-
-      <button
-        className="demo-cancel-btn"
-        onClick={() => {
-          setShowDemoPin(false);
-          setDemoPin("");
-        }}
-      >
-        Cancel
-      </button>
-
-      <p className="demo-disclaimer">
-        Demo payment only. No real money will be charged.
-        This is not an official Safaricom M-Pesa prompt.
-      </p>
-    </div>
-  </div>
-)}
-
-{message && <p className="enrollment-message">{message}</p>}
-
+        {message && (
+          <p className="enrollment-message">{message}</p>
+        )}
 
         <Link to="/courses" className="login-btn">
           Back to Courses
@@ -321,7 +255,9 @@ async function fetchCourse(id) {
 
 async function fetchLessons(id) {
   const api = (await import("../services/api")).default;
-  const response = await api.get(`courses/lessons/?course=${id}`);
+  const response = await api.get(
+    `courses/lessons/?course=${id}`
+  );
   return response.data;
 }
 
