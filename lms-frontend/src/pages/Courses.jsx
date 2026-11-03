@@ -82,9 +82,11 @@ function Courses() {
                       : `KES ${course.price}`}
                   </strong>
 
-                  <Link to={`/courses/${course.id}`}>
-                    Learn More →
-                  </Link>
+                 <Link
+                   to={`/courses/${course.id}`}
+                   className="learn-more-btn">
+                        Learn More
+                 </Link>
                 </div>
 
                 <span className="course-availability">
