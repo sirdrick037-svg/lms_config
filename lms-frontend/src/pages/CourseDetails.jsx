@@ -59,6 +59,7 @@ function CourseDetails() {
   };
 
   
+
 const handlePayment = async () => {
   if (!phoneNumber.trim()) {
     setMessage("Please enter your phone number.");
@@ -69,28 +70,22 @@ const handlePayment = async () => {
   setMessage("");
 
   try {
-    const payment = await initiatePayment(Number(id), phoneNumber);
+    await initiatePayment(Number(id), phoneNumber);
 
-    if (payment.status === "SUCCESS") {
-      await enrollInCourse(Number(id));
-      setMessage(
-        "Demo payment successful! You are now enrolled in this course."
-      );
-    } else {
-      setPaymentSent(true);
-      setMessage(
-        "Payment request sent! Complete your M-Pesa payment, then check its status."
-      );
-    }
+    // Show the simulated M-Pesa PIN confirmation screen.
+    setShowDemoPin(true);
+    setDemoPin("");
+    setPaymentSent(true);
   } catch (err) {
     setMessage(
       err.response?.data?.detail ||
-      "Unable to process payment. Please try again."
+      "Unable to start demo payment. Please try again."
     );
   } finally {
     setEnrolling(false);
   }
 };
+
 
    
 const handleDemoPinConfirmation = async () => {
