@@ -56,28 +56,40 @@ function CourseDetails() {
     }
   };
 
-  const handlePayment = async () => {
-    if (!phoneNumber.trim()) {
-      setMessage("Please enter your M-Pesa phone number.");
-      return;
-    }
+  
+const handlePayment = async () => {
+  if (!phoneNumber.trim()) {
+    setMessage("Please enter your phone number.");
+    return;
+  }
 
-    setEnrolling(true);
-    setMessage("");
+  setEnrolling(true);
+  setMessage("");
 
-    try {
-      await initiatePayment(Number(id), phoneNumber);
-      setPaymentSent(true);
-      setMessage("Payment request sent! Check your phone and enter your M-Pesa PIN.");
-    } catch (err) {
+  try {
+    const payment = await initiatePayment(Number(id), phoneNumber);
+
+    if (payment.status === "SUCCESS") {
+      await enrollInCourse(Number(id));
       setMessage(
-        err.response?.data?.detail ||
-        "Unable to start payment. Please check your phone number and try again."
+        "Demo payment successful! You are now enrolled in this course."
       );
-    } finally {
-      setEnrolling(false);
+    } else {
+      setPaymentSent(true);
+      setMessage(
+        "Payment request sent! Complete your M-Pesa payment, then check its status."
+      );
     }
-  };
+  } catch (err) {
+    setMessage(
+      err.response?.data?.detail ||
+      "Unable to process payment. Please try again."
+    );
+  } finally {
+    setEnrolling(false);
+  }
+};
+
 
   const handleCheckPayment = async () => {
     setEnrolling(true);
