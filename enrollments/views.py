@@ -22,9 +22,19 @@ logger = logging.getLogger(__name__)
 
 
 def mpesa_base_url():
-    if settings.MPESA_ENVIRONMENT == "sandbox":
+    environment = str(settings.MPESA_ENVIRONMENT).strip().lower()
+
+    if environment == "sandbox":
         return "https://sandbox.safaricom.co.ke"
-    return "https://api.safaricom.co.ke"
+
+    if environment == "production":
+        raise ValueError(
+            "Production M-Pesa is disabled for this project."
+        )
+
+    raise ValueError(
+        "Invalid MPESA_ENVIRONMENT. Use sandbox."
+    )
 
 
 def get_mpesa_access_token():
