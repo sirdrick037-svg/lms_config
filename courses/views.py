@@ -5,6 +5,7 @@ from rest_framework.exceptions import PermissionDenied
 
 from .models import Course, Lesson
 from .serializers import CourseSerializer, LessonSerializer
+from enrollments.models import Enrollment
 
 
 class CourseListCreateView(generics.ListCreateAPIView):
@@ -71,12 +72,24 @@ class LessonListCreateView(generics.ListCreateAPIView):
 
         if user.is_staff:
             pass
+
         elif user.role == "INSTRUCTOR":
             queryset = queryset.filter(course__instructor=user)
+
         else:
-            queryset = queryset.filter(course__is_published=True)
+            # Students can only access lessons in courses
+            # they have enrolled in.
+            enrolled_course_ids = Enrollment.objects.filter(
+                student=user
+            ).values_list("course_id", flat=True)
+
+            queryset = queryset.filter(
+                course__is_published=True,
+                course_id__in=enrolled_course_ids
+            )
 
         course_id = self.request.query_params.get("course")
+
         if course_id:
             queryset = queryset.filter(course_id=course_id)
 
@@ -112,4 +125,13 @@ class LessonDetailView(generics.RetrieveUpdateDestroyAPIView):
         if user.role == "INSTRUCTOR":
             return queryset.filter(course__instructor=user)
 
-        return queryset.filter(course__is_published=True)
+        # Students can only access lessons in courses
+        # they have enrolled in.
+        enrolled_course_ids = Enrollment.objects.filter(
+            student=user
+        ).values_list("course_id", flat=True)
+
+        return queryset.filter(
+            course__is_published=True,
+            course_id__in=enrolled_course_ids
+        )
