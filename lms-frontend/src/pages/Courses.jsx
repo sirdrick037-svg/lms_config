@@ -85,7 +85,7 @@ function Courses() {
                  <Link
                    to={`/courses/${course.id}`}
                    className="learn-more-btn">
-                        Learn More
+                       Enroll Now
                  </Link>
                 </div>
 

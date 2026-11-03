@@ -68,5 +68,15 @@ export const getLessonProgress = async () => {
   const response = await api.get("enrollments/progress/");
   return response.data;
 };
+// Mark a lesson as completed
+export const markLessonCompleted = async (enrollmentId, lessonId) => {
+  const response = await api.post("enrollments/progress/", {
+    enrollment: enrollmentId,
+    lesson: lessonId,
+    is_completed: true,
+  });
+
+  return response.data;
+};
 
 export default api;
