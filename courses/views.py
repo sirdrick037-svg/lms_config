@@ -1,6 +1,6 @@
 
 from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.exceptions import PermissionDenied
 
 from .models import Course, Lesson
@@ -10,11 +10,19 @@ from .serializers import CourseSerializer, LessonSerializer
 class CourseListCreateView(generics.ListCreateAPIView):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
-    permission_classes = [IsAuthenticated]
+
+    def get_permissions(self):
+        if self.request.method == "GET":
+            return [AllowAny()]
+        return [IsAuthenticated()]
 
     def get_queryset(self):
         user = self.request.user
         queryset = Course.objects.all()
+
+        # Visitors can see published courses only.
+        if not user.is_authenticated:
+            return queryset.filter(is_published=True)
 
         if user.is_staff:
             return queryset
@@ -68,7 +76,6 @@ class LessonListCreateView(generics.ListCreateAPIView):
         else:
             queryset = queryset.filter(course__is_published=True)
 
-        # Optional course filter, e.g. ?course=10
         course_id = self.request.query_params.get("course")
         if course_id:
             queryset = queryset.filter(course_id=course_id)
