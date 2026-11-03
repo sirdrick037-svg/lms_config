@@ -179,4 +179,4 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
 ]
 
-MPESA_DEMO_MODE = True
+MPESA_DEMO_MODE = False
