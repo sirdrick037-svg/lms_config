@@ -1593,3 +1593,62 @@
   background-color: #bd704d !important;
   color: #ffffff !important;
 }
+/* Enrollment and M-Pesa payment section */
+.enroll-btn {
+  display: inline-block;
+  background-color: #315b4d;
+  color: #ffffff;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: background-color 0.2s ease;
+}
+
+.enroll-btn:hover {
+  background-color: #bd704d;
+}
+
+.enroll-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.payment-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 400px;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.payment-section label {
+  color: #25483d;
+  font-weight: 600;
+}
+
+.payment-section input {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #dce3dc;
+  border-radius: 8px;
+  font-size: 15px;
+  outline: none;
+}
+
+.payment-section input:focus {
+  border-color: #315b4d;
+}
+
+.enrollment-message {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #edf1e9;
+  color: #315b4d;
+  border-radius: 8px;
+  line-height: 1.6;
+}
