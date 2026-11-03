@@ -1,12 +1,12 @@
 
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { getCourses } from "../services/api";
 
 function Courses() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [selectedCourse, setSelectedCourse] = useState(null);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
@@ -24,7 +24,6 @@ function Courses() {
 
   return (
     <div className="courses-page">
-
       <section className="courses-page-hero">
         <span>LEARN SOMETHING NEW</span>
         <h1>Explore Our Courses</h1>
@@ -83,12 +82,9 @@ function Courses() {
                       : `KES ${course.price}`}
                   </strong>
 
-                  <button
-                    type="button"
-                    onClick={() => setSelectedCourse(course)}
-                  >
+                  <Link to={`/courses/${course.id}`}>
                     Learn More →
-                  </button>
+                  </Link>
                 </div>
 
                 <span className="course-availability">
@@ -99,61 +95,6 @@ function Courses() {
           </div>
         )}
       </section>
-
-      {selectedCourse && (
-        <div
-          className="course-modal-overlay"
-          onClick={() => setSelectedCourse(null)}
-        >
-          <div
-            className="course-modal"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              type="button"
-              className="close-modal"
-              onClick={() => setSelectedCourse(null)}
-              aria-label="Close"
-            >
-              ×
-            </button>
-
-            <span className="modal-category">
-              {selectedCourse.category || "Online Course"}
-            </span>
-
-            <h2>{selectedCourse.title}</h2>
-
-            <p className="modal-description">
-              {selectedCourse.description ||
-                "Course description coming soon."}
-            </p>
-
-            <div className="modal-info">
-              <span>
-                Price: {Number(selectedCourse.price) === 0
-                  ? "Free"
-                  : `KES ${selectedCourse.price}`}
-              </span>
-
-              <span>
-                {selectedCourse.is_published
-                  ? "Available"
-                  : "Coming soon"}
-              </span>
-            </div>
-
-            <button
-              type="button"
-              className="modal-close-btn"
-              onClick={() => setSelectedCourse(null)}
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
-
     </div>
   );
 }
