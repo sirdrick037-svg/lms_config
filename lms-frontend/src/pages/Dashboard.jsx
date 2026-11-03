@@ -28,12 +28,8 @@ function Dashboard() {
             getLessonProgress(),
           ]);
 
-        setEnrollments(
-          enrollmentData.results || enrollmentData
-        );
-
+        setEnrollments(enrollmentData.results || enrollmentData);
         setPayments(paymentData.results || paymentData);
-
         setProgress(progressData.results || progressData);
       } catch (err) {
         setError(
@@ -71,7 +67,9 @@ function Dashboard() {
       <section className="dashboard-welcome">
         <span>STUDENT DASHBOARD</span>
         <h1>Welcome back, {studentName}!</h1>
-        <p>Continue learning and building your future with SkillNest.</p>
+        <p>
+          Continue learning and building your future with SkillNest.
+        </p>
       </section>
 
       {error && <p className="error-message">{error}</p>}
@@ -115,15 +113,22 @@ function Dashboard() {
                     className="course-card"
                     key={enrollment.id}
                   >
-                    <h3>
-                      {enrollment.course_title ||
-                        enrollment.course?.title ||
-                        "Enrolled Course"}
-                    </h3>
+                    <span className="course-category">
+                      MY LEARNING
+                    </span>
+
+                    <h3>{enrollment.course_title}</h3>
 
                     <p>
-                      Course enrollment ID: {enrollment.id}
+                      Enrolled on:{" "}
+                      {new Date(
+                        enrollment.enrolled_at
+                      ).toLocaleDateString()}
                     </p>
+
+                    <div className="course-card-bottom">
+                      <span>Enrolled</span>
+                    </div>
                   </article>
                 ))}
               </div>
