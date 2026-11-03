@@ -53,6 +53,15 @@ export const getPayments = async () => {
   const response = await api.get("enrollments/payments/");
   return response.data;
 };
+// Initiate M-Pesa course payment
+export const initiatePayment = async (courseId, phoneNumber) => {
+  const response = await api.post("enrollments/payments/", {
+    course: courseId,
+    phone_number: phoneNumber,
+  });
+
+  return response.data;
+};
 
 // Student lesson progress
 export const getLessonProgress = async () => {
