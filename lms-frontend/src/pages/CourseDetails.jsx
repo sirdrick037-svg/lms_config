@@ -5,6 +5,7 @@ import {
   enrollInCourse,
   initiatePayment,
   getPayments,
+  getEnrollments,
 } from "../services/api";
 
 function CourseDetails() {
@@ -12,6 +13,8 @@ function CourseDetails() {
 
   const [course, setCourse] = useState(null);
   const [lessons, setLessons] = useState([]);
+  const [isEnrolled, setIsEnrolled] = useState(false);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -20,14 +23,29 @@ function CourseDetails() {
   const [enrolling, setEnrolling] = useState(false);
   const [paymentSent, setPaymentSent] = useState(false);
 
+  // Load course and check enrollment first.
   useEffect(() => {
     const fetchCourseDetails = async () => {
       try {
         const courseResponse = await fetchCourse(id);
         setCourse(courseResponse);
 
-        const lessonsResponse = await fetchLessons(id);
-        setLessons(lessonsResponse);
+        const enrollmentResponse = await getEnrollments();
+        const enrollments =
+          enrollmentResponse.results || enrollmentResponse;
+
+        const alreadyEnrolled = enrollments.some(
+          (enrollment) =>
+            Number(enrollment.course) === Number(id)
+        );
+
+        setIsEnrolled(alreadyEnrolled);
+
+        // Only fetch lessons if the student is enrolled.
+        if (alreadyEnrolled) {
+          const lessonsResponse = await fetchLessons(id);
+          setLessons(lessonsResponse.results || lessonsResponse);
+        }
       } catch (err) {
         console.error("Course details error:", err);
         setError(
@@ -41,25 +59,36 @@ function CourseDetails() {
     fetchCourseDetails();
   }, [id]);
 
+  // Load lessons after successful enrollment.
+  const unlockLessons = async () => {
+    const lessonsResponse = await fetchLessons(id);
+    setLessons(lessonsResponse.results || lessonsResponse);
+    setIsEnrolled(true);
+  };
+
+  // Free course enrollment.
   const handleFreeEnrollment = async () => {
     setEnrolling(true);
     setMessage("");
 
     try {
       await enrollInCourse(Number(id));
+      await unlockLessons();
+
       setMessage(
-        "Congratulations! You have successfully enrolled in this course."
+        "Congratulations! You have successfully enrolled. Your lessons are now available."
       );
     } catch (err) {
       setMessage(
         err.response?.data?.detail ||
-          "Unable to enroll. You may already be enrolled or need to log in."
+          "Unable to enroll. Please log in and try again."
       );
     } finally {
       setEnrolling(false);
     }
   };
 
+  // Start M-Pesa payment.
   const handlePayment = async () => {
     if (!phoneNumber.trim()) {
       setMessage("Please enter your phone number.");
@@ -87,6 +116,7 @@ function CourseDetails() {
     }
   };
 
+  // Check payment and enroll.
   const handleCheckPayment = async () => {
     setEnrolling(true);
     setMessage("");
@@ -109,9 +139,10 @@ function CourseDetails() {
       }
 
       await enrollInCourse(Number(id));
+      await unlockLessons();
 
       setMessage(
-        "Payment confirmed! You have successfully enrolled in this course."
+        "Payment confirmed! You have successfully enrolled. Your lessons are now available."
       );
     } catch (err) {
       setMessage(
@@ -153,85 +184,105 @@ function CourseDetails() {
               : `KSh ${Number(course.price).toLocaleString("en-KE")}`}
           </p>
 
-          <p>
-            <strong>Total Lessons:</strong> {lessons.length}
-          </p>
+          {isEnrolled && (
+            <p>
+              <strong>Total Lessons:</strong> {lessons.length}
+            </p>
+          )}
         </div>
 
         <hr />
 
-        <h2>Course Curriculum</h2>
+        {!isEnrolled ? (
+          <>
+            <h2>Join This Course</h2>
 
-        {lessons.length > 0 ? (
-          <div className="course-lessons-list">
-            {lessons
-              .sort((a, b) => a.order - b.order)
-              .map((lesson, index) => (
-                <div
-                  className="course-lesson-item"
-                  key={lesson.id}
-                >
-                  <div>
-                    <span>Lesson {index + 1}</span>
-                    <h3>{lesson.title}</h3>
-                    <p>{lesson.content}</p>
-                  </div>
-                </div>
-              ))}
-          </div>
-        ) : (
-          <p>No lessons have been added to this course yet.</p>
-        )}
-
-        <hr />
-
-        <h2>Join This Course</h2>
-
-        {isFree ? (
-          <button
-            className="enroll-btn"
-            onClick={handleFreeEnrollment}
-            disabled={enrolling}
-          >
-            {enrolling ? "Please wait..." : "Enroll Now"}
-          </button>
-        ) : (
-          <div className="payment-section">
-            <label htmlFor="phoneNumber">
-              M-Pesa Phone Number
-            </label>
-
-            <input
-              id="phoneNumber"
-              type="tel"
-              placeholder="e.g. 0712345678"
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-              disabled={paymentSent}
-            />
-
-            {!paymentSent ? (
+            {isFree ? (
               <button
                 className="enroll-btn"
-                onClick={handlePayment}
+                onClick={handleFreeEnrollment}
                 disabled={enrolling}
               >
-                {enrolling
-                  ? "Please wait..."
-                  : "Pay with M-Pesa"}
+                {enrolling ? "Please wait..." : "Enroll Now"}
               </button>
             ) : (
-              <button
-                className="enroll-btn"
-                onClick={handleCheckPayment}
-                disabled={enrolling}
-              >
-                {enrolling
-                  ? "Checking..."
-                  : "Check Payment & Enroll"}
-              </button>
+              <div className="payment-section">
+                <p>
+                  Pay KSh{" "}
+                  {Number(course.price).toLocaleString("en-KE")}{" "}
+                  using M-Pesa to unlock this course.
+                </p>
+
+                <label htmlFor="phoneNumber">
+                  M-Pesa Phone Number
+                </label>
+
+                <input
+                  id="phoneNumber"
+                  type="tel"
+                  placeholder="e.g. 0712345678"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  disabled={paymentSent}
+                />
+
+                {!paymentSent ? (
+                  <button
+                    className="enroll-btn"
+                    onClick={handlePayment}
+                    disabled={enrolling}
+                  >
+                    {enrolling
+                      ? "Please wait..."
+                      : "Pay with M-Pesa"}
+                  </button>
+                ) : (
+                  <button
+                    className="enroll-btn"
+                    onClick={handleCheckPayment}
+                    disabled={enrolling}
+                  >
+                    {enrolling
+                      ? "Checking..."
+                      : "Check Payment & Enroll"}
+                  </button>
+                )}
+              </div>
             )}
-          </div>
+
+            <p>
+              Enroll in this course to access the lessons.
+            </p>
+          </>
+        ) : (
+          <>
+            <h2>Course Curriculum</h2>
+
+            {lessons.length > 0 ? (
+              <div className="course-lessons-list">
+                {[...lessons]
+                  .sort((a, b) => a.order - b.order)
+                  .map((lesson, index) => (
+                    <div
+                      className="course-lesson-item"
+                      key={lesson.id}
+                    >
+                      <div>
+                        <span>Lesson {index + 1}</span>
+                        <h3>{lesson.title}</h3>
+                        <p>{lesson.content}</p>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            ) : (
+              <p>No lessons have been added to this course yet.</p>
+            )}
+
+            <p className="enrollment-message">
+              You are enrolled in this course.
+            </p>
+          </>
         )}
 
         {message && (
