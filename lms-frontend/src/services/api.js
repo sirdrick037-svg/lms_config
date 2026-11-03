@@ -39,6 +39,14 @@ export const getEnrollments = async () => {
   const response = await api.get("enrollments/");
   return response.data;
 };
+// Enroll in a course
+export const enrollInCourse = async (courseId) => {
+  const response = await api.post("enrollments/", {
+    course: courseId,
+  });
+
+  return response.data;
+};
 
 // Student payments
 export const getPayments = async () => {
