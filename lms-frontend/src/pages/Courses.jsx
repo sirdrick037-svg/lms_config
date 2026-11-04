@@ -1,19 +1,47 @@
 
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getCourses } from "../services/api";
+import {
+  getCourses,
+  getEnrollments,
+} from "../services/api";
 
 function Courses() {
   const [courses, setCourses] = useState([]);
+  const [enrolledCourseIds, setEnrolledCourseIds] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    getCourses()
-      .then((data) => setCourses(data.results || data))
-      .catch(() => setError("Unable to load courses. Please try again."))
-      .finally(() => setLoading(false));
+    const fetchCourses = async () => {
+      try {
+        const courseData = await getCourses();
+        setCourses(courseData.results || courseData);
+
+        // Check which courses the student has enrolled in.
+        try {
+          const enrollmentData = await getEnrollments();
+          const enrollments =
+            enrollmentData.results || enrollmentData;
+
+          setEnrolledCourseIds(
+            enrollments.map((enrollment) =>
+              Number(enrollment.course)
+            )
+          );
+        } catch (err) {
+          // Visitors who are not logged in have no enrollments.
+          setEnrolledCourseIds([]);
+        }
+      } catch (err) {
+        setError("Unable to load courses. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCourses();
   }, []);
 
   const filteredCourses = courses.filter((course) =>
@@ -63,37 +91,48 @@ function Courses() {
 
         {!loading && !error && (
           <div className="courses-grid">
-            {filteredCourses.map((course) => (
-              <article className="course-card" key={course.id}>
-                <div className="course-icon">✦</div>
+            {filteredCourses.map((course) => {
+              const isEnrolled = enrolledCourseIds.includes(
+                Number(course.id)
+              );
 
-                <span className="course-category">
-                  {course.category || "Online Course"}
-                </span>
+              return (
+                <article className="course-card" key={course.id}>
+                  <div className="course-icon">✦</div>
 
-                <h3>{course.title}</h3>
+                  <span className="course-category">
+                    {course.category || "Online Course"}
+                  </span>
 
-                <p>{course.description}</p>
+                  <h3>{course.title}</h3>
 
-                <div className="course-card-bottom">
-                  <strong>
-                    {Number(course.price) === 0
-                      ? "Free"
-                      : `KES ${course.price}`}
-                  </strong>
+                  <p>{course.description}</p>
 
-                 <Link
-                   to={`/courses/${course.id}`}
-                   className="learn-more-btn">
-                       Enroll Now
-                 </Link>
-                </div>
+                  <div className="course-card-bottom">
+                    <strong>
+                      {Number(course.price) === 0
+                        ? "Free"
+                        : `KES ${course.price}`}
+                    </strong>
 
-                <span className="course-availability">
-                  {course.is_published ? "Available" : "Coming soon"}
-                </span>
-              </article>
-            ))}
+                    <Link
+                      to={`/courses/${course.id}`}
+                      className="learn-more-btn"
+                    >
+                      {isEnrolled
+                        ? "Continue Learning"
+                        : "Enroll Now"}
+                    </Link>
+                  </div>
+
+                  <span className="course-availability">
+                    {course.is_published
+                      ? "Available"
+                      : "Coming soon"}
+                  </span>
+                </article>
+              );
+            })}
           </div>
         )}
       </section>
