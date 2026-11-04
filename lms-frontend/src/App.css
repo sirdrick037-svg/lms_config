@@ -1652,3 +1652,40 @@
   border-radius: 8px;
   line-height: 1.6;
 }
+.course-progress {
+  margin-top: 20px;
+  width: 100%;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  color: #315b4d;
+}
+
+.progress-info strong {
+  color: #bd704d;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 10px;
+  background-color: #e9eee5;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #bd704d;
+  border-radius: 20px;
+  transition: width 0.4s ease;
+}
+
+.course-progress p {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #666;
+}
