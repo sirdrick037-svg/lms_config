@@ -89,6 +89,31 @@ function CourseDetails() {
     setIsEnrolled(true);
   };
 
+  // Mark a lesson as completed.
+const handleMarkCompleted = async (lessonId) => {
+  try {
+    await markLessonCompleted(enrollmentId, lessonId);
+
+    const progressResponse = await getLessonProgress();
+    const progressList =
+      progressResponse.results || progressResponse;
+
+    setProgress(
+      progressList.filter(
+        (item) =>
+          Number(item.enrollment) === Number(enrollmentId)
+      )
+    );
+
+    setMessage("Lesson marked as completed!");
+  } catch (err) {
+    setMessage(
+      err.response?.data?.detail ||
+        "Unable to update lesson progress. Please try again."
+    );
+  }
+};
+
   // Free course enrollment.
   const handleFreeEnrollment = async () => {
     setEnrolling(true);
