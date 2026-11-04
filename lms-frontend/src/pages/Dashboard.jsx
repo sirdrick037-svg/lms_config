@@ -54,6 +54,32 @@ function Dashboard() {
     );
   }).length;
 
+  const getCourseProgress = (enrollmentId) => {
+  const courseProgress = progress.filter(
+    (item) => item.enrollment === enrollmentId
+  );
+
+  if (courseProgress.length === 0) {
+    return {
+      completed: 0,
+      total: 0,
+      percentage: 0,
+    };
+  }
+
+  const completed = courseProgress.filter(
+    (item) => item.is_completed
+  ).length;
+
+  return {
+    completed,
+    total: courseProgress.length,
+    percentage: Math.round(
+      (completed / courseProgress.length) * 100
+    ),
+  };
+};
+
   const successfulPayments = payments.filter(
     (payment) => payment.status === "SUCCESS"
   ).length;
