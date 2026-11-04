@@ -47,6 +47,13 @@ function CourseDetails() {
 
         // Only fetch lessons if the student is enrolled.
         if (alreadyEnrolled) {
+  const currentEnrollment = enrollments.find(
+    (enrollment) =>
+      Number(enrollment.course) === Number(id)
+  );
+
+  setEnrollmentId(currentEnrollment.id);
+
   const lessonsResponse = await fetchLessons(id);
   setLessons(lessonsResponse.results || lessonsResponse);
 
@@ -56,13 +63,9 @@ function CourseDetails() {
 
   setProgress(
     progressList.filter(
-      (item) => Number(item.enrollment) ===
-        Number(
-          enrollments.find(
-            (enrollment) =>
-              Number(enrollment.course) === Number(id)
-          )?.id
-        )
+      (item) =>
+        Number(item.enrollment) ===
+        Number(currentEnrollment.id)
     )
   );
 }
