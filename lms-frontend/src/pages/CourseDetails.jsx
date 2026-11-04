@@ -17,6 +17,7 @@ function CourseDetails() {
   const [lessons, setLessons] = useState([]);
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [progress, setProgress] = useState([]);
+  const [enrollmentId, setEnrollmentId] = useState(null);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
