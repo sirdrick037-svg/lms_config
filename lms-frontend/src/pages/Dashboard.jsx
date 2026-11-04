@@ -152,9 +152,29 @@ function Dashboard() {
                       ).toLocaleDateString()}
                     </p>
 
-                    <div className="course-card-bottom">
-                      <span>Enrolled</span>
-                    </div>
+                    {(() => {
+  const courseStats = getCourseProgress(enrollment.id);
+
+  return (
+    <div className="course-progress">
+      <div className="progress-info">
+        <span>Learning Progress</span>
+        <strong>{courseStats.percentage}%</strong>
+      </div>
+
+      <div className="progress-bar">
+        <div
+          className="progress-fill"
+          style={{ width: `${courseStats.percentage}%` }}
+        ></div>
+      </div>
+
+      <p>
+        {courseStats.completed} of {courseStats.total} lessons completed
+      </p>
+    </div>
+  );
+})()}
                   </article>
                 ))}
               </div>
