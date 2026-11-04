@@ -6,6 +6,8 @@ import {
   initiatePayment,
   getPayments,
   getEnrollments,
+  getLessonsProgress,
+  markLessonCompleted,
 } from "../services/api";
 
 function CourseDetails() {
