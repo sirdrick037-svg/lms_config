@@ -3,9 +3,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 
 function Header() {
   const navigate = useNavigate();
-
-  // Re-render the header whenever the route changes
-  useLocation();
+  const location = useLocation();
 
   const isLoggedIn = Boolean(
     localStorage.getItem("access_token")
@@ -14,6 +12,7 @@ function Header() {
   const handleLogout = () => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
+    localStorage.removeItem("student_name");
 
     navigate("/login");
   };
@@ -21,13 +20,19 @@ function Header() {
   return (
     <header className="header">
       <Link to="/" className="logo">
-       SkillNest
+        SkillNest
       </Link>
 
       <nav className="navbar">
         <Link to="/">Home</Link>
         <Link to="/courses">Courses</Link>
         <Link to="/about">About</Link>
+
+        {isLoggedIn && (
+          <Link to="/dashboard">
+            My Dashboard
+          </Link>
+        )}
       </nav>
 
       <div className="header-buttons">
