@@ -11,6 +11,7 @@ import Register from "./pages/Register";
 import CourseDetails from "./pages/CourseDetails";
 import About from "./pages/About";
 import Dashboard from "./pages/Dashboard";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 import "./App.css";
 
@@ -29,7 +30,7 @@ function App() {
             <Route path="/courses" element={<Courses />} />
             <Route path="/courses/:id" element={<CourseDetails />} />
             <Route path="/about" element={<About />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           </Routes>
         </main>
 

@@ -70,15 +70,17 @@ class LessonListCreateView(generics.ListCreateAPIView):
         user = self.request.user
         queryset = Lesson.objects.select_related("course")
 
+        # Administrators can access all lessons.
         if user.is_staff:
             pass
 
+        # Instructors can access lessons in their own courses.
         elif user.role == "INSTRUCTOR":
             queryset = queryset.filter(course__instructor=user)
 
+        # Students can only access lessons in courses
+        # they have enrolled in.
         else:
-            # Students can only access lessons in courses
-            # they have enrolled in.
             enrolled_course_ids = Enrollment.objects.filter(
                 student=user
             ).values_list("course_id", flat=True)
@@ -99,6 +101,12 @@ class LessonListCreateView(generics.ListCreateAPIView):
         course = serializer.validated_data["course"]
         user = self.request.user
 
+        # Administrators can add lessons to any course.
+        if user.is_staff:
+            serializer.save()
+            return
+
+        # Instructors can add lessons only to their own courses.
         if (
             user.role != "INSTRUCTOR"
             or course.instructor_id != user.id
@@ -119,9 +127,11 @@ class LessonDetailView(generics.RetrieveUpdateDestroyAPIView):
         user = self.request.user
         queryset = Lesson.objects.select_related("course")
 
+        # Administrators can manage all lessons.
         if user.is_staff:
             return queryset
 
+        # Instructors can manage lessons in their own courses.
         if user.role == "INSTRUCTOR":
             return queryset.filter(course__instructor=user)
 
