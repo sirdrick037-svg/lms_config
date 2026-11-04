@@ -21,6 +21,14 @@ export const getCourses = async () => {
   const response = await api.get("courses/");
   return response.data;
 };
+// Course lessons
+export const getLessons = async (courseId) => {
+  const response = await api.get(
+    `courses/lessons/?course=${courseId}`
+  );
+
+  return response.data;
+};
 
 // Login
 export const loginUser = async (email, password) => {
