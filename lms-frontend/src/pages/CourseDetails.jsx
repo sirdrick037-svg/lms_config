@@ -46,9 +46,25 @@ function CourseDetails() {
 
         // Only fetch lessons if the student is enrolled.
         if (alreadyEnrolled) {
-          const lessonsResponse = await fetchLessons(id);
-          setLessons(lessonsResponse.results || lessonsResponse);
-        }
+  const lessonsResponse = await fetchLessons(id);
+  setLessons(lessonsResponse.results || lessonsResponse);
+
+  const progressResponse = await getLessonProgress();
+  const progressList =
+    progressResponse.results || progressResponse;
+
+  setProgress(
+    progressList.filter(
+      (item) => Number(item.enrollment) ===
+        Number(
+          enrollments.find(
+            (enrollment) =>
+              Number(enrollment.course) === Number(id)
+          )?.id
+        )
+    )
+  );
+}
       } catch (err) {
         console.error("Course details error:", err);
         setError(
