@@ -6,7 +6,7 @@ import {
   initiatePayment,
   getPayments,
   getEnrollments,
-  getLessonsProgress,
+  getLessonProgress,
   markLessonCompleted,
 } from "../services/api";
 
