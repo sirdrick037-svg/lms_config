@@ -317,6 +317,7 @@ class PaymentListCreateView(generics.ListCreateAPIView):
 
         # LIVE M-Pesa payment mode.
         phone = normalize_phone(phone)
+        
 
         payment = serializer.save(
             student=user,
