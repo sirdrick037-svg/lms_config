@@ -316,10 +316,27 @@ const handleMarkCompleted = async (lessonId) => {
                       key={lesson.id}
                     >
                       <div>
-                        <span>Lesson {index + 1}</span>
-                        <h3>{lesson.title}</h3>
-                        <p>{lesson.content}</p>
-                      </div>
+  <span>Lesson {index + 1}</span>
+  <h3>{lesson.title}</h3>
+  <p>{lesson.content}</p>
+
+  {progress.some(
+    (item) =>
+      Number(item.lesson) === Number(lesson.id) &&
+      item.is_completed
+  ) ? (
+    <button className="enroll-btn" disabled>
+      Completed ✓
+    </button>
+  ) : (
+    <button
+      className="enroll-btn"
+      onClick={() => handleMarkCompleted(lesson.id)}
+    >
+      Mark as Completed
+    </button>
+  )}
+</div>
                     </div>
                   ))}
               </div>
