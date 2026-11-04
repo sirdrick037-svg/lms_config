@@ -5,6 +5,7 @@ import {
   getEnrollments,
   getPayments,
   getLessonProgress,
+  getLessons,
 } from "../services/api";
 
 function Dashboard() {
@@ -15,6 +16,7 @@ function Dashboard() {
   const [enrollments, setEnrollments] = useState([]);
   const [payments, setPayments] = useState([]);
   const [progress, setProgress] = useState([]);
+  const [lessons, setLessons] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -28,10 +30,26 @@ function Dashboard() {
             getLessonProgress(),
           ]);
 
-        setEnrollments(enrollmentData.results || enrollmentData);
+        const enrollmentList =
+          enrollmentData.results || enrollmentData;
+
+        const lessonData = await Promise.all(
+          enrollmentList.map((enrollment) =>
+            getLessons(enrollment.course)
+          )
+        );
+
+        const allLessons = lessonData.flatMap((data) =>
+          data.results || data
+        );
+
+        setEnrollments(enrollmentList);
         setPayments(paymentData.results || paymentData);
         setProgress(progressData.results || progressData);
+        setLessons(allLessons);
       } catch (err) {
+        console.error("Dashboard error:", err);
+
         setError(
           "Unable to load dashboard information. Please log in again."
         );
@@ -44,45 +62,53 @@ function Dashboard() {
   }, []);
 
   const completedCourses = enrollments.filter((enrollment) => {
-    const courseProgress = progress.filter(
-      (item) => item.enrollment === enrollment.id
+    const courseLessons = lessons.filter(
+      (lesson) => lesson.course === enrollment.course
     );
 
-    return (
-      courseProgress.length > 0 &&
-      courseProgress.every((item) => item.is_completed)
-    );
+    if (courseLessons.length === 0) {
+      return false;
+    }
+
+    const completedCount = courseLessons.filter((lesson) =>
+      progress.some(
+        (item) =>
+          item.enrollment === enrollment.id &&
+          item.lesson === lesson.id &&
+          item.is_completed
+      )
+    ).length;
+
+    return completedCount === courseLessons.length;
   }).length;
-
-  const getCourseProgress = (enrollmentId) => {
-  const courseProgress = progress.filter(
-    (item) => item.enrollment === enrollmentId
-  );
-
-  if (courseProgress.length === 0) {
-    return {
-      completed: 0,
-      total: 0,
-      percentage: 0,
-    };
-  }
-
-  const completed = courseProgress.filter(
-    (item) => item.is_completed
-  ).length;
-
-  return {
-    completed,
-    total: courseProgress.length,
-    percentage: Math.round(
-      (completed / courseProgress.length) * 100
-    ),
-  };
-};
 
   const successfulPayments = payments.filter(
     (payment) => payment.status === "SUCCESS"
   ).length;
+
+  const getCourseProgress = (enrollmentId, courseId) => {
+    const courseLessons = lessons.filter(
+      (lesson) => lesson.course === courseId
+    );
+
+    const completed = courseLessons.filter((lesson) =>
+      progress.some(
+        (item) =>
+          item.enrollment === enrollmentId &&
+          item.lesson === lesson.id &&
+          item.is_completed
+      )
+    ).length;
+
+    const total = courseLessons.length;
+
+    return {
+      completed,
+      total,
+      percentage:
+        total > 0 ? Math.round((completed / total) * 100) : 0,
+    };
+  };
 
   if (loading) {
     return <p>Loading your dashboard...</p>;
@@ -134,49 +160,55 @@ function Dashboard() {
               </>
             ) : (
               <div className="courses-grid">
-                {enrollments.map((enrollment) => (
-                  <article
-                    className="course-card"
-                    key={enrollment.id}
-                  >
-                    <span className="course-category">
-                      MY LEARNING
-                    </span>
+                {enrollments.map((enrollment) => {
+                  const courseStats = getCourseProgress(
+                    enrollment.id,
+                    enrollment.course
+                  );
 
-                    <h3>{enrollment.course_title}</h3>
+                  return (
+                    <article
+                      className="course-card"
+                      key={enrollment.id}
+                    >
+                      <span className="course-category">
+                        MY LEARNING
+                      </span>
 
-                    <p>
-                      Enrolled on:{" "}
-                      {new Date(
-                        enrollment.enrolled_at
-                      ).toLocaleDateString()}
-                    </p>
+                      <h3>{enrollment.course_title}</h3>
 
-                    {(() => {
-  const courseStats = getCourseProgress(enrollment.id);
+                      <p>
+                        Enrolled on:{" "}
+                        {new Date(
+                          enrollment.enrolled_at
+                        ).toLocaleDateString()}
+                      </p>
 
-  return (
-    <div className="course-progress">
-      <div className="progress-info">
-        <span>Learning Progress</span>
-        <strong>{courseStats.percentage}%</strong>
-      </div>
+                      <div className="course-progress">
+                        <div className="progress-info">
+                          <span>Learning Progress</span>
+                          <strong>
+                            {courseStats.percentage}%
+                          </strong>
+                        </div>
 
-      <div className="progress-bar">
-        <div
-          className="progress-fill"
-          style={{ width: `${courseStats.percentage}%` }}
-        ></div>
-      </div>
+                        <div className="progress-bar">
+                          <div
+                            className="progress-fill"
+                            style={{
+                              width: `${courseStats.percentage}%`,
+                            }}
+                          ></div>
+                        </div>
 
-      <p>
-        {courseStats.completed} of {courseStats.total} lessons completed
-      </p>
-    </div>
-  );
-})()}
-                  </article>
-                ))}
+                        <p>
+                          {courseStats.completed} of{" "}
+                          {courseStats.total} lessons completed
+                        </p>
+                      </div>
+                    </article>
+                  );
+                })}
               </div>
             )}
           </section>
