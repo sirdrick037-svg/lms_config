@@ -2,6 +2,7 @@
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.exceptions import PermissionDenied
 
 from .models import Course, Lesson
 from .serializers import CourseSerializer, LessonSerializer
@@ -135,7 +136,7 @@ class LessonDetailView(generics.RetrieveUpdateDestroyAPIView):
         if user.role == "INSTRUCTOR":
             return queryset.filter(course__instructor=user)
 
-        # Students can only access lessons in courses
+        # Students can only view lessons in courses
         # they have enrolled in.
         enrolled_course_ids = Enrollment.objects.filter(
             student=user
@@ -144,4 +145,46 @@ class LessonDetailView(generics.RetrieveUpdateDestroyAPIView):
         return queryset.filter(
             course__is_published=True,
             course_id__in=enrolled_course_ids
+        )
+
+    def perform_update(self, serializer):
+        user = self.request.user
+
+        # Administrators can update any lesson.
+        if user.is_staff:
+            serializer.save()
+            return
+
+        # Instructors can only update lessons in their own courses.
+        if user.role == "INSTRUCTOR":
+            course = serializer.validated_data.get(
+                "course",
+                serializer.instance.course
+            )
+
+            if course.instructor_id != user.id:
+                raise PermissionDenied(
+                    "You can only edit lessons in your own courses."
+                )
+
+            serializer.save()
+            return
+
+        raise PermissionDenied(
+            "Students are not allowed to edit lessons."
+        )
+
+    def perform_destroy(self, instance):
+        user = self.request.user
+
+        if user.is_staff:
+            instance.delete()
+            return
+
+        if user.role == "INSTRUCTOR":
+            instance.delete()
+            return
+
+        raise PermissionDenied(
+            "Students are not allowed to delete lessons."
         )
