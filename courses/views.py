@@ -2,7 +2,7 @@
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.exceptions import PermissionDenied
-from rest_framework.exceptions import PermissionDenied
+
 
 from .models import Course, Lesson
 from .serializers import CourseSerializer, LessonSerializer
