@@ -84,10 +84,47 @@ function CourseDetails() {
 
   // Load lessons after successful enrollment.
   const unlockLessons = async () => {
+  try {
+    // Get the student's enrollments.
+    const enrollmentResponse = await getEnrollments();
+    const enrollmentList =
+      enrollmentResponse.results || enrollmentResponse;
+
+    // Find the enrollment for this course.
+    const currentEnrollment = enrollmentList.find(
+      (enrollment) => Number(enrollment.course) === Number(id)
+    );
+
+    if (!currentEnrollment) {
+      setMessage("Your enrollment could not be found.");
+      return;
+    }
+
+    // Save the enrollment ID.
+    setEnrollmentId(currentEnrollment.id);
+
+    // Load course lessons.
     const lessonsResponse = await fetchLessons(id);
     setLessons(lessonsResponse.results || lessonsResponse);
+
+    // Load existing lesson progress.
+    const progressResponse = await getLessonProgress();
+    const progressList =
+      progressResponse.results || progressResponse;
+
+    setProgress(
+      progressList.filter(
+        (item) =>
+          Number(item.enrollment) === Number(currentEnrollment.id)
+      )
+    );
+
     setIsEnrolled(true);
-  };
+  } catch (error) {
+    console.error("Unlock lessons error:", error);
+    setMessage("Unable to load your lessons. Please try again.");
+  }
+};
 
   // Mark a lesson as completed.
 const handleMarkCompleted = async (lessonId) => {
