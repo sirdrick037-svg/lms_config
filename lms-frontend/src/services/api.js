@@ -107,5 +107,19 @@ export const startQuizAttempt = async (quizId) => {
 
   return response.data;
 };
+// Submit quiz answers
+export const submitQuizAttempt = async (attemptId, answers) => {
+  const response = await api.post(
+    `assessments/attempts/${attemptId}/submit/`,
+    {
+      answers: answers.map((answer) => ({
+        question: answer.question,
+        selected_answer: answer.selected_answer,
+      })),
+    }
+  );
+
+  return response.data;
+};
 
 export default api;
