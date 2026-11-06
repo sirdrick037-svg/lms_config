@@ -10,6 +10,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Quiz, Question, QuizAttempt, Answer
+from courses.models import Lesson
+from enrollments.models import Enrollment, LessonProgress
 from .serializers import (
     QuizSerializer,
     QuestionSerializer,

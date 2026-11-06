@@ -7,6 +7,7 @@ import {
   startQuizAttempt,
   submitQuizAttempt,
 } from "./services/api";
+import "./Quizzes.css";
 
 function Quizzes() {
   const [quizzes, setQuizzes] = useState([]);
@@ -141,7 +142,14 @@ function Quizzes() {
 
   return (
     <div className="quizzes-container">
-      <h2>Quizzes for My Enrolled Courses</h2>
+      <div className="quiz-intro">
+  <p className="quiz-intro-label">SKILLNEST LEARNING</p>
+  <h2>Test Your Knowledge</h2>
+  <p>
+    Challenge yourself with quizzes from your enrolled courses.
+    Track your understanding and see how much you've learned.
+  </p>
+</div>
 
       {error && <p>{error}</p>}
 
