@@ -99,5 +99,13 @@ export const getQuizQuestions = async (quizId) => {
   );
   return response.data;
 };
+// Start a new quiz attempt
+export const startQuizAttempt = async (quizId) => {
+  const response = await api.post("assessments/attempts/", {
+    quiz: quizId,
+  });
+
+  return response.data;
+};
 
 export default api;
