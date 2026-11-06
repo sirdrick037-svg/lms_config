@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import {
   getQuizzes,
   getQuizQuestions,
+  getEnrollments,
   startQuizAttempt,
   submitQuizAttempt,
 } from "./services/api";
@@ -21,11 +22,31 @@ function Quizzes() {
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
-        const response = await getQuizzes();
-        setQuizzes(response.results || response);
+        const [quizResponse, enrollmentResponse] =
+          await Promise.all([
+            getQuizzes(),
+            getEnrollments(),
+          ]);
+
+        const allQuizzes =
+          quizResponse.results || quizResponse;
+
+        const enrollments =
+          enrollmentResponse.results || enrollmentResponse;
+
+        const enrolledCourseIds = enrollments.map(
+          (enrollment) => Number(enrollment.course)
+        );
+
+        const enrolledQuizzes = allQuizzes.filter(
+          (quiz) =>
+            enrolledCourseIds.includes(Number(quiz.course))
+        );
+
+        setQuizzes(enrolledQuizzes);
       } catch (err) {
         console.error(err);
-        setError("Unable to load quizzes.");
+        setError("Unable to load your quizzes.");
       } finally {
         setLoading(false);
       }
@@ -38,19 +59,28 @@ function Quizzes() {
     try {
       setError("");
       setResult(null);
-
-      const attempt = await startQuizAttempt(quiz.id);
-      const response = await getQuizQuestions(quiz.id);
-
-      setAttemptId(attempt.id);
-      setSelectedQuiz(quiz);
-      setQuestions(response.results || response);
+      setQuestions([]);
       setAnswers({});
+
+      // Check for questions before creating an attempt.
+      const response = await getQuizQuestions(quiz.id);
+      const questionList = response.results || response;
+
+      setSelectedQuiz(quiz);
+      setQuestions(questionList);
+
+      if (questionList.length === 0) {
+        return;
+      }
+
+      // Create an attempt only when questions exist.
+      const attempt = await startQuizAttempt(quiz.id);
+      setAttemptId(attempt.id);
     } catch (err) {
       console.error(err);
       setError(
         err.response?.data?.detail ||
-          "Unable to start quiz. Please try again."
+          "Unable to open this quiz. Please try again."
       );
     }
   };
@@ -96,19 +126,30 @@ function Quizzes() {
     }
   };
 
+  const handleBack = () => {
+    setSelectedQuiz(null);
+    setQuestions([]);
+    setAnswers({});
+    setAttemptId(null);
+    setResult(null);
+    setError("");
+  };
+
   if (loading) {
     return <p>Loading quizzes...</p>;
   }
 
   return (
     <div className="quizzes-container">
-      <h2>Available Quizzes</h2>
+      <h2>Quizzes for My Enrolled Courses</h2>
 
       {error && <p>{error}</p>}
 
       {!selectedQuiz ? (
         quizzes.length === 0 ? (
-          <p>No quizzes are available yet.</p>
+          <p>
+            No quizzes are available for your enrolled courses yet.
+          </p>
         ) : (
           quizzes.map((quiz) => (
             <div className="quiz-card" key={quiz.id}>
@@ -122,79 +163,67 @@ function Quizzes() {
             </div>
           ))
         )
-      ) : result ? (
-        <div className="quiz-card">
-          <h2>{selectedQuiz.title} - Results</h2>
-
-          <h3>Your Score: {result.score}%</h3>
-
-          <h3>
-            {result.passed ? "Congratulations! You passed!" : "You did not pass. Try again!"}
-          </h3>
-
-          {!result.passed && (
-            <button onClick={() => handleStartQuiz(selectedQuiz)}>
-              Retake Quiz
-            </button>
-          )}
-
-          <button
-            onClick={() => {
-              setSelectedQuiz(null);
-              setQuestions([]);
-              setAnswers({});
-              setAttemptId(null);
-              setResult(null);
-              setError("");
-            }}
-          >
-            Back to Quizzes
-          </button>
-        </div>
       ) : (
         <div className="quiz-card">
           <h2>{selectedQuiz.title}</h2>
 
-          {questions.map((question, index) => (
-            <div key={question.id}>
+          {questions.length === 0 ? (
+            <p>No questions have been posted for this quiz yet.</p>
+          ) : result ? (
+            <>
+              <h3>Your Score: {result.score}%</h3>
+
               <h3>
-                {index + 1}. {question.text}
+                {result.passed
+                  ? "Congratulations! You passed!"
+                  : "You did not pass. Try again!"}
               </h3>
 
-              {["A", "B", "C", "D"].map((option) => (
-                <label key={option} style={{ display: "block" }}>
-                  <input
-                    type="radio"
-                    name={`question-${question.id}`}
-                    value={option}
-                    checked={answers[question.id] === option}
-                    onChange={() =>
-                      handleAnswerChange(question.id, option)
-                    }
-                  />
+              {!result.passed && (
+                <button onClick={() => handleStartQuiz(selectedQuiz)}>
+                  Retake Quiz
+                </button>
+              )}
+            </>
+          ) : (
+            <>
+              {questions.map((question, index) => (
+                <div key={question.id}>
+                  <h3>
+                    {index + 1}. {question.text}
+                  </h3>
 
-                  {question[`option_${option.toLowerCase()}`]}
-                </label>
+                  {["A", "B", "C", "D"].map((option) => (
+                    <label
+                      key={option}
+                      style={{ display: "block" }}
+                    >
+                      <input
+                        type="radio"
+                        name={`question-${question.id}`}
+                        value={option}
+                        checked={answers[question.id] === option}
+                        onChange={() =>
+                          handleAnswerChange(question.id, option)
+                        }
+                      />
+
+                      {question[`option_${option.toLowerCase()}`]}
+                    </label>
+                  ))}
+                </div>
               ))}
-            </div>
-          ))}
 
-          <button
-            onClick={handleSubmitQuiz}
-            disabled={submitting}
-          >
-            {submitting ? "Submitting..." : "Submit Quiz"}
-          </button>
+              <button
+                onClick={handleSubmitQuiz}
+                disabled={submitting}
+              >
+                {submitting ? "Submitting..." : "Submit Quiz"}
+              </button>
+            </>
+          )}
 
-          <button
-            onClick={() => {
-              setSelectedQuiz(null);
-              setQuestions([]);
-              setAnswers({});
-              setAttemptId(null);
-              setError("");
-            }}
-          >
+          <button onClick={handleBack}>
             Back to Quizzes
           </button>
         </div>
