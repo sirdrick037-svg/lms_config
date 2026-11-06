@@ -86,5 +86,18 @@ export const markLessonCompleted = async (enrollmentId, lessonId) => {
 
   return response.data;
 };
+// Student quizzes
+export const getQuizzes = async () => {
+  const response = await api.get("assessments/quizzes/");
+  return response.data;
+};
+
+// Get questions for a specific quiz
+export const getQuizQuestions = async (quizId) => {
+  const response = await api.get(
+    `assessments/quizzes/${quizId}/questions/`
+  );
+  return response.data;
+};
 
 export default api;
