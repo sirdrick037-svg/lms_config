@@ -29,10 +29,16 @@ function Header() {
         <Link to="/about">About</Link>
 
         {isLoggedIn && (
-          <Link to="/dashboard">
-            My Dashboard
-          </Link>
-        )}
+  <>
+    <Link to="/dashboard">
+      My Dashboard
+    </Link>
+
+    <Link to="/quizzes">
+      Quizzes
+    </Link>
+  </>
+)}
       </nav>
 
       <div className="header-buttons">
