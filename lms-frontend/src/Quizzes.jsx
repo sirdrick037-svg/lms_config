@@ -1,8 +1,10 @@
+
 import { useEffect, useState } from "react";
 import {
   getQuizzes,
   getQuizQuestions,
   startQuizAttempt,
+  submitQuizAttempt,
 } from "./services/api";
 
 function Quizzes() {
@@ -11,7 +13,9 @@ function Quizzes() {
   const [selectedQuiz, setSelectedQuiz] = useState(null);
   const [attemptId, setAttemptId] = useState(null);
   const [answers, setAnswers] = useState({});
+  const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -33,6 +37,7 @@ function Quizzes() {
   const handleStartQuiz = async (quiz) => {
     try {
       setError("");
+      setResult(null);
 
       const attempt = await startQuizAttempt(quiz.id);
       const response = await getQuizQuestions(quiz.id);
@@ -55,6 +60,40 @@ function Quizzes() {
       ...previousAnswers,
       [questionId]: answer,
     }));
+  };
+
+  const handleSubmitQuiz = async () => {
+    if (questions.some((question) => !answers[question.id])) {
+      setError("Please answer all questions before submitting.");
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+      setError("");
+
+      const formattedAnswers = Object.entries(answers).map(
+        ([questionId, selectedAnswer]) => ({
+          question: Number(questionId),
+          selected_answer: selectedAnswer,
+        })
+      );
+
+      const response = await submitQuizAttempt(
+        attemptId,
+        formattedAnswers
+      );
+
+      setResult(response);
+    } catch (err) {
+      console.error(err);
+      setError(
+        err.response?.data?.detail ||
+          "Unable to submit quiz. Please try again."
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (loading) {
@@ -83,6 +122,35 @@ function Quizzes() {
             </div>
           ))
         )
+      ) : result ? (
+        <div className="quiz-card">
+          <h2>{selectedQuiz.title} - Results</h2>
+
+          <h3>Your Score: {result.score}%</h3>
+
+          <h3>
+            {result.passed ? "Congratulations! You passed!" : "You did not pass. Try again!"}
+          </h3>
+
+          {!result.passed && (
+            <button onClick={() => handleStartQuiz(selectedQuiz)}>
+              Retake Quiz
+            </button>
+          )}
+
+          <button
+            onClick={() => {
+              setSelectedQuiz(null);
+              setQuestions([]);
+              setAnswers({});
+              setAttemptId(null);
+              setResult(null);
+              setError("");
+            }}
+          >
+            Back to Quizzes
+          </button>
+        </div>
       ) : (
         <div className="quiz-card">
           <h2>{selectedQuiz.title}</h2>
@@ -111,8 +179,11 @@ function Quizzes() {
             </div>
           ))}
 
-          <button onClick={() => alert("Answer submission is our next step!")}>
-            Submit Quiz
+          <button
+            onClick={handleSubmitQuiz}
+            disabled={submitting}
+          >
+            {submitting ? "Submitting..." : "Submit Quiz"}
           </button>
 
           <button
