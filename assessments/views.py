@@ -10,14 +10,16 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Quiz, Question, QuizAttempt, Answer
-from courses.models import Lesson
-from enrollments.models import Enrollment, LessonProgress
 from .serializers import (
     QuizSerializer,
     QuestionSerializer,
     QuizAttemptSerializer,
     QuestionWriteSerializer,
 )
+
+from courses.models import Lesson
+from enrollments.models import Enrollment, LessonProgress
+
 
 # --------------------------------------------------
 # QUIZ LIST AND CREATE
@@ -49,12 +51,10 @@ class QuizListCreateView(generics.ListCreateAPIView):
         user = self.request.user
         course = serializer.validated_data["course"]
 
-        # Administrators can create quizzes for any course.
         if user.is_staff:
             serializer.save()
             return
 
-        # Instructors can create quizzes for their own courses.
         if (
             user.role != "INSTRUCTOR"
             or course.instructor_id != user.id
@@ -161,12 +161,10 @@ class QuestionListCreateView(generics.ListCreateAPIView):
             pk=self.kwargs["quiz_id"]
         )
 
-        # Administrators can add questions to any quiz.
         if user.is_staff:
             serializer.save(quiz=quiz)
             return
 
-        # Instructors can only add questions to their own quizzes.
         if (
             user.role != "INSTRUCTOR"
             or quiz.course.instructor_id != user.id
@@ -192,9 +190,10 @@ class QuizAttemptListCreateView(generics.ListCreateAPIView):
         ).select_related("quiz")
 
     def perform_create(self, serializer):
+        user = self.request.user
         quiz = serializer.validated_data["quiz"]
 
-        if self.request.user.role != "STUDENT":
+        if user.role != "STUDENT":
             raise PermissionDenied(
                 "Only students can attempt quizzes."
             )
@@ -204,17 +203,44 @@ class QuizAttemptListCreateView(generics.ListCreateAPIView):
                 "This quiz is not available."
             )
 
-        from enrollments.models import Enrollment
-
-        if not Enrollment.objects.filter(
-            student=self.request.user,
+        # Check student enrollment.
+        enrollment = Enrollment.objects.filter(
+            student=user,
             course=quiz.course
-        ).exists():
+        ).first()
+
+        if not enrollment:
             raise PermissionDenied(
                 "You must enroll in this course before attempting its quiz."
             )
 
-        serializer.save(student=self.request.user)
+        # Count all lessons in the course.
+        total_lessons = Lesson.objects.filter(
+            course=quiz.course
+        ).count()
+
+        # Count completed lessons for this enrollment.
+        completed_lessons = LessonProgress.objects.filter(
+            enrollment=enrollment,
+            lesson__course=quiz.course,
+            completed=True
+        ).count()
+
+        if total_lessons == 0:
+            raise ValidationError(
+                "This course has no lessons available yet."
+            )
+
+        if completed_lessons < total_lessons:
+            remaining = total_lessons - completed_lessons
+
+            raise PermissionDenied(
+                f"You must complete all lessons before attempting this quiz. "
+                f"{remaining} lesson(s) remaining."
+            )
+
+        # Allow the attempt only after all lessons are completed.
+        serializer.save(student=user)
 
 
 # --------------------------------------------------
