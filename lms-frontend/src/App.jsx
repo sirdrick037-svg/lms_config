@@ -12,6 +12,7 @@ import CourseDetails from "./pages/CourseDetails";
 import About from "./pages/About";
 import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Quizzes from "./Quizzes";
 
 import "./App.css";
 
@@ -31,6 +32,7 @@ function App() {
             <Route path="/courses/:id" element={<CourseDetails />} />
             <Route path="/about" element={<About />} />
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path="/quizzes" element={<ProtectedRoute><Quizzes /></ProtectedRoute>} />
           </Routes>
         </main>
 
