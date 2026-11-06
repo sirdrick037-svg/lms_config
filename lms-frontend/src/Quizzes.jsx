@@ -1,21 +1,26 @@
 
 import { useEffect, useState } from "react";
+import "./Quizzes.css";
+
 import {
   getQuizzes,
   getQuizQuestions,
   getEnrollments,
+  getLessons,
+  getLessonProgress,
   startQuizAttempt,
   submitQuizAttempt,
 } from "./services/api";
-import "./Quizzes.css";
 
 function Quizzes() {
   const [quizzes, setQuizzes] = useState([]);
   const [questions, setQuestions] = useState([]);
+  const [lessonStats, setLessonStats] = useState({});
   const [selectedQuiz, setSelectedQuiz] = useState(null);
   const [attemptId, setAttemptId] = useState(null);
   const [answers, setAnswers] = useState({});
   const [result, setResult] = useState(null);
+
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -23,17 +28,24 @@ function Quizzes() {
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
-        const [quizResponse, enrollmentResponse] =
-          await Promise.all([
-            getQuizzes(),
-            getEnrollments(),
-          ]);
+        const [
+          quizResponse,
+          enrollmentResponse,
+          progressResponse,
+        ] = await Promise.all([
+          getQuizzes(),
+          getEnrollments(),
+          getLessonProgress(),
+        ]);
 
         const allQuizzes =
           quizResponse.results || quizResponse;
 
         const enrollments =
           enrollmentResponse.results || enrollmentResponse;
+
+        const allProgress =
+          progressResponse.results || progressResponse;
 
         const enrolledCourseIds = enrollments.map(
           (enrollment) => Number(enrollment.course)
@@ -45,9 +57,55 @@ function Quizzes() {
         );
 
         setQuizzes(enrolledQuizzes);
+
+        // Calculate lesson completion for each quiz.
+        const stats = {};
+
+        await Promise.all(
+          enrolledQuizzes.map(async (quiz) => {
+            const enrollment = enrollments.find(
+              (item) =>
+                Number(item.course) === Number(quiz.course)
+            );
+
+            if (!enrollment) return;
+
+            const lessonResponse = await getLessons(quiz.course);
+            const lessons =
+              lessonResponse.results || lessonResponse;
+
+            const completedLessonIds = new Set(
+              allProgress
+                .filter(
+                  (progress) =>
+                    Number(progress.enrollment) ===
+                      Number(enrollment.id) &&
+                    progress.is_completed
+                )
+                .map((progress) => Number(progress.lesson))
+            );
+
+            const completed = lessons.filter(
+              (lesson) =>
+                completedLessonIds.has(Number(lesson.id))
+            ).length;
+
+            stats[quiz.id] = {
+              total: lessons.length,
+              completed,
+              remaining: lessons.length - completed,
+              canSubmit:
+                lessons.length > 0 &&
+                completed === lessons.length,
+            };
+          })
+        );
+
+        setLessonStats(stats);
+
       } catch (err) {
         console.error(err);
-        setError("Unable to load your quizzes.");
+        setError("Unable to load your quizzes and lesson progress.");
       } finally {
         setLoading(false);
       }
@@ -62,8 +120,8 @@ function Quizzes() {
       setResult(null);
       setQuestions([]);
       setAnswers({});
+      setAttemptId(null);
 
-      // Check for questions before creating an attempt.
       const response = await getQuizQuestions(quiz.id);
       const questionList = response.results || response;
 
@@ -74,14 +132,14 @@ function Quizzes() {
         return;
       }
 
-      // Create an attempt only when questions exist.
       const attempt = await startQuizAttempt(quiz.id);
       setAttemptId(attempt.id);
+
     } catch (err) {
       console.error(err);
       setError(
         err.response?.data?.detail ||
-          "Unable to open this quiz. Please try again."
+        "Unable to open this quiz. Please try again."
       );
     }
   };
@@ -94,6 +152,15 @@ function Quizzes() {
   };
 
   const handleSubmitQuiz = async () => {
+    const stats = lessonStats[selectedQuiz.id];
+
+    if (!stats || !stats.canSubmit) {
+      setError(
+        "Please complete all lessons before submitting your quiz."
+      );
+      return;
+    }
+
     if (questions.some((question) => !answers[question.id])) {
       setError("Please answer all questions before submitting.");
       return;
@@ -116,11 +183,12 @@ function Quizzes() {
       );
 
       setResult(response);
+
     } catch (err) {
       console.error(err);
       setError(
         err.response?.data?.detail ||
-          "Unable to submit quiz. Please try again."
+        "Unable to submit quiz. Please try again."
       );
     } finally {
       setSubmitting(false);
@@ -142,16 +210,22 @@ function Quizzes() {
 
   return (
     <div className="quizzes-container">
-      <div className="quiz-intro">
-  <p className="quiz-intro-label">SKILLNEST LEARNING</p>
-  <h2>Test Your Knowledge</h2>
-  <p>
-    Challenge yourself with quizzes from your enrolled courses.
-    Track your understanding and see how much you've learned.
-  </p>
-</div>
 
-      {error && <p>{error}</p>}
+      <div className="quiz-intro">
+        <p className="quiz-intro-label">
+          SKILLNEST LEARNING
+        </p>
+
+        <h2>Test Your Knowledge</h2>
+
+        <p>
+          Challenge yourself with quizzes from your enrolled
+          courses. Complete your lessons and demonstrate
+          what you have learned.
+        </p>
+      </div>
+
+      {error && <p className="quiz-error">{error}</p>}
 
       {!selectedQuiz ? (
         quizzes.length === 0 ? (
@@ -159,20 +233,65 @@ function Quizzes() {
             No quizzes are available for your enrolled courses yet.
           </p>
         ) : (
-          quizzes.map((quiz) => (
-            <div className="quiz-card" key={quiz.id}>
-              <h3>{quiz.title}</h3>
-              <p>{quiz.description}</p>
-              <p>Passing score: {quiz.passing_score}%</p>
+          quizzes.map((quiz) => {
+            const stats = lessonStats[quiz.id];
 
-              <button onClick={() => handleStartQuiz(quiz)}>
-                Start Quiz
-              </button>
-            </div>
-          ))
+            return (
+              <div className="quiz-card" key={quiz.id}>
+                <h3>{quiz.title}</h3>
+
+                <p>{quiz.description}</p>
+
+                <p>
+                  Passing score: {quiz.passing_score}%
+                </p>
+
+                {stats && (
+                  <div className="quiz-progress">
+                    <p>
+                      Lessons completed: {stats.completed} of{" "}
+                      {stats.total}
+                    </p>
+
+                    <div className="quiz-progress-track">
+                      <div
+                        className="quiz-progress-fill"
+                        style={{
+                          width:
+                            stats.total > 0
+                              ? `${(stats.completed / stats.total) * 100}%`
+                              : "0%",
+                        }}
+                      />
+                    </div>
+
+                    {stats.canSubmit ? (
+                      <p className="quiz-complete-message">
+                        All lessons completed! You can submit
+                        your quiz.
+                      </p>
+                    ) : (
+                      <p className="quiz-warning">
+                        {stats.remaining} lesson(s) remaining
+                        before you can submit.
+                      </p>
+                    )}
+                  </div>
+                )}
+
+                <button
+                  onClick={() => handleStartQuiz(quiz)}
+                  disabled={!stats}
+                >
+                  Start Quiz
+                </button>
+              </div>
+            );
+          })
         )
       ) : (
         <div className="quiz-card">
+
           <h2>{selectedQuiz.title}</h2>
 
           {questions.length === 0 ? (
@@ -188,13 +307,48 @@ function Quizzes() {
               </h3>
 
               {!result.passed && (
-                <button onClick={() => handleStartQuiz(selectedQuiz)}>
+                <button
+                  onClick={() => handleStartQuiz(selectedQuiz)}
+                >
                   Retake Quiz
                 </button>
               )}
             </>
           ) : (
             <>
+              {lessonStats[selectedQuiz.id] && (
+                <div className="quiz-progress">
+                  <p>
+                    Lessons completed:{" "}
+                    {lessonStats[selectedQuiz.id].completed} of{" "}
+                    {lessonStats[selectedQuiz.id].total}
+                  </p>
+
+                  <div className="quiz-progress-track">
+                    <div
+                      className="quiz-progress-fill"
+                      style={{
+                        width: `${
+                          lessonStats[selectedQuiz.id].total > 0
+                            ? (lessonStats[selectedQuiz.id].completed /
+                                lessonStats[selectedQuiz.id].total) *
+                              100
+                            : 0
+                        }%`,
+                      }}
+                    />
+                  </div>
+
+                  {!lessonStats[selectedQuiz.id].canSubmit && (
+                    <p className="quiz-warning">
+                      Complete all{" "}
+                      {lessonStats[selectedQuiz.id].remaining} remaining
+                      lesson(s) before submitting this quiz.
+                    </p>
+                  )}
+                </div>
+              )}
+
               {questions.map((question, index) => (
                 <div key={question.id}>
                   <h3>
@@ -210,13 +364,20 @@ function Quizzes() {
                         type="radio"
                         name={`question-${question.id}`}
                         value={option}
-                        checked={answers[question.id] === option}
+                        checked={
+                          answers[question.id] === option
+                        }
                         onChange={() =>
-                          handleAnswerChange(question.id, option)
+                          handleAnswerChange(
+                            question.id,
+                            option
+                          )
                         }
                       />
 
-                      {question[`option_${option.toLowerCase()}`]}
+                      {question[
+                        `option_${option.toLowerCase()}`
+                      ]}
                     </label>
                   ))}
                 </div>
@@ -224,9 +385,14 @@ function Quizzes() {
 
               <button
                 onClick={handleSubmitQuiz}
-                disabled={submitting}
+                disabled={
+                  submitting ||
+                  !lessonStats[selectedQuiz.id]?.canSubmit
+                }
               >
-                {submitting ? "Submitting..." : "Submit Quiz"}
+                {submitting
+                  ? "Submitting..."
+                  : "Submit Quiz"}
               </button>
             </>
           )}
@@ -234,6 +400,7 @@ function Quizzes() {
           <button onClick={handleBack}>
             Back to Quizzes
           </button>
+
         </div>
       )}
     </div>

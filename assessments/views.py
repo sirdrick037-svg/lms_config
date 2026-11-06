@@ -268,10 +268,10 @@ class SubmitQuizView(APIView):
         ).count()
 
         completed_lessons = LessonProgress.objects.filter(
-            enrollment=enrollment,
-            lesson__course=attempt.quiz.course,
-            completed=True
-        ).count()
+    enrollment=enrollment,
+    lesson__course=attempt.quiz.course,
+    is_completed=True
+).count()
 
         if total_lessons == 0:
             raise ValidationError(
