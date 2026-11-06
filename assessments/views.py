@@ -203,7 +203,6 @@ class QuizAttemptListCreateView(generics.ListCreateAPIView):
                 "This quiz is not available."
             )
 
-        # Check student enrollment.
         enrollment = Enrollment.objects.filter(
             student=user,
             course=quiz.course
@@ -214,32 +213,9 @@ class QuizAttemptListCreateView(generics.ListCreateAPIView):
                 "You must enroll in this course before attempting its quiz."
             )
 
-        # Count all lessons in the course.
-        total_lessons = Lesson.objects.filter(
-            course=quiz.course
-        ).count()
+        # Students can start the quiz before completing all lessons.
+        # Lesson completion will be checked when they submit.
 
-        # Count completed lessons for this enrollment.
-        completed_lessons = LessonProgress.objects.filter(
-            enrollment=enrollment,
-            lesson__course=quiz.course,
-            completed=True
-        ).count()
-
-        if total_lessons == 0:
-            raise ValidationError(
-                "This course has no lessons available yet."
-            )
-
-        if completed_lessons < total_lessons:
-            remaining = total_lessons - completed_lessons
-
-            raise PermissionDenied(
-                f"You must complete all lessons before attempting this quiz. "
-                f"{remaining} lesson(s) remaining."
-            )
-
-        # Allow the attempt only after all lessons are completed.
         serializer.save(student=user)
 
 
@@ -265,9 +241,49 @@ class SubmitQuizView(APIView):
                 status=status.HTTP_404_NOT_FOUND
             )
 
+        if request.user.role != "STUDENT":
+            raise PermissionDenied(
+                "Only students can submit quiz attempts."
+            )
+
         if attempt.submitted_at is not None:
             raise ValidationError(
                 "This quiz attempt has already been submitted."
+            )
+
+        # Check enrollment again.
+        enrollment = Enrollment.objects.filter(
+            student=request.user,
+            course=attempt.quiz.course
+        ).first()
+
+        if not enrollment:
+            raise PermissionDenied(
+                "You must be enrolled in this course."
+            )
+
+        # Check lesson completion before allowing submission.
+        total_lessons = Lesson.objects.filter(
+            course=attempt.quiz.course
+        ).count()
+
+        completed_lessons = LessonProgress.objects.filter(
+            enrollment=enrollment,
+            lesson__course=attempt.quiz.course,
+            completed=True
+        ).count()
+
+        if total_lessons == 0:
+            raise ValidationError(
+                "This course has no lessons available yet."
+            )
+
+        if completed_lessons < total_lessons:
+            remaining = total_lessons - completed_lessons
+
+            raise PermissionDenied(
+                f"You must complete all lessons before submitting. "
+                f"{remaining} lesson(s) remaining."
             )
 
         answers_data = request.data.get("answers")
