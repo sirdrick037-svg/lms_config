@@ -12,6 +12,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Quiz, Question, QuizAttempt, Answer
+
 from .serializers import (
     QuizSerializer,
     QuestionSerializer,
@@ -216,14 +217,14 @@ class QuizAttemptListCreateView(generics.ListCreateAPIView):
                 "You must enroll in this course before attempting its quiz."
             )
 
-        # Students can start the quiz before completing all lessons.
-        # Lesson completion will be checked when they submit.
+        # Students can start before completing lessons.
+        # Completion is checked when they submit.
 
         serializer.save(student=user)
 
 
 # --------------------------------------------------
-# SUBMIT QUIZ AND AUTOMATICALLY MARK ANSWERS
+# SUBMIT QUIZ
 # --------------------------------------------------
 
 class SubmitQuizView(APIView):
@@ -254,7 +255,7 @@ class SubmitQuizView(APIView):
                 "This quiz attempt has already been submitted."
             )
 
-        # Check enrollment again.
+        # Check enrollment.
         enrollment = Enrollment.objects.filter(
             student=request.user,
             course=attempt.quiz.course
@@ -265,16 +266,16 @@ class SubmitQuizView(APIView):
                 "You must be enrolled in this course."
             )
 
-        # Check lesson completion before allowing submission.
+        # Check lesson completion.
         total_lessons = Lesson.objects.filter(
             course=attempt.quiz.course
         ).count()
 
         completed_lessons = LessonProgress.objects.filter(
-    enrollment=enrollment,
-    lesson__course=attempt.quiz.course,
-    is_completed=True
-).count()
+            enrollment=enrollment,
+            lesson__course=attempt.quiz.course,
+            is_completed=True
+        ).count()
 
         if total_lessons == 0:
             raise ValidationError(
@@ -355,13 +356,15 @@ class SubmitQuizView(APIView):
                 "This quiz has no questions."
             )
 
+        # Calculate score automatically.
         attempt.score = round(
             correct_count * 100 / total_questions
         )
 
-        # The attempt must be reviewed by an instructor or admin.
+        # Wait for admin or instructor review.
         attempt.passed = False
         attempt.review_status = "PENDING"
+
         attempt.submitted_at = timezone.now()
 
         attempt.save(
@@ -378,8 +381,9 @@ class SubmitQuizView(APIView):
             status=status.HTTP_200_OK
         )
 
+
 # --------------------------------------------------
-# ADMIN AND INSTRUCTOR QUIZ REVIEW
+# ADMIN AND INSTRUCTOR: VIEW SUBMITTED QUIZZES
 # --------------------------------------------------
 
 class QuizSubmissionReviewListView(generics.ListAPIView):
@@ -408,16 +412,22 @@ class QuizSubmissionReviewListView(generics.ListAPIView):
             "student",
             "quiz",
             "quiz__course",
-            "reviewed_by",
+            "reviewed_by"
         ).prefetch_related("answers")
 
 
+# --------------------------------------------------
+# ADMIN AND INSTRUCTOR: PASS OR FAIL A QUIZ
+# --------------------------------------------------
+
 class ReviewQuizAttemptView(APIView):
     permission_classes = [IsAuthenticated]
-    @extend_schema(request=QuizReviewSerializer)
-    def patch(self, request, attempt_id):
 
-     def patch(self, request, attempt_id):
+    @extend_schema(
+        request=QuizReviewSerializer,
+        responses=QuizAttemptSerializer
+    )
+    def patch(self, request, attempt_id):
         user = request.user
 
         if not user.is_staff and user.role != "INSTRUCTOR":
@@ -426,11 +436,15 @@ class ReviewQuizAttemptView(APIView):
             )
 
         attempt = get_object_or_404(
-            QuizAttempt.objects.select_related("quiz__course"),
+            QuizAttempt.objects.select_related(
+                "quiz__course",
+                "student"
+            ),
             pk=attempt_id,
-            submitted_at__isnull=False,
+            submitted_at__isnull=False
         )
 
+        # Instructors can only review their own courses.
         if (
             not user.is_staff
             and attempt.quiz.course.instructor_id != user.id
@@ -439,18 +453,21 @@ class ReviewQuizAttemptView(APIView):
                 "You can only review quizzes from your own courses."
             )
 
+        # Prevent reviewing an attempt more than once.
         if attempt.review_status != "PENDING":
             raise ValidationError(
                 "This quiz has already been reviewed."
             )
 
-        decision = request.data.get("review_status")
+        # Validate the review decision.
+        review_serializer = QuizReviewSerializer(
+            data=request.data
+        )
+        review_serializer.is_valid(raise_exception=True)
 
-        if decision not in ["PASS", "FAIL"]:
-            raise ValidationError(
-                {"review_status": "Choose PASS or FAIL."}
-            )
+        decision = review_serializer.validated_data["review_status"]
 
+        # Save the review.
         attempt.review_status = decision
         attempt.passed = decision == "PASS"
         attempt.reviewed_by = user
@@ -461,11 +478,11 @@ class ReviewQuizAttemptView(APIView):
                 "review_status",
                 "passed",
                 "reviewed_by",
-                "reviewed_at",
+                "reviewed_at"
             ]
         )
 
         return Response(
             QuizAttemptSerializer(attempt).data,
-            status=status.HTTP_200_OK,
+            status=status.HTTP_200_OK
         )
