@@ -51,19 +51,47 @@ class Question(models.Model):
 
 
 class QuizAttempt(models.Model):
+
+    REVIEW_STATUS_CHOICES = [
+        ("PENDING", "Pending Review"),
+        ("PASS", "Pass"),
+        ("FAIL", "Fail"),
+    ]
+
     student = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="quiz_attempts",
     )
+
     quiz = models.ForeignKey(
         Quiz,
         on_delete=models.CASCADE,
         related_name="attempts",
     )
+
     score = models.PositiveIntegerField(default=0)
+
     passed = models.BooleanField(default=False)
+
+    review_status = models.CharField(
+        max_length=10,
+        choices=REVIEW_STATUS_CHOICES,
+        default="PENDING",
+    )
+
+    reviewed_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="reviewed_quiz_attempts",
+    )
+
+    reviewed_at = models.DateTimeField(null=True, blank=True)
+
     started_at = models.DateTimeField(auto_now_add=True)
+
     submitted_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
