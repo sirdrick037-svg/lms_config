@@ -24,7 +24,11 @@ function Login() {
       localStorage.setItem("refresh_token", data.refresh);
       localStorage.setItem("user", JSON.stringify(data.user));
 
-      navigate("/");
+      if (data.user?.is_staff || data.user?.role === "INSTRUCTOR") {
+  navigate("/quiz-reviews");
+} else {
+  navigate("/");
+}
     } catch (err) {
       setError("Login failed. Please check your email and password.");
     } finally {
