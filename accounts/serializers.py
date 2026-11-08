@@ -43,6 +43,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             role=User.Role.STUDENT,
         )
 
+
 class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
 
     def __init__(self, *args, **kwargs):
@@ -61,4 +62,14 @@ class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         attrs[self.username_field] = user.get_username()
 
-        return super().validate(attrs)
+        data = super().validate(attrs)
+
+        data["user"] = {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "role": user.role,
+            "is_staff": user.is_staff,
+        }
+
+        return data
