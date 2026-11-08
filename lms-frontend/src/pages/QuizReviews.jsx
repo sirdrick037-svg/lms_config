@@ -4,6 +4,7 @@ import {
   getQuizSubmissionsForReview,
   reviewQuizAttempt,
 } from "../services/api";
+import "./QuizReviews.css";
 
 function QuizReviews() {
   const [attempts, setAttempts] = useState([]);

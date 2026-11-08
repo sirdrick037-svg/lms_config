@@ -13,6 +13,7 @@ import About from "./pages/About";
 import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Quizzes from "./Quizzes";
+import QuizReviews from "./pages/QuizReviews";
 
 import "./App.css";
 
