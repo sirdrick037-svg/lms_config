@@ -3,6 +3,8 @@ from django.shortcuts import get_object_or_404
 from django.db import transaction
 from django.utils import timezone
 
+from drf_spectacular.utils import extend_schema
+
 from rest_framework import generics, status
 from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.permissions import IsAuthenticated
@@ -15,6 +17,7 @@ from .serializers import (
     QuestionSerializer,
     QuizAttemptSerializer,
     QuestionWriteSerializer,
+    QuizReviewSerializer,
 )
 
 from courses.models import Lesson
@@ -411,8 +414,10 @@ class QuizSubmissionReviewListView(generics.ListAPIView):
 
 class ReviewQuizAttemptView(APIView):
     permission_classes = [IsAuthenticated]
-
+    @extend_schema(request=QuizReviewSerializer)
     def patch(self, request, attempt_id):
+
+     def patch(self, request, attempt_id):
         user = request.user
 
         if not user.is_staff and user.role != "INSTRUCTOR":
