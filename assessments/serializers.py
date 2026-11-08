@@ -108,3 +108,7 @@ class QuizAttemptSerializer(serializers.ModelSerializer):
             "submitted_at",
             "answers",
         ]
+class QuizReviewSerializer(serializers.Serializer):
+    review_status = serializers.ChoiceField(
+        choices=["PASS", "FAIL"]
+    )        
