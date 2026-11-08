@@ -122,4 +122,23 @@ export const submitQuizAttempt = async (attemptId, answers) => {
   return response.data;
 };
 
+// Instructor/Admin: Get submitted quizzes awaiting review
+export const getQuizSubmissionsForReview = async () => {
+  const response = await api.get("assessments/attempts/review/");
+  return response.data;
+};
+
+// Instructor/Admin: Review a quiz attempt
+export const reviewQuizAttempt = async (attemptId, reviewStatus) => {
+  const response = await api.patch(
+    `assessments/attempts/${attemptId}/review/`,
+    {
+      review_status: reviewStatus,
+    }
+  );
+
+  return response.data;
+};
+
+
 export default api;
