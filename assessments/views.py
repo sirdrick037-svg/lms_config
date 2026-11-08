@@ -356,16 +356,16 @@ class SubmitQuizView(APIView):
             correct_count * 100 / total_questions
         )
 
-        attempt.passed = (
-            attempt.score >= attempt.quiz.passing_score
-        )
-
+        # The attempt must be reviewed by an instructor or admin.
+        attempt.passed = False
+        attempt.review_status = "PENDING"
         attempt.submitted_at = timezone.now()
 
         attempt.save(
             update_fields=[
                 "score",
                 "passed",
+                "review_status",
                 "submitted_at"
             ]
         )
@@ -373,4 +373,94 @@ class SubmitQuizView(APIView):
         return Response(
             QuizAttemptSerializer(attempt).data,
             status=status.HTTP_200_OK
+        )
+
+# --------------------------------------------------
+# ADMIN AND INSTRUCTOR QUIZ REVIEW
+# --------------------------------------------------
+
+class QuizSubmissionReviewListView(generics.ListAPIView):
+    serializer_class = QuizAttemptSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+
+        if user.is_staff:
+            queryset = QuizAttempt.objects.all()
+
+        elif user.role == "INSTRUCTOR":
+            queryset = QuizAttempt.objects.filter(
+                quiz__course__instructor=user
+            )
+
+        else:
+            raise PermissionDenied(
+                "Only instructors and administrators can review quizzes."
+            )
+
+        return queryset.filter(
+            submitted_at__isnull=False
+        ).select_related(
+            "student",
+            "quiz",
+            "quiz__course",
+            "reviewed_by",
+        ).prefetch_related("answers")
+
+
+class ReviewQuizAttemptView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def patch(self, request, attempt_id):
+        user = request.user
+
+        if not user.is_staff and user.role != "INSTRUCTOR":
+            raise PermissionDenied(
+                "Only instructors and administrators can review quizzes."
+            )
+
+        attempt = get_object_or_404(
+            QuizAttempt.objects.select_related("quiz__course"),
+            pk=attempt_id,
+            submitted_at__isnull=False,
+        )
+
+        if (
+            not user.is_staff
+            and attempt.quiz.course.instructor_id != user.id
+        ):
+            raise PermissionDenied(
+                "You can only review quizzes from your own courses."
+            )
+
+        if attempt.review_status != "PENDING":
+            raise ValidationError(
+                "This quiz has already been reviewed."
+            )
+
+        decision = request.data.get("review_status")
+
+        if decision not in ["PASS", "FAIL"]:
+            raise ValidationError(
+                {"review_status": "Choose PASS or FAIL."}
+            )
+
+        attempt.review_status = decision
+        attempt.passed = decision == "PASS"
+        attempt.reviewed_by = user
+        attempt.reviewed_at = timezone.now()
+
+        attempt.save(
+            update_fields=[
+                "review_status",
+                "passed",
+                "reviewed_by",
+                "reviewed_at",
+            ]
+        )
+
+        return Response(
+            QuizAttemptSerializer(attempt).data,
+            status=status.HTTP_200_OK,
         )
