@@ -33,6 +33,18 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/quizzes" element={<ProtectedRoute><Quizzes /></ProtectedRoute>} />
+              <Route
+              path="/quiz-reviews"
+              element={
+                <ProtectedRoute>
+                  {canReview ? (
+                    <QuizReviews />
+                  ) : (
+                    <h2>You do not have permission to review quizzes.</h2>
+                  )}
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </main>
 
