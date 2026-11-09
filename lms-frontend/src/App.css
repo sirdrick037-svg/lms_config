@@ -1872,3 +1872,25 @@
     padding: 22px;
   }
 }
+/* COURSE COMPLETION BADGES */
+
+.course-completion-badge {
+  display: inline-block;
+  width: fit-content;
+  padding: 7px 13px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin: 8px 0;
+}
+
+.course-completion-badge.completed {
+  background: #dcefe1;
+  color: #27623d;
+}
+
+.course-completion-badge.in-progress {
+  background: #fff0d5;
+  color: #946313;
+}
