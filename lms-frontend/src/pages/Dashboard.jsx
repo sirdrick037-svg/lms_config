@@ -234,9 +234,13 @@ function Dashboard() {
           </p>
 
           <p>
-            Review Status:{" "}
-            <strong>{attempt.review_status || "PENDING"}</strong>
-          </p>
+  Review Status:{" "}
+  <span
+    className={`quiz-status ${(attempt.review_status || "PENDING").toLowerCase()}`}
+  >
+    {attempt.review_status || "PENDING"}
+  </span>
+</p>
 
           <p>
             Result:{" "}
