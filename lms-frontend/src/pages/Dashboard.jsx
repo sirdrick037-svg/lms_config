@@ -10,9 +10,14 @@ import {
 } from "../services/api";
 
 function Dashboard() {
-  const [studentName] = useState(
-    localStorage.getItem("student_name") || "Student"
-  );
+  const user = JSON.parse(localStorage.getItem("user") || "null");
+
+const studentName =
+  user?.first_name || user?.username || "Student";
+
+const studentEmail = user?.email || "No email available";
+
+const studentInitial = studentName.charAt(0).toUpperCase();
 
   const [enrollments, setEnrollments] = useState([]);
   const [payments, setPayments] = useState([]);
