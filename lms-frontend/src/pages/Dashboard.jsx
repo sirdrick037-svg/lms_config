@@ -216,6 +216,43 @@ function Dashboard() {
               </div>
             )}
           </section>
+          <section className="dashboard-content">
+  <h2>My Quiz Results</h2>
+
+  {quizAttempts.length === 0 ? (
+    <p>You haven't attempted any quizzes yet.</p>
+  ) : (
+    <div className="courses-grid">
+      {quizAttempts.map((attempt) => (
+        <article className="course-card" key={attempt.id}>
+          <span className="course-category">QUIZ RESULT</span>
+
+          <h3>{attempt.quiz_title || `Quiz #${attempt.quiz}`}</h3>
+
+          <p>
+            Score: <strong>{attempt.score}%</strong>
+          </p>
+
+          <p>
+            Review Status:{" "}
+            <strong>{attempt.review_status || "PENDING"}</strong>
+          </p>
+
+          <p>
+            Result:{" "}
+            <strong>
+              {attempt.review_status === "PENDING"
+                ? "Awaiting instructor review"
+                : attempt.review_status === "PASS"
+                ? "Passed"
+                : "Not passed"}
+            </strong>
+          </p>
+        </article>
+      ))}
+    </div>
+  )}
+</section>
         </>
       )}
     </div>
