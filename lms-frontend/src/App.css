@@ -1714,3 +1714,21 @@
   background: #f8d7da;
   color: #721c24;
 }
+/* QUIZ RESULT CARD IMPROVEMENTS */
+
+.dashboard-content .course-card {
+  min-height: 230px;
+  padding: 25px;
+  gap: 12px;
+  border-radius: 14px;
+}
+
+.dashboard-content .course-card h3 {
+  color: #243c35;
+  font-size: 19px;
+}
+
+.dashboard-content .course-card p {
+  margin-bottom: 5px;
+  color: #718078;
+}
