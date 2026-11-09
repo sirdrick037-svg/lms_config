@@ -1,17 +1,15 @@
-
 import { useEffect, useState } from "react";
 import {
   getQuizSubmissionsForReview,
   reviewQuizAttempt,
 } from "../services/api";
-
 import "./QuizReviews.css";
 
 function QuizReviews() {
   const [attempts, setAttempts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [reviewingId, setReviewingId] = useState(null);
+  const [message, setMessage] = useState("");
 
   // Fetch quiz submissions
   const fetchAttempts = async () => {
@@ -21,13 +19,19 @@ function QuizReviews() {
 
       const data = await getQuizSubmissionsForReview();
 
-      setAttempts(
-        Array.isArray(data) ? data : data.results || []
-      );
+      console.log("Review attempts:", data);
+
+      const results = Array.isArray(data)
+        ? data
+        : data.results || [];
+
+      setAttempts(results);
     } catch (err) {
+      console.error("Error fetching submissions:", err);
+
       setError(
         err.response?.data?.detail ||
-        "Unable to load quiz submissions. Please check your permissions."
+          "Failed to load quiz submissions."
       );
     } finally {
       setLoading(false);
@@ -38,235 +42,201 @@ function QuizReviews() {
     fetchAttempts();
   }, []);
 
-  // Review a quiz attempt
-  const handleReview = async (attemptId, status) => {
-    const confirmed = window.confirm(
-      `Are you sure you want to mark this attempt as ${status}?`
-    );
-
-    if (!confirmed) return;
-
+  // Approve or reject a submission
+  const handleReview = async (attemptId, reviewStatus) => {
     try {
-      setReviewingId(attemptId);
+      setMessage("");
+      setError("");
 
       const updatedAttempt = await reviewQuizAttempt(
         attemptId,
-        status
+        reviewStatus
       );
 
-      setAttempts((current) =>
-        current.map((attempt) =>
-          attempt.id === attemptId
-            ? updatedAttempt
-            : attempt
+      setAttempts((previousAttempts) =>
+        previousAttempts.map((attempt) =>
+          attempt.id === attemptId ? updatedAttempt : attempt
         )
       );
-    } catch (err) {
-      alert(
-        err.response?.data?.detail ||
-        "Could not submit the review. Please try again."
+
+      setMessage(
+        `Quiz attempt #${attemptId} marked as ${reviewStatus}.`
       );
-    } finally {
-      setReviewingId(null);
+    } catch (err) {
+      console.error("Error reviewing quiz:", err);
+
+      setError(
+        err.response?.data?.detail ||
+          "Failed to review this quiz attempt."
+      );
     }
   };
 
+  // Loading screen
   if (loading) {
     return (
-      <div className="quiz-reviews-page">
+      <div className="quiz-reviews-container">
         <p>Loading quiz submissions...</p>
       </div>
     );
   }
 
   return (
-    <div className="quiz-reviews-page">
-
-      {/* Page Header */}
-      <div className="quiz-reviews-header">
-        <h1>Quiz Reviews</h1>
-        <p>
-          Review student quiz attempts and approve their results.
-        </p>
+    <div className="quiz-reviews-container">
+      {/* Header */}
+      <div className="review-header">
+        <div>
+          <h1>Quiz Reviews</h1>
+          <p>Review submitted student quiz attempts.</p>
+        </div>
 
         <button
           className="refresh-button"
           onClick={fetchAttempts}
         >
-          Refresh Submissions
+          Refresh
         </button>
       </div>
 
-      {/* Error Message */}
+      {/* Messages */}
+      {message && (
+        <p className="success-message">{message}</p>
+      )}
+
       {error && (
-        <p className="review-error">{error}</p>
+        <p className="error-message">{error}</p>
       )}
 
-      {/* Empty State */}
-      {!error && attempts.length === 0 && (
-        <p className="review-empty">
-          No quiz submissions found.
-        </p>
-      )}
+      {/* Quiz submissions */}
+      {attempts.length === 0 ? (
+        <div className="empty-reviews">
+          <h3>No quiz submissions found</h3>
+          <p>Submitted quiz attempts will appear here.</p>
+        </div>
+      ) : (
+        <div className="review-list">
+          {attempts.map((attempt) => (
+            <div className="review-card" key={attempt.id}>
+              {/* Student information */}
+              <div className="review-card-header">
+                <div>
+                  <h2>{attempt.quiz_title || "Quiz"}</h2>
 
-      {/* Quiz Submission List */}
-      <div className="review-list">
+                  <p>
+                    Student:{" "}
+                    {attempt.student_username ||
+                      `Student #${attempt.student}`}
+                  </p>
 
-        {attempts.map((attempt) => (
+                  <p>Attempt ID: {attempt.id}</p>
+                </div>
 
-          <div className="review-card" key={attempt.id}>
-
-            {/* Student and Quiz Information */}
-            <div className="review-card-header">
-              <div>
-                <h2>
-                  {attempt.quiz_title ||
-                    `Quiz #${attempt.quiz}`}
-                </h2>
-
-                <p>
-                  <strong>Student:</strong>{" "}
-                  {attempt.student_username || "Unknown"}
-                </p>
+                <span
+                  className={`review-status ${
+                    (attempt.review_status || "PENDING").toLowerCase()
+                  }`}
+                >
+                  {attempt.review_status || "PENDING"}
+                </span>
               </div>
 
-              <span
-                className={`review-status ${
-                  (attempt.review_status || "PENDING").toLowerCase()
-                }`}
-              >
-                {attempt.review_status || "PENDING"}
-              </span>
-            </div>
+              {/* Score */}
+              <div className="review-score">
+                <strong>Automatic score:</strong>{" "}
+                {attempt.score ?? 0}%
+              </div>
 
-            {/* Score */}
-            <div className="review-information">
-              <p>
-                <strong>Score:</strong>{" "}
-                {attempt.score ?? "Not available"}
-              </p>
-
-              <p>
-                <strong>Submitted:</strong>{" "}
-                {attempt.submitted_at
-                  ? new Date(
-                      attempt.submitted_at
-                    ).toLocaleString()
-                  : "Not available"}
-              </p>
-            </div>
-
-            {/* Student Answers */}
-            {attempt.answers?.length > 0 && (
+              {/* Student answers */}
               <div className="review-answers">
-
                 <h3>Student Answers</h3>
 
-                {attempt.answers.map((answer) => (
+                {attempt.answers && attempt.answers.length > 0 ? (
+                  attempt.answers.map((answer) => (
+                    <div
+                      className="review-answer"
+                      key={answer.id}
+                    >
+                      <h4>
+                        {answer.question_text ||
+                          `Question #${answer.question}`}
+                      </h4>
 
-                  <div
-                    className="review-answer"
-                    key={answer.id}
-                  >
+                      {/* Answer options */}
+                      <div className="answer-options">
+                        {[
+                          ["A", answer.option_a],
+                          ["B", answer.option_b],
+                          ["C", answer.option_c],
+                          ["D", answer.option_d],
+                        ].map(([letter, option]) => (
+                          <div
+                            className="answer-option"
+                            key={letter}
+                          >
+                            <strong>{letter}:</strong>{" "}
+                            {option || "Option not available"}
+                          </div>
+                        ))}
+                      </div>
 
-                    <h4>
-                      {answer.question_text ||
-                        `Question #${answer.question}`}
-                    </h4>
-
-                    <div className="answer-options">
-
+                      {/* Selected answer */}
                       <p>
-                        <strong>A:</strong>{" "}
-                        {answer.option_a}
+                        <strong>Student selected:</strong>{" "}
+                        {answer.selected_answer || "Not answered"}
                       </p>
 
+                      {/* Automatic marking */}
                       <p>
-                        <strong>B:</strong>{" "}
-                        {answer.option_b}
+                        <strong>Automatic marking:</strong>{" "}
+                        {answer.is_correct ? "Correct" : "Incorrect"}
                       </p>
-
-                      <p>
-                        <strong>C:</strong>{" "}
-                        {answer.option_c}
-                      </p>
-
-                      <p>
-                        <strong>D:</strong>{" "}
-                        {answer.option_d}
-                      </p>
-
                     </div>
-
-                    <p>
-                      <strong>Student selected:</strong>{" "}
-                      {answer.selected_answer}
-                    </p>
-
-                    <p>
-                      <strong>Automatic marking:</strong>{" "}
-                      <span
-                        className={
-                          answer.is_correct
-                            ? "answer-correct"
-                            : "answer-incorrect"
-                        }
-                      >
-                        {answer.is_correct
-                          ? "Correct"
-                          : "Incorrect"}
-                      </span>
-                    </p>
-
-                  </div>
-                ))}
-
+                  ))
+                ) : (
+                  <p>No answers found for this attempt.</p>
+                )}
               </div>
-            )}
 
-            {/* Review Actions */}
-            {attempt.review_status === "PENDING" && (
-
+              {/* Approve and reject buttons */}
               <div className="review-actions">
-
                 <button
                   className="pass-button"
+                  disabled={
+                    attempt.review_status === "PASS" ||
+                    attempt.review_status === "FAIL"
+                  }
                   onClick={() =>
                     handleReview(attempt.id, "PASS")
                   }
-                  disabled={reviewingId === attempt.id}
                 >
-                  {reviewingId === attempt.id
-                    ? "Saving..."
-                    : "Approve (PASS)"}
+                  Approve
                 </button>
 
                 <button
                   className="fail-button"
+                  disabled={
+                    attempt.review_status === "PASS" ||
+                    attempt.review_status === "FAIL"
+                  }
                   onClick={() =>
                     handleReview(attempt.id, "FAIL")
                   }
-                  disabled={reviewingId === attempt.id}
                 >
-                  {reviewingId === attempt.id
-                    ? "Saving..."
-                    : "Reject (FAIL)"}
+                  Reject
                 </button>
-
               </div>
-            )}
 
-            {/* Reviewed Information */}
-            {attempt.review_status !== "PENDING" && (
-              <p className="review-completed">
-                This submission has been reviewed.
-              </p>
-            )}
-
-          </div>
-        ))}
-
-      </div>
+              {/* Review date */}
+              {attempt.reviewed_at && (
+                <p className="reviewed-date">
+                  Reviewed on:{" "}
+                  {new Date(attempt.reviewed_at).toLocaleString()}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
