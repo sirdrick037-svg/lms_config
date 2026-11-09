@@ -139,6 +139,11 @@ export const reviewQuizAttempt = async (attemptId, reviewStatus) => {
 
   return response.data;
 };
+// Student quiz attempts
+export const getQuizAttempts = async () => {
+  const response = await api.get("assessments/attempts/");
+  return response.data;
+};
 
 
 export default api;

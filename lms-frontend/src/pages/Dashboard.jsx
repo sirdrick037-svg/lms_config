@@ -6,6 +6,7 @@ import {
   getPayments,
   getLessonProgress,
   getLessons,
+  getQuizAttempts,
 } from "../services/api";
 
 function Dashboard() {
@@ -17,17 +18,19 @@ function Dashboard() {
   const [payments, setPayments] = useState([]);
   const [progress, setProgress] = useState([]);
   const [lessons, setLessons] = useState([]);
+  const [quizAttempts, setQuizAttempts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const [enrollmentData, paymentData, progressData] =
+        const [enrollmentData, paymentData, progressData, quizAttemptData] =
           await Promise.all([
             getEnrollments(),
             getPayments(),
             getLessonProgress(),
+            getQuizAttempts(),
           ]);
 
         const enrollmentList =
@@ -47,6 +50,7 @@ function Dashboard() {
         setPayments(paymentData.results || paymentData);
         setProgress(progressData.results || progressData);
         setLessons(allLessons);
+        setQuizAttempts(quizAttemptData.results || quizAttemptData);
       } catch (err) {
         console.error("Dashboard error:", err);
 
