@@ -1732,3 +1732,56 @@
   margin-bottom: 5px;
   color: #718078;
 }
+/* SKILLNEST DASHBOARD SUMMARY CARDS */
+
+.dashboard-card {
+  position: relative;
+  border: none;
+  border-radius: 16px;
+  padding: 30px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(36, 60, 53, 0.12);
+}
+
+.stats-courses {
+  background: #e5efe8;
+  border-left: 5px solid #315b4c;
+}
+
+.stats-completed {
+  background: #f5e9dc;
+  border-left: 5px solid #b46b4c;
+}
+
+.stats-payments {
+  background: #e8eaf3;
+  border-left: 5px solid #58658d;
+}
+
+.stats-icon {
+  font-size: 30px;
+  margin-bottom: 15px;
+}
+
+.dashboard-card h3 {
+  color: #718078;
+  font-size: 15px;
+  margin-bottom: 10px;
+}
+
+.dashboard-card h2 {
+  color: #243c35;
+  font-size: 36px;
+  font-weight: 700;
+  margin: 10px 0;
+}
+
+.dashboard-card p {
+  color: #718078;
+  font-size: 13px;
+  margin-bottom: 0;
+}
