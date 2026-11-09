@@ -179,8 +179,16 @@ function Dashboard() {
                       key={enrollment.id}
                     >
                       <span className="course-category">
-                        MY LEARNING
-                      </span>
+  MY LEARNING
+</span>
+
+<span
+  className={`course-completion-badge ${
+    courseStats.percentage === 100 ? "completed" : "in-progress"
+  }`}
+>
+  {courseStats.percentage === 100 ? "✓ COMPLETED" : "IN PROGRESS"}
+</span>
 
                       <h3>{enrollment.course_title}</h3>
 
