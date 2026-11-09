@@ -133,24 +133,27 @@ function Dashboard() {
       {!error && (
         <>
           <section className="dashboard-stats">
-            <article className="dashboard-card">
-              <h3>My Courses</h3>
-              <h2>{enrollments.length}</h2>
-              <p>Enrolled courses</p>
-            </article>
+  <article className="dashboard-card stats-courses">
+    <div className="stats-icon"></div>
+    <h3>My Courses</h3>
+    <h2>{enrollments.length}</h2>
+    <p>Enrolled courses</p>
+  </article>
 
-            <article className="dashboard-card">
-              <h3>Completed</h3>
-              <h2>{completedCourses}</h2>
-              <p>Completed courses</p>
-            </article>
+  <article className="dashboard-card stats-completed">
+    <div className="stats-icon"></div>
+    <h3>Completed</h3>
+    <h2>{completedCourses}</h2>
+    <p>Courses completed</p>
+  </article>
 
-            <article className="dashboard-card">
-              <h3>Payments</h3>
-              <h2>{successfulPayments}</h2>
-              <p>Successful payments</p>
-            </article>
-          </section>
+  <article className="dashboard-card stats-payments">
+    <div className="stats-icon"></div>
+    <h3>Payments</h3>
+    <h2>{successfulPayments}</h2>
+    <p>Successful payments</p>
+  </article>
+</section>
 
           <section className="dashboard-content">
             <h2>My Learning</h2>
