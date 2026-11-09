@@ -44,6 +44,7 @@ function QuizReviews() {
 
   // Approve or reject a submission
   const handleReview = async (attemptId, reviewStatus) => {
+    console.log("Review button clicked:", attemptId, reviewStatus);
     try {
       setMessage("");
       setError("");
