@@ -119,6 +119,7 @@ def initiate_stk_push(payment):
     )
     response.raise_for_status()
     result = response.json()
+    print("M-PESA SANDBOX RESPONSE:", result)
 
     if result.get("ResponseCode") != "0":
         raise ValueError(
