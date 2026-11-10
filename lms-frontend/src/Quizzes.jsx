@@ -194,7 +194,8 @@ setSelectedReviewerId("");
 
       const response = await submitQuizAttempt(
         attemptId,
-        formattedAnswers
+        formattedAnswers,
+        selectedReviewerId
       );
 
       setResult(response);
