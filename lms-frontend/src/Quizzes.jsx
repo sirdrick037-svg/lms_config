@@ -4,6 +4,7 @@ import "./Quizzes.css";
 
 import {
   getQuizzes,
+  getCourse,
   getQuizQuestions,
   getEnrollments,
   getLessons,
@@ -18,6 +19,8 @@ function Quizzes() {
   const [lessonStats, setLessonStats] = useState({});
   const [selectedQuiz, setSelectedQuiz] = useState(null);
   const [attemptId, setAttemptId] = useState(null);
+  const [courseInstructors, setCourseInstructors] = useState([]);
+  const [selectedReviewerId, setSelectedReviewerId] = useState("");
   const [answers, setAnswers] = useState({});
   const [result, setResult] = useState(null);
 
