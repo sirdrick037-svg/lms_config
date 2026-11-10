@@ -364,7 +364,27 @@ setSelectedReviewerId("");
                   )}
                 </div>
               )}
+              <div className="reviewer-selection">
+  <label htmlFor="selectedReviewer">
+    Choose an instructor to review your quiz:
+  </label>
 
+  <select
+    id="selectedReviewer"
+    value={selectedReviewerId}
+    onChange={(e) => setSelectedReviewerId(e.target.value)}
+    required
+  >
+    <option value="">Select an instructor</option>
+
+    {courseInstructors.map((instructor) => (
+      <option key={instructor.id} value={instructor.id}>
+        {instructor.first_name || instructor.username}{" "}
+        {instructor.last_name || ""}
+      </option>
+    ))}
+  </select>
+</div>
               {questions.map((question, index) => (
                 <div key={question.id}>
                   <h3>
