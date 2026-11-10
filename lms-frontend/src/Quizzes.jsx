@@ -364,6 +364,12 @@ setSelectedReviewerId("");
                   )}
                 </div>
               )}
+              {courseInstructors.length === 0 && (
+  <p className="quiz-warning">
+    No instructors have been assigned to this course yet.
+    Please contact your administrator.
+  </p>
+)}
               <div className="reviewer-selection">
   <label htmlFor="selectedReviewer">
     Choose an instructor to review your quiz:
