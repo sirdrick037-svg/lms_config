@@ -108,10 +108,15 @@ export const startQuizAttempt = async (quizId) => {
   return response.data;
 };
 // Submit quiz answers
-export const submitQuizAttempt = async (attemptId, answers) => {
+export const submitQuizAttempt = async (
+  attemptId,
+  answers,
+  selectedReviewerId
+) => {
   const response = await api.post(
     `assessments/attempts/${attemptId}/submit/`,
     {
+      selected_reviewer: selectedReviewerId,
       answers: answers.map((answer) => ({
         question: answer.question,
         selected_answer: answer.selected_answer,
@@ -121,7 +126,6 @@ export const submitQuizAttempt = async (attemptId, answers) => {
 
   return response.data;
 };
-
 // Instructor/Admin: Get submitted quizzes awaiting review
 export const getQuizSubmissionsForReview = async () => {
   const response = await api.get("assessments/attempts/review/");
