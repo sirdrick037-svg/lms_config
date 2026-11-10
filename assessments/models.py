@@ -89,6 +89,13 @@ class QuizAttempt(models.Model):
     )
 
     reviewed_at = models.DateTimeField(null=True, blank=True)
+    selected_reviewer = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="assigned_quiz_attempts",
+    )
 
     started_at = models.DateTimeField(auto_now_add=True)
 
