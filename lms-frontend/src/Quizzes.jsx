@@ -127,6 +127,14 @@ function Quizzes() {
 
       const response = await getQuizQuestions(quiz.id);
       const questionList = response.results || response;
+      // Load instructors assigned to this course
+const courseResponse = await getCourse(quiz.course);
+
+setCourseInstructors(
+  courseResponse.instructors_details || []
+);
+
+setSelectedReviewerId("");
 
       setSelectedQuiz(quiz);
       setQuestions(questionList);
