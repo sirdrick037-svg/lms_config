@@ -389,6 +389,7 @@ class SubmitQuizView(APIView):
                 "passed",
                 "review_status",
                 "submitted_at"
+                "selected_reviewer"
             ]
         )
 
