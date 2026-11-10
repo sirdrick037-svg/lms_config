@@ -176,6 +176,10 @@ setSelectedReviewerId("");
       setError("Please answer all questions before submitting.");
       return;
     }
+    if (!selectedReviewerId) {
+  setError("Please select an instructor to review your quiz.");
+  return;
+}
 
     try {
       setSubmitting(true);
