@@ -415,7 +415,7 @@ class QuizSubmissionReviewListView(generics.ListAPIView):
 
         elif user.role == "INSTRUCTOR":
             queryset = QuizAttempt.objects.filter(
-                quiz__course__instructor=user
+                selected_reviewer=user
             )
 
         else:
