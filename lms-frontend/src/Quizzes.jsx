@@ -422,9 +422,11 @@ setSelectedReviewerId("");
               <button
                 onClick={handleSubmitQuiz}
                 disabled={
-                  submitting ||
-                  !lessonStats[selectedQuiz.id]?.canSubmit
-                }
+  submitting ||
+  !lessonStats[selectedQuiz.id]?.canSubmit ||
+  !selectedReviewerId ||
+  courseInstructors.length === 0
+}
               >
                 {submitting
                   ? "Submitting..."
