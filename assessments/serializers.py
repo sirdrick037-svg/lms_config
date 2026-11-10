@@ -115,6 +115,11 @@ class QuizAttemptSerializer(serializers.ModelSerializer):
         source="quiz.title",
         read_only=True
     )
+    selected_reviewer_username = serializers.CharField(
+    source="selected_reviewer.username",
+    read_only=True,
+    allow_null=True,
+)
 
     class Meta:
         model = QuizAttempt
