@@ -296,6 +296,22 @@ class SubmitQuizView(APIView):
             raise ValidationError(
                 {"answers": "Provide a non-empty list of answers."}
             )
+        selected_reviewer_id = request.data.get("selected_reviewer")
+
+        if not selected_reviewer_id:
+            raise ValidationError(
+        {"selected_reviewer": "Please select a reviewer before submitting."}
+    )
+
+        selected_reviewer = attempt.quiz.course.instructors.filter(
+    id=selected_reviewer_id,
+    role="INSTRUCTOR",
+).first()
+
+        if not selected_reviewer:
+            raise ValidationError(
+        {"selected_reviewer": "Please select an instructor assigned to this course."}
+    )
 
         questions = {
             question.id: question
