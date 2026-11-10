@@ -129,6 +129,8 @@ class QuizAttemptSerializer(serializers.ModelSerializer):
             "student_username",
             "quiz",
             "quiz_title",
+            "selected_reviewer",
+            "selected_reviewer_username",
             "score",
             "passed",
             "review_status",
