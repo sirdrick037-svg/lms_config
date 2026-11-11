@@ -447,28 +447,26 @@ class ReviewQuizAttemptView(APIView):
     def patch(self, request, attempt_id):
         user = request.user
 
-        if user.role == "INSTRUCTOR" and attempt.selected_reviewer_id != user.id:
-          raise PermissionDenied(
-        "You are not the selected reviewer for this submission."
-    )
-
+        # Retrieve the submitted quiz attempt.
         attempt = get_object_or_404(
             QuizAttempt.objects.select_related(
                 "quiz__course",
-                "student"
+                "student",
+                "selected_reviewer"
             ),
             pk=attempt_id,
             submitted_at__isnull=False
         )
 
-        # Instructors can only review their own courses.
-        if (
-            not user.is_staff
-            and attempt.quiz.course.instructor_id != user.id
-        ):
-            raise PermissionDenied(
-                "You can only review quizzes from your own courses."
-            )
+        # Only administrators or the selected instructor can review.
+        if not user.is_staff:
+            if (
+                user.role != "INSTRUCTOR"
+                or attempt.selected_reviewer_id != user.id
+            ):
+                raise PermissionDenied(
+                    "You are not authorized to review this submission."
+                )
 
         # Prevent reviewing an attempt more than once.
         if attempt.review_status != "PENDING":
