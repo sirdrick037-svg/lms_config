@@ -1,23 +1,63 @@
-# Learning Management System (LMS) API
+# SkillNest – Learning Management System API
 
 ## Project Overview
 
-The Learning Management System (LMS) API is a backend application built with Django and Django REST Framework. It provides a platform for managing courses, lessons, student enrollments, and quizzes.
+SkillNest is a Learning Management System (LMS) backend built with Python, Django, and Django REST Framework.
 
-The system supports different user roles, including students, instructors, and administrators. Students can enroll in courses, access lessons, track their learning progress, and take quizzes. Instructors can manage their courses, create lessons, add quiz questions, and view student quiz results.
+It provides RESTful APIs for managing users, courses, lessons, student enrollments, learning progress, quizzes, assessments, and payments.
+
+The system supports three main user roles:
+
+- **Students:** Browse courses, enroll, access lessons, track progress, and take quizzes.
+- **Instructors:** Manage assigned courses, create lessons and quizzes, and review student quiz submissions.
+- **Administrators:** Manage the platform and oversee its activities.
+
+The backend communicates with the SkillNest React frontend.
 
 ## Features
 
-- User authentication and role-based access control.
-- Course creation, listing, updating, and management.
-- Lesson creation and retrieval.
-- Student enrollment in courses.
-- Lesson progress tracking and completion.
-- Quiz creation and publication.
-- Multiple-choice questions with four answer options.
-- Quiz submission and automatic grading.
-- Quiz scores and pass/fail results.
-- API documentation using Swagger and ReDoc.
+### Authentication and User Management
+- User registration and authentication.
+- Role-based access control.
+- Student, instructor, and administrator roles.
+
+### Course Management
+- Create, retrieve, update, and manage courses.
+- Assign multiple instructors to a course.
+- Retrieve course instructor information.
+- Manage course publication status.
+
+### Lesson Management
+- Create and manage course lessons.
+- Retrieve lessons belonging to courses.
+- Track student lesson completion.
+
+### Enrollment and Learning Progress
+- Student course enrollment.
+- Enrollment management.
+- Lesson progress tracking.
+- Completion status management.
+
+### Quiz and Assessment Management
+- Create and publish quizzes.
+- Add multiple-choice questions with four answer options.
+- Start quiz attempts.
+- Submit quiz answers.
+- Automatic quiz grading and score calculation.
+- Track quiz attempts and results.
+
+### Instructor Quiz Review
+- Students select an instructor assigned to the course before submitting a quiz.
+- Quiz submissions are assigned to the selected instructor.
+- Only the selected instructor or an administrator can review the submission.
+- Instructors can approve or reject quiz submissions.
+- Review status, reviewer information, and review timestamps are recorded.
+- Students can view their quiz review status and final results.
+
+### Payment Integration
+- M-Pesa payment integration.
+- Demo mode for testing payment functionality without initiating a real transaction.
+- Payment-related functionality connected to student enrollment.
 
 ## Technologies Used
 
@@ -25,10 +65,10 @@ The system supports different user roles, including students, instructors, and a
 - Django
 - Django REST Framework
 - Django REST Framework Simple JWT (if configured)
-- drf-spectacular for API documentation
-- SQLite or the configured project database
+- drf-spectacular
+- SQLite or the configured database
 - Postman for API testing
-- Git and GitHub for version control
+- Git and GitHub
 
 ## Project Structure
 
@@ -54,7 +94,7 @@ git clone YOUR_GITHUB_REPOSITORY_URL
 cd YOUR_PROJECT_FOLDER
 ```
 
-Replace the placeholders with your actual repository URL and project folder name.
+Replace the placeholders with your actual repository URL and project folder.
 
 ### 2. Create a Virtual Environment
 
@@ -76,86 +116,95 @@ source venv/bin/activate
 
 ### 3. Install Dependencies
 
-If a `requirements.txt` file exists:
+If your project contains a requirements.txt file:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Otherwise, install the packages required by your project, for example:
+Otherwise, install the required packages used by your project.
+
+### 4. Configure Environment Variables
+
+Create a `.env` file if your project uses environment variables.
+
+Configure the required Django settings, database credentials, secret key, and payment settings.
+
+Do not commit your `.env` file or expose sensitive credentials in the repository.
+
+### 5. Apply Database Migrations
 
 ```bash
-pip install django djangorestframework drf-spectacular
+python manage.py migrate
 ```
 
-Install any additional packages your project uses, including JWT authentication packages if configured.
-
-### 4. Apply Database Migrations
+If you have made model changes that require new migrations:
 
 ```bash
 python manage.py makemigrations
 python manage.py migrate
 ```
 
-### 5. Create an Administrator
+### 6. Create an Administrator
 
 ```bash
 python manage.py createsuperuser
 ```
 
-Follow the prompts to create the administrator account.
+Follow the prompts to create an administrator account.
 
-### 6. Start the Development Server
+### 7. Start the Development Server
 
 ```bash
 python manage.py runserver
 ```
 
-The API will be available at:
+The backend API will be available at:
 
-`http://127.0.0.1:8000/`
+http://127.0.0.1:8000/
 
 ## API Endpoints
+
+The main API routes include:
 
 | Method | Endpoint | Purpose |
 |---|---|---|
 | GET, POST | `/api/courses/` | List and create courses |
 | GET, PUT, PATCH, DELETE | `/api/courses/{id}/` | Retrieve or manage a course |
 | GET, POST | `/api/courses/lessons/` | List and create lessons |
-| GET, PUT, PATCH, DELETE | `/api/courses/lessons/{id}/` | Retrieve or manage a lesson |
-| GET, POST | `/api/enrollments/` | List enrollments and create an enrollment |
-| GET, POST | `/api/enrollments/progress/` | List and create lesson progress records |
-| GET, PATCH | `/api/enrollments/progress/{id}/` | Retrieve or update lesson progress |
+| GET, POST | `/api/enrollments/` | Manage student enrollments |
+| GET, POST | `/api/enrollments/progress/` | Manage lesson progress |
 | GET, POST | `/api/assessments/quizzes/` | List and create quizzes |
-| GET, PUT, PATCH, DELETE | `/api/assessments/quizzes/{id}/` | Retrieve or manage a quiz |
-| GET, POST | `/api/assessments/quizzes/{quiz_id}/questions/` | List or create quiz questions |
-| GET, POST | `/api/assessments/attempts/` | View quiz attempts or start an attempt |
+| GET, POST | `/api/assessments/attempts/` | View attempts or start a quiz |
 | POST | `/api/assessments/attempts/{attempt_id}/submit/` | Submit quiz answers |
-| GET | `/api/schema/` | Access the OpenAPI schema |
-| GET | `/api/docs/` | Open Swagger API documentation |
-| GET | `/api/redoc/` | Open ReDoc API documentation |
+| GET | `/api/schema/` | OpenAPI schema |
+| GET | `/api/docs/` | Swagger documentation |
+| GET | `/api/redoc/` | ReDoc documentation |
 
-Authentication endpoints are available under `/api/auth/`. Consult `accounts/urls.py` for the exact login, registration, or token endpoints configured in your project.
+Authentication endpoints are available under `/api/auth/`.
 
-**Note:** Available methods and permissions depend on the view configuration. For example, students should only access their own quiz attempts, while instructors should access results for their own courses.
+Additional assessment review and payment endpoints are available according to the configured URL routes.
 
-## Authentication
+Available HTTP methods and permissions depend on the individual views.
 
-For protected endpoints:
+## Quiz Submission and Review Workflow
 
-1. Authenticate using the configured authentication endpoint.
-2. Obtain an access token if JWT authentication is enabled.
-3. In Postman, open the **Authorization** tab.
-4. Select **Bearer Token** and enter the access token.
-5. Send the request.
+SkillNest supports an instructor-based quiz review process.
 
-Never commit passwords, access tokens, or secret keys to the repository.
+1. A student starts a published quiz.
+2. The student answers the quiz questions.
+3. Before submission, the student selects an instructor assigned to the course.
+4. The backend validates the selected instructor.
+5. The quiz is submitted and automatically graded.
+6. The submission receives a pending review status.
+7. The selected instructor reviews the submission and approves or rejects it.
+8. The student can view the review status and reviewer information on the dashboard.
 
-## Example: Create a Quiz
+## Example API Requests
+
+### Create a Quiz
 
 **Endpoint:** `POST /api/assessments/quizzes/`
-
-Example JSON body:
 
 ```json
 {
@@ -167,9 +216,9 @@ Example JSON body:
 }
 ```
 
-The course ID must refer to a valid course, and the authenticated instructor must have permission to create quizzes for that course.
+The course ID must refer to a valid course, and the authenticated user must have permission to create quizzes for that course.
 
-## Example: Create a Multiple-Choice Question
+### Create a Multiple-Choice Question
 
 **Endpoint:** `POST /api/assessments/quizzes/7/questions/`
 
@@ -184,9 +233,7 @@ The course ID must refer to a valid course, and the authenticated instructor mus
 }
 ```
 
-The correct answer must be one of `A`, `B`, `C`, or `D`.
-
-## Example: Start a Quiz Attempt
+### Start a Quiz Attempt
 
 **Endpoint:** `POST /api/assessments/attempts/`
 
@@ -196,14 +243,15 @@ The correct answer must be one of `A`, `B`, `C`, or `D`.
 }
 ```
 
-The student must be authenticated, the quiz must be published, and the student must be enrolled in the course.
+The student must meet the applicable quiz access requirements.
 
-## Example: Submit Quiz Answers
+### Submit Quiz Answers
 
 **Endpoint:** `POST /api/assessments/attempts/2/submit/`
 
 ```json
 {
+  "selected_reviewer": 3,
   "answers": [
     {
       "question": 8,
@@ -211,49 +259,71 @@ The student must be authenticated, the quiz must be published, and the student m
     },
     {
       "question": 9,
-      "selected_answer": "B"
+      "selected_answer": "A"
     }
   ]
 }
 ```
 
-The API checks the submitted answers, calculates the score, determines whether the student passed, and saves the result.
+The selected reviewer must be an instructor assigned to the quiz's course.
+
+The backend validates the answers, calculates the score, and saves the submission for instructor review.
+
+## Authentication
+
+Protected API endpoints require authentication.
+
+If JWT authentication is enabled:
+
+1. Authenticate through the configured login endpoint.
+2. Obtain an access token.
+3. Open the Authorization tab in Postman.
+4. Select Bearer Token.
+5. Enter the access token.
+6. Send the request.
+
+Never commit passwords, access tokens, or secret keys to GitHub.
+
+## API Documentation
+
+Start the Django development server and visit:
+
+- **Swagger UI:** http://127.0.0.1:8000/api/docs/
+- **ReDoc:** http://127.0.0.1:8000/api/redoc/
+
+These interfaces provide interactive documentation for the available API endpoints.
 
 ## Testing
 
-The API can be tested using Postman or Swagger.
+The API can be tested using Postman and Swagger.
 
 Recommended test scenarios:
 
 - Register and authenticate users.
-- Verify access permissions for students and instructors.
-- Create and retrieve courses and lessons.
-- Enroll a student in a course.
-- Create and update lesson progress.
-- Create a quiz and add questions.
-- Start a quiz attempt and submit answers.
-- Verify quiz scores and pass/fail status.
-- Confirm that instructors can view results for their own courses.
-- Confirm that students cannot access other students' results.
-
-## API Documentation
-
-After starting the development server, visit:
-
-- **Swagger UI:** `http://127.0.0.1:8000/api/docs/`
-- **ReDoc:** `http://127.0.0.1:8000/api/redoc/`
-
-These pages provide interactive documentation for the available API endpoints.
+- Verify role-based permissions.
+- Create and manage courses.
+- Assign multiple instructors to courses.
+- Enroll students in courses.
+- Track lesson completion.
+- Create quizzes and questions.
+- Submit quiz answers.
+- Verify automatic grading.
+- Verify instructor selection during submission.
+- Confirm that only the selected instructor or an administrator can review a submission.
+- Verify quiz approval and rejection.
+- Confirm that students can view their review results.
+- Test payment functionality using the configured demo mode.
 
 ## Future Improvements
 
 - Add pagination, filtering, and search.
-- Add richer reporting and student performance analytics.
-- Improve quiz and enrollment management.
-- Add automated unit and integration tests.
-- Deploy the application to a production server.
-- Configure production database settings and secure environment variables.
+- Improve student performance analytics.
+- Expand automated unit and integration tests.
+- Improve payment transaction handling.
+- Add notifications for quiz reviews and payments.
+- Deploy the API to a production environment.
+- Configure production database and security settings.
 
 ## Author
 
-Developed as a Learning Management System API project.
+Developed as part of the SkillNest Learning Management System project.
