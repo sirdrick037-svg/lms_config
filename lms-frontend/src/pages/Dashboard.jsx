@@ -254,20 +254,30 @@ const studentInitial = studentName.charAt(0).toUpperCase();
   <span
     className={`quiz-status ${(attempt.review_status || "PENDING").toLowerCase()}`}
   >
-    {attempt.review_status || "PENDING"}
+    {attempt.review_status === "PASS"
+      ? "APPROVED"
+      : attempt.review_status === "FAIL"
+      ? "REJECTED"
+      : "PENDING"}
   </span>
 </p>
 
-          <p>
-            Result:{" "}
-            <strong>
-              {attempt.review_status === "PENDING"
-                ? "Awaiting instructor review"
-                : attempt.review_status === "PASS"
-                ? "Passed"
-                : "Not passed"}
-            </strong>
-          </p>
+<p>
+  Final Result:{" "}
+  <strong>
+    {attempt.review_status === "PENDING"
+      ? "Awaiting instructor review"
+      : attempt.review_status === "PASS"
+      ? "Congratulations! Your quiz was approved."
+      : "Your quiz was rejected. Please contact your instructor."}
+  </strong>
+</p>
+
+{attempt.reviewed_by_username && (
+  <p>
+    Reviewed by: <strong>{attempt.reviewed_by_username}</strong>
+  </p>
+)}
         </article>
       ))}
     </div>
