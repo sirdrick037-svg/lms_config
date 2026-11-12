@@ -120,6 +120,11 @@ class QuizAttemptSerializer(serializers.ModelSerializer):
     read_only=True,
     allow_null=True,
 )
+    reviewed_by_username = serializers.CharField(
+    source="reviewed_by.username",
+    read_only=True,
+    allow_null=True,
+)
 
     class Meta:
         model = QuizAttempt
