@@ -182,3 +182,52 @@
   border: 1px solid #d5dfd3;
   border-radius: 8px;
 }
+/* Reviewer Selection */
+.reviewer-selection {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 25px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.reviewer-selection label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #166534;
+}
+
+.reviewer-selection select {
+  width: 100%;
+  padding: 13px 15px;
+  border: 1px solid #86c99a;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #14532d;
+  font-size: 14px;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.reviewer-selection select:focus {
+  border-color: #16a34a;
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.15);
+}
+
+.reviewer-selection select:disabled {
+  background: #f1f5f9;
+  cursor: not-allowed;
+}
+
+.quiz-card .reviewer-selection {
+  margin-bottom: 25px;
+}
+
+/* Quiz action button spacing */
+.quiz-card button {
+  margin-top: 12px;
+}
