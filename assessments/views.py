@@ -227,12 +227,17 @@ class QuizAttemptListCreateView(generics.ListCreateAPIView):
 # SUBMIT QUIZ
 # --------------------------------------------------
 
+# --------------------------------------------------
+# SUBMIT QUIZ
+# --------------------------------------------------
+
 class SubmitQuizView(APIView):
     permission_classes = [IsAuthenticated]
 
     @transaction.atomic
     def post(self, request, attempt_id):
 
+        # Get the student's quiz attempt
         try:
             attempt = QuizAttempt.objects.select_for_update().get(
                 pk=attempt_id,
@@ -245,17 +250,19 @@ class SubmitQuizView(APIView):
                 status=status.HTTP_404_NOT_FOUND
             )
 
+        # Only students can submit quizzes
         if request.user.role != "STUDENT":
             raise PermissionDenied(
                 "Only students can submit quiz attempts."
             )
 
+        # Prevent submitting an attempt more than once
         if attempt.submitted_at is not None:
             raise ValidationError(
                 "This quiz attempt has already been submitted."
             )
 
-        # Check enrollment.
+        # Check enrollment
         enrollment = Enrollment.objects.filter(
             student=request.user,
             course=attempt.quiz.course
@@ -266,7 +273,7 @@ class SubmitQuizView(APIView):
                 "You must be enrolled in this course."
             )
 
-        # Check lesson completion.
+        # Check lesson completion
         total_lessons = Lesson.objects.filter(
             course=attempt.quiz.course
         ).count()
@@ -290,29 +297,43 @@ class SubmitQuizView(APIView):
                 f"{remaining} lesson(s) remaining."
             )
 
+        # Get submitted answers
         answers_data = request.data.get("answers")
 
         if not isinstance(answers_data, list) or not answers_data:
             raise ValidationError(
                 {"answers": "Provide a non-empty list of answers."}
             )
+
+        # Get the selected instructor
         selected_reviewer_id = request.data.get("selected_reviewer")
 
         if not selected_reviewer_id:
             raise ValidationError(
-        {"selected_reviewer": "Please select a reviewer before submitting."}
-    )
+                {
+                    "selected_reviewer":
+                    "Please select a reviewer before submitting."
+                }
+            )
 
+        # Confirm that the instructor belongs to this course
         selected_reviewer = attempt.quiz.course.instructors.filter(
-    id=selected_reviewer_id,
-    role="INSTRUCTOR",
-).first()
+            id=selected_reviewer_id,
+            role="INSTRUCTOR",
+        ).first()
 
         if not selected_reviewer:
             raise ValidationError(
-        {"selected_reviewer": "Please select an instructor assigned to this course."}
-    )
+                {
+                    "selected_reviewer":
+                    "Please select an instructor assigned to this course."
+                }
+            )
 
+        # IMPORTANT: Save the selected instructor on the attempt
+        attempt.selected_reviewer = selected_reviewer
+
+        # Get all questions belonging to this quiz
         questions = {
             question.id: question
             for question in Question.objects.filter(
@@ -323,6 +344,7 @@ class SubmitQuizView(APIView):
         seen_question_ids = set()
         correct_count = 0
 
+        # Process submitted answers
         for item in answers_data:
 
             if not isinstance(item, dict):
@@ -372,17 +394,17 @@ class SubmitQuizView(APIView):
                 "This quiz has no questions."
             )
 
-        # Calculate score automatically.
+        # Calculate the automatic score
         attempt.score = round(
             correct_count * 100 / total_questions
         )
 
-        # Wait for admin or instructor review.
+        # Wait for instructor review
         attempt.passed = False
         attempt.review_status = "PENDING"
-
         attempt.submitted_at = timezone.now()
 
+        # Save everything, including the selected instructor
         attempt.save(
             update_fields=[
                 "score",
@@ -393,6 +415,7 @@ class SubmitQuizView(APIView):
             ]
         )
 
+        # Return the submitted attempt
         return Response(
             QuizAttemptSerializer(attempt).data,
             status=status.HTTP_200_OK
