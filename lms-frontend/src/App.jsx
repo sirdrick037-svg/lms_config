@@ -14,6 +14,7 @@ import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Quizzes from "./Quizzes";
 import QuizReviews from "./pages/QuizReviews";
+import JoinRequest from "./pages/JoinRequest";
 
 import "./App.css";
 
@@ -33,6 +34,7 @@ function App() {
             <Route path="/courses" element={<Courses />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/join" element={<JoinRequest />} />
             <Route path="/courses/:id" element={<CourseDetails />} />
             <Route path="/about" element={<About />} />
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
