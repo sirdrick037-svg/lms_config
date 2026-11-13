@@ -7,11 +7,12 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from .models import JoinRequest, UserInvitation
+from .models import JoinRequest
 from .serializers import (
     AcceptInvitationSerializer,
     EmailTokenObtainPairSerializer,
     JoinRequestSerializer,
+    JoinRequestReviewSerializer,
 )
 from .services import create_invitation
 
@@ -50,6 +51,10 @@ class JoinRequestReviewView(APIView):
     permission_classes = [IsAdminUser]
 
     def post(self, request, pk):
+        serializer = JoinRequestReviewSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        request_data = serializer.validated_data
+
         join_request = generics.get_object_or_404(
             JoinRequest,
             pk=pk,
@@ -61,8 +66,8 @@ class JoinRequestReviewView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        action = request.data.get("action")
-        admin_notes = request.data.get("admin_notes", "")
+        action = request_data["action"]
+        admin_notes = request_data.get("admin_notes", "")
 
         if action == "reject":
             join_request.status = JoinRequest.Status.REJECTED
@@ -76,14 +81,8 @@ class JoinRequestReviewView(APIView):
                 status=status.HTTP_200_OK,
             )
 
-        if action != "approve":
-            return Response(
-                {"detail": "Action must be approve or reject."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
         role = join_request.requested_role
-        course_ids = request.data.get("course_ids", [])
+        course_ids = request_data.get("course_ids", [])
 
         if role == "INSTRUCTOR" and not course_ids:
             return Response(
