@@ -117,6 +117,7 @@ class AcceptInvitationSerializer(serializers.Serializer):
         attrs["invitation"] = invitation
         return attrs
 
+    
     def create(self, validated_data):
         with transaction.atomic():
             invitation = UserInvitation.objects.select_for_update().get(
@@ -147,17 +148,14 @@ class AcceptInvitationSerializer(serializers.Serializer):
             )
 
             if invitation.role == User.Role.INSTRUCTOR:
-               for course in invitation.courses.all():
-                course.instructors.add(user)
+                for course in invitation.courses.all():
+                    course.instructors.add(user)
 
-        if not course.instructor_id:
-            course.instructor = user
-            course.save(update_fields=["instructor"])
-
-        invitation.accepted_at = timezone.now()
-        invitation.save(update_fields=["accepted_at"])
+            invitation.accepted_at = timezone.now()
+            invitation.save(update_fields=["accepted_at"])
 
         return user
+
 
 
 class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
