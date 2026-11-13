@@ -74,3 +74,39 @@ Welcome to SkillNest!
     )
 
     return invitation
+
+
+def regenerate_invitation_link(invitation):
+    import hashlib
+    import secrets
+    from datetime import timedelta
+    from django.utils import timezone
+    from django.conf import settings
+    from django.core.mail import send_mail
+
+    token = secrets.token_urlsafe(32)
+
+    invitation.token_hash = hashlib.sha256(
+        token.encode()
+    ).hexdigest()
+
+    invitation.created_at = timezone.now()
+    invitation.expires_at = timezone.now() + timedelta(hours=24)
+    invitation.accepted_at = None
+    invitation.revoked_at = None
+
+    invitation.save()
+
+    registration_link = (
+        f"{settings.FRONTEND_URL}/accept-invitation/?token={token}"
+    )
+
+    send_mail(
+        "Your new SkillNest invitation",
+        f"Complete your registration here:\n{registration_link}",
+        settings.DEFAULT_FROM_EMAIL,
+        [invitation.email],
+        fail_silently=False,
+    )
+
+    return registration_link
