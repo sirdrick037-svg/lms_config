@@ -61,3 +61,52 @@ class UserInvitation(models.Model):
 
     def __str__(self):
         return f"{self.email} - {self.role} invitation"
+
+
+class JoinRequest(models.Model):
+
+    class Status(models.TextChoices):
+        PENDING = "PENDING", "Pending"
+        APPROVED = "APPROVED", "Approved"
+        REJECTED = "REJECTED", "Rejected"
+
+    name = models.CharField(max_length=150)
+
+    email = models.EmailField(db_index=True)
+
+    requested_role = models.CharField(
+        max_length=20,
+        choices=User.Role.choices,
+    )
+
+    message = models.TextField()
+
+    status = models.CharField(
+        max_length=20,
+        choices=Status.choices,
+        default=Status.PENDING,
+    )
+
+    submitted_at = models.DateTimeField(auto_now_add=True)
+
+    reviewed_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="reviewed_join_requests",
+    )
+
+    reviewed_at = models.DateTimeField(
+        null=True,
+        blank=True,
+    )
+
+    admin_notes = models.TextField(blank=True)
+
+    def __str__(self):
+        return f"{self.name} - {self.requested_role} ({self.status})"
+
+    
+
+    
