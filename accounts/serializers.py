@@ -184,3 +184,61 @@ class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
         }
 
         return data
+
+
+from .models import JoinRequest
+
+
+class JoinRequestSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = JoinRequest
+        fields = [
+            "id",
+            "name",
+            "email",
+            "requested_role",
+            "message",
+            "status",
+            "submitted_at",
+        ]
+
+        read_only_fields = [
+            "id",
+            "status",
+            "submitted_at",
+        ]
+
+    def validate_email(self, value):
+        value = value.strip().lower()
+
+        if User.objects.filter(email__iexact=value).exists():
+            raise serializers.ValidationError(
+                "This email already has a SkillNest account."
+            )
+
+        return value
+
+    def validate_requested_role(self, value):
+        if value not in [
+            User.Role.STUDENT,
+            User.Role.INSTRUCTOR,
+        ]:
+            raise serializers.ValidationError(
+                "Choose either Student or Instructor."
+            )
+
+        return value
+
+    def validate(self, attrs):
+        email = attrs.get("email", "").strip().lower()
+
+        if JoinRequest.objects.filter(
+            email__iexact=email,
+            status=JoinRequest.Status.PENDING,
+        ).exists():
+            raise serializers.ValidationError(
+                "You already have a pending join request."
+            )
+
+        return attrs
