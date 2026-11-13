@@ -63,8 +63,12 @@ function JoinRequest() {
 
   return (
     <div className="join-request-container">
-      <h1>Join SkillNest</h1>
-      <p>Submit a request to become part of our learning community.</p>
+      <h1>Request an Invitation</h1>
+<p>
+  Interested in joining SkillNest? Submit your request below.
+  Once approved by our administrator, you will receive an
+  invitation email to complete your registration.
+</p>
 
       {success && <p className="success-message">{success}</p>}
       {error && <p className="error-message">{error}</p>}
@@ -108,7 +112,7 @@ function JoinRequest() {
         />
 
         <button type="submit" disabled={loading}>
-          {loading ? "Submitting..." : "Submit Join Request"}
+          {loading ? "Submitting..." : "Request Invitation"}
         </button>
       </form>
     </div>
