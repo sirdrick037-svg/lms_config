@@ -248,3 +248,18 @@ class JoinRequestSerializer(serializers.ModelSerializer):
             )
 
         return attrs
+
+
+class JoinRequestReviewSerializer(serializers.Serializer):
+    action = serializers.ChoiceField(
+        choices=["approve", "reject"]
+    )
+    admin_notes = serializers.CharField(
+        required=False,
+        allow_blank=True
+    )
+    course_ids = serializers.ListField(
+        child=serializers.IntegerField(),
+        required=False
+    )
+    
