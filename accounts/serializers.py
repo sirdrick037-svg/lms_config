@@ -1,11 +1,22 @@
-from django.contrib.auth import get_user_model
+
+import hashlib
+
+from django.contrib.auth import get_user_model, password_validation
+from django.db import transaction
+from django.utils import timezone
+
 from rest_framework import serializers
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.exceptions import AuthenticationFailed
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+from .models import UserInvitation
+
 User = get_user_model()
 
 
 class RegisterSerializer(serializers.ModelSerializer):
+    """Legacy registration serializer. We will disable its public endpoint."""
+
     password = serializers.CharField(
         write_only=True,
         min_length=8,
@@ -44,6 +55,103 @@ class RegisterSerializer(serializers.ModelSerializer):
         )
 
 
+class AcceptInvitationSerializer(serializers.Serializer):
+    token = serializers.CharField(write_only=True)
+    username = serializers.CharField(max_length=150)
+    password = serializers.CharField(
+        write_only=True,
+        min_length=8,
+        style={"input_type": "password"},
+    )
+
+    def validate_username(self, value):
+        value = value.strip()
+
+        if User.objects.filter(username__iexact=value).exists():
+            raise serializers.ValidationError(
+                "This username is already taken."
+            )
+
+        return value
+
+    def validate_password(self, value):
+        password_validation.validate_password(value)
+        return value
+
+    def validate(self, attrs):
+        token_hash = hashlib.sha256(
+            attrs["token"].encode()
+        ).hexdigest()
+
+        invitation = UserInvitation.objects.filter(
+            token_hash=token_hash
+        ).first()
+
+        if not invitation:
+            raise serializers.ValidationError(
+                {"token": "Invalid invitation link."}
+            )
+
+        if invitation.accepted_at:
+            raise serializers.ValidationError(
+                {"token": "This invitation has already been used."}
+            )
+
+        if invitation.revoked_at:
+            raise serializers.ValidationError(
+                {"token": "This invitation has been revoked."}
+            )
+
+        if invitation.expires_at <= timezone.now():
+            raise serializers.ValidationError(
+                {"token": "This invitation has expired."}
+            )
+
+        if User.objects.filter(
+            email__iexact=invitation.email
+        ).exists():
+            raise serializers.ValidationError(
+                {"token": "An account with this email already exists."}
+            )
+
+        attrs["invitation"] = invitation
+        return attrs
+
+    def create(self, validated_data):
+        with transaction.atomic():
+            invitation = UserInvitation.objects.select_for_update().get(
+                pk=validated_data["invitation"].pk
+            )
+
+            if (
+                invitation.accepted_at
+                or invitation.revoked_at
+                or invitation.expires_at <= timezone.now()
+            ):
+                raise serializers.ValidationError(
+                    "This invitation is no longer valid."
+                )
+
+            if User.objects.filter(
+                email__iexact=invitation.email
+            ).exists():
+                raise serializers.ValidationError(
+                    "An account with this email already exists."
+                )
+
+            user = User.objects.create_user(
+                username=validated_data["username"],
+                email=invitation.email,
+                password=validated_data["password"],
+                role=invitation.role,
+            )
+
+            invitation.accepted_at = timezone.now()
+            invitation.save(update_fields=["accepted_at"])
+
+            return user
+
+
 class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
 
     def __init__(self, *args, **kwargs):
@@ -59,6 +167,9 @@ class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         if not user:
             raise AuthenticationFailed("Invalid email or password.")
+
+        if not user.is_active:
+            raise AuthenticationFailed("This account is inactive.")
 
         attrs[self.username_field] = user.get_username()
 
