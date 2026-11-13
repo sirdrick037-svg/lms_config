@@ -1,5 +1,5 @@
-
 from django.utils import timezone
+from drf_spectacular.utils import extend_schema
 
 from rest_framework import generics, status
 from rest_framework.permissions import AllowAny, IsAdminUser
@@ -47,9 +47,11 @@ class AdminJoinRequestListView(generics.ListAPIView):
     queryset = JoinRequest.objects.all().order_by("-submitted_at")
 
 
+
 class JoinRequestReviewView(APIView):
     permission_classes = [IsAdminUser]
 
+    @extend_schema(request=JoinRequestReviewSerializer)
     def post(self, request, pk):
         serializer = JoinRequestReviewSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
