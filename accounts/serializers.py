@@ -146,10 +146,18 @@ class AcceptInvitationSerializer(serializers.Serializer):
                 role=invitation.role,
             )
 
-            invitation.accepted_at = timezone.now()
-            invitation.save(update_fields=["accepted_at"])
+            if invitation.role == User.Role.INSTRUCTOR:
+               for course in invitation.courses.all():
+                course.instructors.add(user)
 
-            return user
+        if not course.instructor_id:
+            course.instructor = user
+            course.save(update_fields=["instructor"])
+
+        invitation.accepted_at = timezone.now()
+        invitation.save(update_fields=["accepted_at"])
+
+        return user
 
 
 class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
