@@ -9,7 +9,7 @@ function JoinRequest() {
     message: "",
   });
 
-  const [success, setSuccess] = useState("");
+  const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -23,7 +23,7 @@ function JoinRequest() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setSuccess("");
+    setSuccess(false);
     setError("");
 
     try {
@@ -47,13 +47,15 @@ function JoinRequest() {
         );
       }
 
-      setSuccess("Your request has been submitted! The SkillNest admin will review it.");
+      setSuccess(true);
+
       setFormData({
         name: "",
         email: "",
         requested_role: "STUDENT",
         message: "",
       });
+
     } catch (err) {
       setError(err.message || "Something went wrong. Please try again.");
     } finally {
@@ -64,13 +66,33 @@ function JoinRequest() {
   return (
     <div className="join-request-container">
       <h1>Request an Invitation</h1>
-<p>
-  Interested in joining SkillNest? Submit your request below.
-  Once approved by our administrator, you will receive an
-  invitation email to complete your registration.
-</p>
 
-      {success && <p className="success-message">{success}</p>}
+      <p>
+        Interested in joining SkillNest? Submit your request below.
+        Once approved by our administrator, you will receive an
+        invitation email to complete your registration.
+      </p>
+
+      {success && (
+        <div className="success-toast">
+          <span className="success-icon">✓</span>
+          <div>
+            <strong>Invitation request sent successfully!</strong>
+            <p>
+              Your request has been received. Please check your email
+              for confirmation and wait for the administrator's decision.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setSuccess(false)}
+            aria-label="Close message"
+          >
+            ×
+          </button>
+        </div>
+      )}
+
       {error && <p className="error-message">{error}</p>}
 
       <form onSubmit={handleSubmit}>
