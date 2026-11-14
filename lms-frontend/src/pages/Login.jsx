@@ -24,7 +24,9 @@ function Login() {
       localStorage.setItem("refresh_token", data.refresh);
       localStorage.setItem("user", JSON.stringify(data.user));
 
-      if (data.user?.is_staff || data.user?.role === "INSTRUCTOR") {
+      if (data.user?.is_staff) {
+  navigate("/admin/join-requests");
+} else if (data.user?.role === "INSTRUCTOR") {
   navigate("/quiz-reviews");
 } else {
   navigate("/");
