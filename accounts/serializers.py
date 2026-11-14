@@ -250,16 +250,42 @@ class JoinRequestSerializer(serializers.ModelSerializer):
         return attrs
 
 
+
 class JoinRequestReviewSerializer(serializers.Serializer):
     action = serializers.ChoiceField(
         choices=["approve", "reject"]
     )
+
     admin_notes = serializers.CharField(
         required=False,
         allow_blank=True
     )
+
+    role = serializers.ChoiceField(
+        choices=User.Role.choices,
+        required=False
+    )
+
     course_ids = serializers.ListField(
         child=serializers.IntegerField(),
         required=False
     )
+
+    def validate(self, attrs):
+        if attrs["action"] == "approve" and not attrs.get("role"):
+            raise serializers.ValidationError({
+                "role": "The administrator must assign a role before approval."
+            })
+
+        if (
+            attrs["action"] == "approve"
+            and attrs.get("role") == User.Role.INSTRUCTOR
+            and not attrs.get("course_ids")
+        ):
+            raise serializers.ValidationError({
+                "course_ids": "Select at least one course for this instructor."
+            })
+
+        return attrs
+
     
