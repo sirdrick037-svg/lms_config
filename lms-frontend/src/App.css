@@ -1894,3 +1894,338 @@
   background: #fff0d5;
   color: #946313;
 }
+
+.success-toast {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  margin: 20px 0;
+  background: #e8f8ee;
+  border: 1px solid #a6dfba;
+  border-radius: 10px;
+  color: #176b37;
+  animation: toastAppear 0.3s ease;
+}
+
+.success-toast p {
+  margin: 5px 0 0;
+  font-size: 14px;
+}
+
+.success-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #218b4b;
+  color: white;
+  font-weight: bold;
+}
+
+.success-toast button {
+  margin-left: auto;
+  border: none;
+  background: transparent;
+  color: #176b37;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+@keyframes toastAppear {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =================================
+   SKILLNEST - INVITATION REQUEST PAGE
+================================= */
+
+.join-request-container {
+  max-width: 650px;
+  margin: 55px auto;
+  padding: 40px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(36, 60, 53, 0.09);
+  border-top: 5px solid #315b4c;
+}
+
+.join-request-container h1 {
+  color: #243c35;
+  font-size: 30px;
+  margin-bottom: 12px;
+}
+
+.join-request-container > p {
+  color: #718078;
+  line-height: 1.7;
+  margin-bottom: 25px;
+}
+
+.join-request-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.join-request-container label {
+  color: #315b4c;
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+.join-request-container input,
+.join-request-container select,
+.join-request-container textarea {
+  width: 100%;
+  padding: 13px 14px;
+  border: 1px solid #d8ded5;
+  border-radius: 8px;
+  background: #fbfcfa;
+  color: #243c35;
+  font-size: 15px;
+  outline: none;
+}
+
+.join-request-container input:focus,
+.join-request-container select:focus,
+.join-request-container textarea:focus {
+  border-color: #315b4c;
+  box-shadow: 0 0 0 3px rgba(49, 91, 76, 0.10);
+}
+
+.join-request-container textarea {
+  resize: vertical;
+  min-height: 110px;
+}
+
+.join-request-container form button {
+  margin-top: 15px;
+  padding: 14px;
+  background: #315b4c;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.join-request-container form button:hover {
+  background: #243c35;
+  transform: translateY(-2px);
+}
+
+.join-request-container form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* =================================
+   SKILLNEST - ADMIN INVITATION REQUESTS
+================================= */
+
+.admin-join-requests {
+  min-height: 100vh;
+  padding: 55px 7%;
+  background: #f7f5ef;
+}
+
+.admin-join-requests > h1 {
+  color: #243c35;
+  font-size: 34px;
+  margin-bottom: 12px;
+}
+
+.admin-join-requests > p {
+  color: #718078;
+  margin-bottom: 30px;
+  line-height: 1.7;
+}
+
+.request-card {
+  background: #ffffff;
+  border: 1px solid #e3e9e1;
+  border-left: 5px solid #315b4c;
+  border-radius: 13px;
+  padding: 28px;
+  margin-bottom: 25px;
+  box-shadow: 0 5px 20px rgba(36, 60, 53, 0.06);
+  transition: 0.25s;
+}
+
+.request-card:hover {
+  box-shadow: 0 10px 25px rgba(36, 60, 53, 0.10);
+}
+
+.request-card h3 {
+  color: #243c35;
+  font-size: 22px;
+  margin-bottom: 18px;
+}
+
+.request-card p {
+  color: #718078;
+  line-height: 1.7;
+  margin: 9px 0;
+  overflow-wrap: anywhere;
+}
+
+.request-card p strong {
+  color: #315b4c;
+}
+
+.request-review {
+  margin-top: 25px;
+  padding-top: 20px;
+}
+
+.request-review hr {
+  border: none;
+  border-top: 1px solid #e9eee5;
+  margin-bottom: 22px;
+}
+
+.request-review h4 {
+  color: #315b4c;
+  font-size: 18px;
+  margin: 18px 0 12px;
+}
+
+.request-review > label {
+  display: block;
+  color: #315b4c;
+  font-weight: 600;
+  margin: 15px 0 8px;
+}
+
+.request-review select,
+.request-review textarea {
+  width: 100%;
+  max-width: 500px;
+  padding: 12px 14px;
+  border: 1px solid #d8ded5;
+  border-radius: 8px;
+  background: #fbfcfa;
+  color: #243c35;
+  font-size: 15px;
+  outline: none;
+}
+
+.request-review select:focus,
+.request-review textarea:focus {
+  border-color: #315b4c;
+  box-shadow: 0 0 0 3px rgba(49, 91, 76, 0.10);
+}
+
+.request-review textarea {
+  display: block;
+  resize: vertical;
+  margin-top: 8px;
+}
+
+.request-review input[type="checkbox"] {
+  accent-color: #315b4c;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.request-review label:has(input[type="checkbox"]) {
+  color: #52665c;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.review-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.review-buttons button {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 7px;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.review-buttons button:first-child {
+  background: #315b4c;
+}
+
+.review-buttons button:first-child:hover {
+  background: #243c35;
+}
+
+.review-buttons button:last-child {
+  background: #b46b4c;
+}
+
+.review-buttons button:last-child:hover {
+  background: #96563d;
+}
+
+.review-buttons button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.admin-join-requests .error-message {
+  color: #a83232;
+  background: #fff0ef;
+  border: 1px solid #f0c5c1;
+  padding: 12px 15px;
+  border-radius: 8px;
+  margin: 15px 0;
+}
+
+/* Invitation page responsive styling */
+
+@media (max-width: 600px) {
+  .join-request-container {
+    margin: 25px 15px;
+    padding: 25px 20px;
+  }
+
+  .join-request-container h1 {
+    font-size: 25px;
+  }
+
+  .admin-join-requests {
+    padding: 35px 5%;
+  }
+
+  .admin-join-requests > h1 {
+    font-size: 27px;
+  }
+
+  .request-card {
+    padding: 20px;
+  }
+
+  .review-buttons {
+    flex-direction: column;
+  }
+
+  .review-buttons button {
+    width: 100%;
+  }
+}
+
