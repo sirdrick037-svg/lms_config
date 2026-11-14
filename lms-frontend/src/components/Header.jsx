@@ -5,11 +5,10 @@ function Header() {
   const navigate = useNavigate();
 
   const isLoggedIn = Boolean(localStorage.getItem("access_token"));
-
   const user = JSON.parse(localStorage.getItem("user") || "null");
 
-  const isReviewer =
-    user?.is_staff || user?.role === "INSTRUCTOR";
+  const isAdmin = user?.is_staff;
+  const isInstructor = user?.role === "INSTRUCTOR" && !isAdmin;
 
   const handleLogout = () => {
     localStorage.removeItem("access_token");
@@ -27,7 +26,9 @@ function Header() {
       </Link>
 
       <nav className="navbar">
-        {isReviewer ? (
+        {isAdmin ? (
+          <Link to="/admin/join-requests">Invitation Requests</Link>
+        ) : isInstructor ? (
           <Link to="/quiz-reviews">Quiz Reviews</Link>
         ) : (
           <>
