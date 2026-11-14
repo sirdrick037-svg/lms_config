@@ -4,6 +4,8 @@ import hashlib
 from django.contrib.auth import get_user_model, password_validation
 from django.db import transaction
 from django.utils import timezone
+from django.conf import settings
+from django.core.mail import send_mail
 
 from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed
@@ -154,7 +156,50 @@ class AcceptInvitationSerializer(serializers.Serializer):
             invitation.accepted_at = timezone.now()
             invitation.save(update_fields=["accepted_at"])
 
+        
+        # Notify the administrator that registration was completed
+        admin = invitation.invited_by
+
+        if admin and admin.email:
+            course_names = ", ".join(
+                invitation.courses.values_list("title", flat=True)
+            )
+
+            message = f"""
+Hello {admin.username},
+
+Good news! A new member has successfully registered on SkillNest.
+
+Registration details:
+
+Name: {user.username}
+Email: {user.email}
+Role: {user.role}
+"""
+
+            if course_names:
+                message += f"\nAssigned courses: {course_names}\n"
+
+            message += """
+The member can now access SkillNest.
+
+Regards,
+SkillNest Registration System
+"""
+
+            try:
+                send_mail(
+                    "New Successful Registration - SkillNest",
+                    message,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [admin.email],
+                    fail_silently=True,
+                )
+            except Exception:
+                pass
+
         return user
+
 
 
 
