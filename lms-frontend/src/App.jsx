@@ -58,23 +58,8 @@ function App() {
             <Route path="/courses/:id" element={<CourseDetails />} />
             <Route path="/about" element={<About />} />
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-            <Route 
-  path="/admin/join-requests"
-  element={
-    <ProtectedRoute>
-      <AdminOnlyRoute />
-    </ProtectedRoute>
-  }
-/>
-              
-            <Route
-  path="/quiz-reviews"
-  element={
-    <ProtectedRoute>
-      <QuizReviewRoute />
-    </ProtectedRoute>
-  }
-/>
+            <Route path="/admin/join-requests" element={<ProtectedRoute><AdminOnlyRoute /></ProtectedRoute>}/>
+            <Route path="/quiz-reviews" element={<ProtectedRoute><QuizReviewRoute /></ProtectedRoute>}/>
           </Routes>
         </main>
 
