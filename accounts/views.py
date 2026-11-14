@@ -1,5 +1,7 @@
 from django.utils import timezone
 from drf_spectacular.utils import extend_schema
+from django.core.mail import send_mail
+from django.conf import settings
 
 from rest_framework import generics, status
 from rest_framework.permissions import AllowAny, IsAdminUser
@@ -39,6 +41,37 @@ class EmailTokenObtainPairView(TokenObtainPairView):
 class JoinRequestCreateView(generics.CreateAPIView):
     serializer_class = JoinRequestSerializer
     permission_classes = [AllowAny]
+
+    def perform_create(self, serializer):
+        join_request = serializer.save()
+
+        subject = "We received your SkillNest invitation request"
+
+        message = f"""
+Hello {join_request.name},
+
+Thank you for your interest in joining SkillNest!
+
+We have successfully received your invitation request.
+
+Our administrator will review your application and notify you
+by email once a decision has been made.
+
+Please note that submitting a request does not automatically
+create an account.
+
+Thank you for your patience.
+
+The SkillNest Team
+"""
+
+        send_mail(
+            subject,
+            message,
+            settings.DEFAULT_FROM_EMAIL,
+            [join_request.email],
+            fail_silently=False,
+        )
 
 
 class AdminJoinRequestListView(generics.ListAPIView):
