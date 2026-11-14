@@ -16,6 +16,7 @@ import Quizzes from "./Quizzes";
 import QuizReviews from "./pages/QuizReviews";
 import JoinRequest from "./pages/JoinRequest";
 import AcceptInvitation from "./pages/AcceptInvitation";
+import AdminJoinRequests from "./pages/AdminJoinRequests";
 
 import "./App.css";
 
@@ -40,6 +41,18 @@ function App() {
             <Route path="/courses/:id" element={<CourseDetails />} />
             <Route path="/about" element={<About />} />
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route
+  path="/admin/join-requests"
+  element={
+    <ProtectedRoute>
+      {user?.is_staff ? (
+        <AdminJoinRequests />
+      ) : (
+        <h2>You do not have permission to access this page.</h2>
+      )}
+    </ProtectedRoute>
+  }
+/>
             <Route path="/quizzes" element={<ProtectedRoute><Quizzes /></ProtectedRoute>} />
               <Route
               path="/quiz-reviews"
