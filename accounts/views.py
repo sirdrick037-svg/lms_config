@@ -81,6 +81,7 @@ class AdminJoinRequestListView(generics.ListAPIView):
 
 
 
+
 class JoinRequestReviewView(APIView):
     permission_classes = [IsAdminUser]
 
@@ -105,6 +106,39 @@ class JoinRequestReviewView(APIView):
         admin_notes = request_data.get("admin_notes", "")
 
         if action == "reject":
+            subject = "Update on your SkillNest application"
+
+            message = f"""
+Hello {join_request.name},
+
+Thank you for your interest in joining SkillNest.
+
+After reviewing your application, we regret to inform you
+that your request has not been approved.
+
+Message from our administrator:
+{admin_notes or "No additional comments were provided."}
+
+Thank you for considering SkillNest.
+
+Kind regards,
+The SkillNest Team
+"""
+
+            try:
+                send_mail(
+                    subject,
+                    message,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [join_request.email],
+                    fail_silently=False,
+                )
+            except Exception:
+                return Response(
+                    {"detail": "Rejection email could not be sent."},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                )
+
             join_request.status = JoinRequest.Status.REJECTED
             join_request.reviewed_by = request.user
             join_request.reviewed_at = timezone.now()
@@ -112,11 +146,11 @@ class JoinRequestReviewView(APIView):
             join_request.save()
 
             return Response(
-                {"detail": "Join request rejected."},
+                {"detail": "Join request rejected and email sent."},
                 status=status.HTTP_200_OK,
             )
 
-        role = join_request.requested_role
+        role = request_data["role"]
         course_ids = request_data.get("course_ids", [])
 
         if role == "INSTRUCTOR" and not course_ids:
@@ -166,6 +200,7 @@ class JoinRequestReviewView(APIView):
             },
             status=status.HTTP_200_OK,
         )
+
 
 
 class AcceptInvitationView(generics.CreateAPIView):
