@@ -20,6 +20,26 @@ import AdminJoinRequests from "./pages/AdminJoinRequests";
 
 import "./App.css";
 
+function AdminOnlyRoute() {
+  const user = JSON.parse(localStorage.getItem("user") || "null");
+
+  return user?.is_staff ? (
+    <AdminJoinRequests />
+  ) : (
+    <h2>You do not have permission to access this page.</h2>
+  );
+}
+
+function QuizReviewRoute() {
+  const user = JSON.parse(localStorage.getItem("user") || "null");
+
+  return user?.is_staff || user?.role === "INSTRUCTOR" ? (
+    <QuizReviews />
+  ) : (
+    <h2>You do not have permission to review quizzes.</h2>
+  );
+}
+
 function App() {
     const user = JSON.parse(localStorage.getItem("user") || "null");
 
