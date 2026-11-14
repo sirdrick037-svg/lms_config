@@ -70,19 +70,14 @@ function App() {
   }
 />
               
-            <Route path="/quizzes" element={<ProtectedRoute><Quizzes /></ProtectedRoute>} />
-              <Route
-              path="/quiz-reviews"
-              element={
-                <ProtectedRoute>
-                  {canReview ? (
-                    <QuizReviews />
-                  ) : (
-                    <h2>You do not have permission to review quizzes.</h2>
-                  )}
-                </ProtectedRoute>
-              }
-            />
+            <Route
+  path="/quiz-reviews"
+  element={
+    <ProtectedRoute>
+      <QuizReviewRoute />
+    </ProtectedRoute>
+  }
+/>
           </Routes>
         </main>
 
