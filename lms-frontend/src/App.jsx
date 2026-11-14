@@ -41,10 +41,7 @@ function QuizReviewRoute() {
 }
 
 function App() {
-    const user = JSON.parse(localStorage.getItem("user") || "null");
-
-  const canReview =
-    user?.is_staff || user?.role === "INSTRUCTOR";
+  
   return (
     <BrowserRouter>
       <div className="app">
