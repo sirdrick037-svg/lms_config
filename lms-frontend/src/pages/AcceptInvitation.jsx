@@ -48,10 +48,13 @@ function AcceptInvitation() {
 
       setSuccess("Your SkillNest account has been created successfully!");
 
-      setTimeout(() => {
-        navigate("/login");
-      }, 2000);
-
+setTimeout(() => {
+  navigate("/login", {
+    state: {
+      registrationSuccess: true,
+    },
+  });
+}, 2000);
     } catch (err) {
       setError(err.message || "Something went wrong.");
     } finally {
