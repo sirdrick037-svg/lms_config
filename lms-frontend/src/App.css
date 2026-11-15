@@ -2229,3 +2229,39 @@
   }
 }
 
+/* Password fields with show/hide buttons */
+.password-input-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.password-input-wrapper input {
+  width: 100%;
+  padding-right: 48px;
+  box-sizing: border-box;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  padding: 5px;
+  margin: 0;
+  cursor: pointer;
+  font-size: 19px;
+  line-height: 1;
+  width: auto;
+  color: #315b4c;
+}
+
+.password-toggle:hover {
+  background: transparent;
+  transform: translateY(-50%);
+}
+
