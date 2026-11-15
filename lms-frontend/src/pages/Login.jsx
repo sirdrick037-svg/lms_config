@@ -48,6 +48,12 @@ const registrationSuccess = location.state?.registrationSuccess;
         <p>Login to continue learning with LearnHub.</p>
 
         {error && <p className="error-message">{error}</p>}
+        {registrationSuccess && (
+  <p className="success-message">
+    Registration successful! Your SkillNest account has been created.
+    Please log in using your new email and password.
+  </p>
+)}
 
         <form onSubmit={handleSubmit}>
           <label>Email Address</label>
