@@ -10,6 +10,9 @@ function AcceptInvitation() {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState("");
@@ -19,6 +22,12 @@ function AcceptInvitation() {
 
     setError("");
     setSuccess("");
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match. Please try again.");
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -48,13 +57,12 @@ function AcceptInvitation() {
 
       setSuccess("Your SkillNest account has been created successfully!");
 
-setTimeout(() => {
-  navigate("/login", {
-    state: {
-      registrationSuccess: true,
-    },
-  });
-}, 2000);
+      setTimeout(() => {
+        navigate("/login", {
+          state: { registrationSuccess: true },
+        });
+      }, 2000);
+
     } catch (err) {
       setError(err.message || "Something went wrong.");
     } finally {
@@ -94,13 +102,48 @@ setTimeout(() => {
           />
 
           <label>Create a Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Create password"
-            required
-          />
+          <div className="password-input-wrapper">
+            <input
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Create password"
+              required
+            />
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={() => setShowPassword(!showPassword)}
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? "🙈" : "👁️"}
+            </button>
+          </div>
+
+          <label>Confirm Password</label>
+          <div className="password-input-wrapper">
+            <input
+              type={showConfirmPassword ? "text" : "password"}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Confirm your password"
+              required
+            />
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={() =>
+                setShowConfirmPassword(!showConfirmPassword)
+              }
+              aria-label={
+                showConfirmPassword
+                  ? "Hide confirmation password"
+                  : "Show confirmation password"
+              }
+            >
+              {showConfirmPassword ? "🙈" : "👁️"}
+            </button>
+          </div>
 
           <button type="submit" disabled={loading}>
             {loading ? "Creating Account..." : "Create My Account"}
