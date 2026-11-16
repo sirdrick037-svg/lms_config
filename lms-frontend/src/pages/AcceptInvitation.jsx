@@ -116,7 +116,7 @@ function AcceptInvitation() {
               onClick={() => setShowPassword(!showPassword)}
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
-              {showPassword ? "🙈" : "👁️"}
+              {showPassword ? "" : ""}
             </button>
           </div>
 
@@ -141,7 +141,7 @@ function AcceptInvitation() {
                   : "Show confirmation password"
               }
             >
-              {showConfirmPassword ? "🙈" : "👁️"}
+              {showConfirmPassword ? "" : ""}
             </button>
           </div>
 
