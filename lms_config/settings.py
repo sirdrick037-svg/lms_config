@@ -92,13 +92,18 @@ WSGI_APPLICATION = 'lms_config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
 
+
 DATABASES = {
     'default': dj_database_url.config(
-        default=config('DATABASE_URL', default='sqlite:///' + str(BASE_DIR / 'db.sqlite3')),
+        default=config(
+            'DATABASE_URL',
+            default='sqlite:///' + str(BASE_DIR / 'db.sqlite3')
+        ),
         conn_max_age=600,
-        ssl_require=not DEBUG,
+        ssl_require=not DEBUG and bool(config('DATABASE_URL', default='')),
     )
 }
+
 # Password validation
 # https://docs.djangoproject.com/en/6.1/ref/settings/#auth-password-validators
 
