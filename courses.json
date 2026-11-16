@@ -1,0 +1,162 @@
+[
+{
+  "model": "courses.course",
+  "pk": 4,
+  "fields": {
+    "title": "Introduction to Python",
+    "description": "Learn Python programming fundamentals, variables, data types, and functions.",
+    "price": "1500.00",
+    "instructor": 16,
+    "is_published": true,
+    "created_at": "2026-10-22T08:37:54.301Z",
+    "updated_at": "2026-10-29T07:53:51.447Z",
+    "instructors": [
+      16
+    ]
+  }
+},
+{
+  "model": "courses.course",
+  "pk": 5,
+  "fields": {
+    "title": "Web Develpoment with Django",
+    "description": "Learn how to build web applications with python and Django.",
+    "price": "1800.00",
+    "instructor": 16,
+    "is_published": true,
+    "created_at": "2026-10-22T08:44:00.076Z",
+    "updated_at": "2026-10-29T07:54:36.394Z",
+    "instructors": [
+      16
+    ]
+  }
+},
+{
+  "model": "courses.course",
+  "pk": 9,
+  "fields": {
+    "title": "Data Science",
+    "description": "Introduction to Data Science and its Fundermentals",
+    "price": "2000.00",
+    "instructor": 16,
+    "is_published": true,
+    "created_at": "2026-10-23T20:40:30.035Z",
+    "updated_at": "2026-11-11T06:22:14.170Z",
+    "instructors": [
+      16
+    ]
+  }
+},
+{
+  "model": "courses.course",
+  "pk": 11,
+  "fields": {
+    "title": "Database Management",
+    "description": "Learn SQL fundamentals, relational database design, tables, keys, and relationships.",
+    "price": "0.00",
+    "instructor": 16,
+    "is_published": true,
+    "created_at": "2026-10-23T21:12:44.935Z",
+    "updated_at": "2026-10-23T21:12:44.936Z",
+    "instructors": [
+      16
+    ]
+  }
+},
+{
+  "model": "courses.course",
+  "pk": 14,
+  "fields": {
+    "title": "JavaScript Fundamentals",
+    "description": "Learn JavaScript variables, functions, arrays, objects, events, and DOM manipulation.",
+    "price": "1.00",
+    "instructor": 16,
+    "is_published": true,
+    "created_at": "2026-10-23T21:15:33.199Z",
+    "updated_at": "2026-10-29T09:19:46.744Z",
+    "instructors": [
+      16
+    ]
+  }
+},
+{
+  "model": "courses.course",
+  "pk": 15,
+  "fields": {
+    "title": "Cybersecurity Fundementals",
+    "description": "Learn how to protect computer systems, networks and data from cyber threats. Explore network security, common attacks, passwords and online safety.",
+    "price": "2000.00",
+    "instructor": 16,
+    "is_published": true,
+    "created_at": "2026-11-03T07:23:57.220Z",
+    "updated_at": "2026-11-03T07:23:57.220Z",
+    "instructors": [
+      16
+    ]
+  }
+},
+{
+  "model": "courses.course",
+  "pk": 16,
+  "fields": {
+    "title": "Graphic Design for Beginners",
+    "description": "Discover the fundamentals of graphic design, including color theory, typography, layouts, branding and creating professional designs using Canva.",
+    "price": "1500.00",
+    "instructor": 16,
+    "is_published": true,
+    "created_at": "2026-11-03T07:25:58.107Z",
+    "updated_at": "2026-11-03T07:25:58.107Z",
+    "instructors": [
+      16
+    ]
+  }
+},
+{
+  "model": "courses.course",
+  "pk": 17,
+  "fields": {
+    "title": "Digital Marketing",
+    "description": "Learn social media marketing, content creation, SEO, email marketing and online advertising to grow businesses online.",
+    "price": "1700.00",
+    "instructor": 16,
+    "is_published": true,
+    "created_at": "2026-11-03T07:27:01.072Z",
+    "updated_at": "2026-11-11T06:22:00.715Z",
+    "instructors": [
+      16
+    ]
+  }
+},
+{
+  "model": "courses.course",
+  "pk": 18,
+  "fields": {
+    "title": "Mobile App Development",
+    "description": "Learn the fundamentals of mobile application development, user interface design, app functionality and building your first mobile application.",
+    "price": "2500.00",
+    "instructor": 16,
+    "is_published": true,
+    "created_at": "2026-11-03T07:27:44.728Z",
+    "updated_at": "2026-11-11T06:21:54.060Z",
+    "instructors": [
+      16
+    ]
+  }
+},
+{
+  "model": "courses.course",
+  "pk": 19,
+  "fields": {
+    "title": "Artificial Intelligence for Beginners",
+    "description": "Explore artificial intelligence, machine learning, AI tools, practical applications and how intelligent systems work.",
+    "price": "3000.00",
+    "instructor": 16,
+    "is_published": true,
+    "created_at": "2026-11-03T07:28:28.435Z",
+    "updated_at": "2026-11-11T06:21:45.169Z",
+    "instructors": [
+      16
+    ]
+  }
+}
+]
