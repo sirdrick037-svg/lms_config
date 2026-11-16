@@ -207,6 +207,7 @@ MPESA_CALLBACK_URL = config("MPESA_CALLBACK_URL")
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
+    "https://lms-config-psi.vercel.app",
 ]
 
 MPESA_DEMO_MODE = config("MPESA_DEMO_MODE", default=False, cast=bool)
