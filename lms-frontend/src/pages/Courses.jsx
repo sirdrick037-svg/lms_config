@@ -11,6 +11,8 @@ import {
 function Courses() {
   const user = JSON.parse(localStorage.getItem("user") || "null");
   const isAdmin = Boolean(user?.is_staff);
+  console.log("Logged-in user:", user);
+  console.log("Is admin:", isAdmin);
 
   const [courses, setCourses] = useState([]);
   const [instructors, setInstructors] = useState([]);
