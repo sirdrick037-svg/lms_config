@@ -1,5 +1,6 @@
 
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 function AdminJoinRequests() {
   const [requests, setRequests] = useState([]);
@@ -171,6 +172,11 @@ function AdminJoinRequests() {
 
   return (
     <div className="admin-join-requests">
+
+      <Link to="/admin" className="admin-back-button">
+        ← Back to Admin Dashboard
+      </Link>
+
       <h1>Invitation Requests</h1>
 
       <p>
