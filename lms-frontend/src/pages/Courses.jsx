@@ -5,6 +5,7 @@ import {
   getCourses,
   getEnrollments,
   createCourse,
+  getAdminUsers,
 } from "../services/api";
 
 function Courses() {
@@ -12,6 +13,8 @@ function Courses() {
   const isAdmin = Boolean(user?.is_staff);
 
   const [courses, setCourses] = useState([]);
+  const [instructors, setInstructors] = useState([]);
+  const [selectedInstructors, setSelectedInstructors] = useState([]);
   const [enrolledCourseIds, setEnrolledCourseIds] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -32,8 +35,14 @@ function Courses() {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const courseData = await getCourses();
-        setCourses(courseData.results || courseData);
+        if (isAdmin) {
+  const userData = await getAdminUsers();
+  const allUsers = userData.results || userData;
+
+  setInstructors(
+    allUsers.filter((person) => person.role === "INSTRUCTOR")
+  );
+}
 
         try {
           const enrollmentData = await getEnrollments();
@@ -173,6 +182,34 @@ function Courses() {
               step="0.01"
               required
             />
+            <label>Assign Instructors</label>
+
+<div className="instructor-selection">
+  {instructors.length === 0 ? (
+    <p>No registered instructors available.</p>
+  ) : (
+    instructors.map((instructor) => (
+      <label key={instructor.id}>
+        <input
+          type="checkbox"
+          value={instructor.id}
+          checked={selectedInstructors.includes(instructor.id)}
+          onChange={(e) => {
+            const instructorId = Number(e.target.value);
+
+            setSelectedInstructors((previous) =>
+              e.target.checked
+                ? [...previous, instructorId]
+                : previous.filter((id) => id !== instructorId)
+            );
+          }}
+        />
+
+        {instructor.username} ({instructor.email})
+      </label>
+    ))
+  )}
+</div>
 
             <label className="publish-course-label">
               <input
