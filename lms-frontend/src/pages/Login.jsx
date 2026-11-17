@@ -69,11 +69,11 @@ function Login() {
       localStorage.setItem("user", JSON.stringify(data.user));
 
       if (data.user?.is_staff) {
-        navigate("/admin/join-requests");
+        navigate("/admin");
       } else if (data.user?.role === "INSTRUCTOR") {
         navigate("/quiz-reviews");
       } else {
-        navigate("/");
+        navigate("/dashboard");
       }
     } catch (err) {
       setError("Login failed. Please check your email and password.");
@@ -85,31 +85,31 @@ function Login() {
   return (
     <div className="auth-page">
 
-<div className="auth-intro">
-  <h1 className="auth-brand">
-    Skill<span>Nest</span>
-  </h1>
+      <div className="auth-intro">
+        <h1 className="auth-brand">
+          Skill<span>Nest</span>
+        </h1>
 
-  <p className="auth-tagline">LEARN • PRACTICE • GROW</p>
+        <p className="auth-tagline">LEARN • PRACTICE • GROW</p>
 
-  <div className="auth-intro-content">
-    <h2>Welcome to SkillNest</h2>
+        <div className="auth-intro-content">
+          <h2>Welcome to SkillNest</h2>
 
-    <p>
-      Your journey to knowledge, skills and new opportunities
-      starts here.
-    </p>
+          <p>
+            Your journey to knowledge, skills and new opportunities
+            starts here.
+          </p>
 
-    <div className="auth-benefits">
-      <p>✓ Access quality learning materials</p>
-      <p>✓ Learn at your own pace</p>
-      <p>✓ Take quizzes and track your progress</p>
-      <p>✓ Build skills for your future</p>
-    </div>
+          <div className="auth-benefits">
+            <p>✓ Access quality learning materials</p>
+            <p>✓ Learn at your own pace</p>
+            <p>✓ Take quizzes and track your progress</p>
+            <p>✓ Build skills for your future</p>
+          </div>
 
-    <h3>Learn Today. Lead Tomorrow.</h3>
-  </div>
-</div>
+          <h3>Learn Today. Lead Tomorrow.</h3>
+        </div>
+      </div>
 
       <div className="auth-card">
         <h1>Welcome Back!</h1>
