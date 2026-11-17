@@ -61,7 +61,9 @@ class CourseDetailView(generics.RetrieveUpdateDestroyAPIView):
             return queryset
 
         if user.role == "INSTRUCTOR":
-            return queryset.filter(instructor=user)
+            return queryset.filter(
+        Q(instructor=user) | Q(instructors=user)
+    ).distinct()
 
         return queryset.filter(is_published=True)
 
