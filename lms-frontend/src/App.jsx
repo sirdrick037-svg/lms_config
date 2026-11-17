@@ -18,6 +18,7 @@ import QuizReviews from "./pages/QuizReviews";
 import JoinRequest from "./pages/JoinRequest";
 import AcceptInvitation from "./pages/AcceptInvitation";
 import AdminJoinRequests from "./pages/AdminJoinRequests";
+import InstructorLessons from "./pages/InstructorLessons";
 
 import "./App.css";
 
@@ -66,8 +67,8 @@ function App() {
             <Route path="/join" element={<JoinRequest />} />
             <Route path="/accept-invitation" element={<AcceptInvitation />} />
             <Route path="/courses/:id" element={<CourseDetails />} />
+            <Route path="/instructor-lessons" element={<ProtectedRoute><InstructorLessons /></ProtectedRoute>} />
             <Route path="/about" element={<About />} />
-
             <Route
               path="/dashboard"
               element={
@@ -76,7 +77,6 @@ function App() {
                 </ProtectedRoute>
               }
             />
-
             <Route
               path="/admin"
               element={
@@ -85,7 +85,6 @@ function App() {
                 </ProtectedRoute>
               }
             />
-
             <Route
               path="/quizzes"
               element={
@@ -94,7 +93,6 @@ function App() {
                 </ProtectedRoute>
               }
             />
-
             <Route
               path="/admin/join-requests"
               element={
@@ -103,7 +101,6 @@ function App() {
                 </ProtectedRoute>
               }
             />
-
             <Route
               path="/quiz-reviews"
               element={
