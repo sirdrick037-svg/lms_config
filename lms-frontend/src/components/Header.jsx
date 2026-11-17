@@ -29,10 +29,16 @@ function Header() {
         {isAdmin ? (
           <>
             <Link to="/admin">Admin Dashboard</Link>
-            <Link to="/admin/join-requests">Invitation Requests</Link>
+            <Link to="/admin/join-requests">
+              Invitation Requests
+            </Link>
+            <Link to="/courses">Courses</Link>
           </>
         ) : isInstructor ? (
-          <Link to="/quiz-reviews">Quiz Reviews</Link>
+          <>
+            <Link to="/courses">My Assigned Courses</Link>
+            <Link to="/quiz-reviews">Quiz Reviews</Link>
+          </>
         ) : (
           <>
             <Link to="/">Home</Link>
