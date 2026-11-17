@@ -12,6 +12,7 @@ import {
 
 function CourseDetails() {
   const { id } = useParams();
+
   const user = JSON.parse(localStorage.getItem("user") || "null");
   const isAdmin = Boolean(user?.is_staff);
 
@@ -29,12 +30,16 @@ function CourseDetails() {
   const [enrolling, setEnrolling] = useState(false);
   const [paymentSent, setPaymentSent] = useState(false);
 
-  // Load course and check enrollment first.
   useEffect(() => {
     const fetchCourseDetails = async () => {
       try {
         const courseResponse = await fetchCourse(id);
         setCourse(courseResponse);
+
+        // Administrators only need a course preview.
+        if (isAdmin) {
+          return;
+        }
 
         const enrollmentResponse = await getEnrollments();
         const enrollments =
@@ -47,30 +52,31 @@ function CourseDetails() {
 
         setIsEnrolled(alreadyEnrolled);
 
-        // Only fetch lessons if the student is enrolled.
         if (alreadyEnrolled) {
-  const currentEnrollment = enrollments.find(
-    (enrollment) =>
-      Number(enrollment.course) === Number(id)
-  );
+          const currentEnrollment = enrollments.find(
+            (enrollment) =>
+              Number(enrollment.course) === Number(id)
+          );
 
-  setEnrollmentId(currentEnrollment.id);
+          setEnrollmentId(currentEnrollment.id);
 
-  const lessonsResponse = await fetchLessons(id);
-  setLessons(lessonsResponse.results || lessonsResponse);
+          const lessonsResponse = await fetchLessons(id);
+          setLessons(
+            lessonsResponse.results || lessonsResponse
+          );
 
-  const progressResponse = await getLessonProgress();
-  const progressList =
-    progressResponse.results || progressResponse;
+          const progressResponse = await getLessonProgress();
+          const progressList =
+            progressResponse.results || progressResponse;
 
-  setProgress(
-    progressList.filter(
-      (item) =>
-        Number(item.enrollment) ===
-        Number(currentEnrollment.id)
-    )
-  );
-}
+          setProgress(
+            progressList.filter(
+              (item) =>
+                Number(item.enrollment) ===
+                Number(currentEnrollment.id)
+            )
+          );
+        }
       } catch (err) {
         console.error("Course details error:", err);
         setError(
@@ -86,72 +92,73 @@ function CourseDetails() {
 
   // Load lessons after successful enrollment.
   const unlockLessons = async () => {
-  try {
-    // Get the student's enrollments.
-    const enrollmentResponse = await getEnrollments();
-    const enrollmentList =
-      enrollmentResponse.results || enrollmentResponse;
+    try {
+      const enrollmentResponse = await getEnrollments();
+      const enrollmentList =
+        enrollmentResponse.results || enrollmentResponse;
 
-    // Find the enrollment for this course.
-    const currentEnrollment = enrollmentList.find(
-      (enrollment) => Number(enrollment.course) === Number(id)
-    );
+      const currentEnrollment = enrollmentList.find(
+        (enrollment) =>
+          Number(enrollment.course) === Number(id)
+      );
 
-    if (!currentEnrollment) {
-      setMessage("Your enrollment could not be found.");
-      return;
+      if (!currentEnrollment) {
+        setMessage("Your enrollment could not be found.");
+        return;
+      }
+
+      setEnrollmentId(currentEnrollment.id);
+
+      const lessonsResponse = await fetchLessons(id);
+      setLessons(
+        lessonsResponse.results || lessonsResponse
+      );
+
+      const progressResponse = await getLessonProgress();
+      const progressList =
+        progressResponse.results || progressResponse;
+
+      setProgress(
+        progressList.filter(
+          (item) =>
+            Number(item.enrollment) ===
+            Number(currentEnrollment.id)
+        )
+      );
+
+      setIsEnrolled(true);
+    } catch (error) {
+      console.error("Unlock lessons error:", error);
+      setMessage(
+        "Unable to load your lessons. Please try again."
+      );
     }
-
-    // Save the enrollment ID.
-    setEnrollmentId(currentEnrollment.id);
-
-    // Load course lessons.
-    const lessonsResponse = await fetchLessons(id);
-    setLessons(lessonsResponse.results || lessonsResponse);
-
-    // Load existing lesson progress.
-    const progressResponse = await getLessonProgress();
-    const progressList =
-      progressResponse.results || progressResponse;
-
-    setProgress(
-      progressList.filter(
-        (item) =>
-          Number(item.enrollment) === Number(currentEnrollment.id)
-      )
-    );
-
-    setIsEnrolled(true);
-  } catch (error) {
-    console.error("Unlock lessons error:", error);
-    setMessage("Unable to load your lessons. Please try again.");
-  }
-};
+  };
 
   // Mark a lesson as completed.
-const handleMarkCompleted = async (lessonId) => {
-  try {
-    await markLessonCompleted(enrollmentId, lessonId);
+  const handleMarkCompleted = async (lessonId) => {
+    try {
+      await markLessonCompleted(enrollmentId, lessonId);
 
-    const progressResponse = await getLessonProgress();
-    const progressList =
-      progressResponse.results || progressResponse;
+      const progressResponse = await getLessonProgress();
+      const progressList =
+        progressResponse.results || progressResponse;
 
-    setProgress(
-      progressList.filter(
-        (item) =>
-          Number(item.enrollment) === Number(enrollmentId)
-      )
-    );
+      setProgress(
+        progressList.filter(
+          (item) =>
+            Number(item.enrollment) === Number(enrollmentId)
+        )
+      );
 
-    setMessage("Lesson marked as completed!");
-  } catch (err) {
-    setMessage(
-      err.response?.data?.detail ||
-        "Unable to update lesson progress. Please try again."
-    );
-  }
-};
+      setMessage("Lesson marked as completed!");
+    } catch (err) {
+      setMessage(
+        err.response?.data?.detail ||
+          "Unable to update lesson progress. Please try again."
+      );
+    }
+  };
 
   // Free course enrollment.
   const handleFreeEnrollment = async () => {
@@ -247,10 +254,78 @@ const handleMarkCompleted = async (lessonId) => {
 
   const isFree = Number(course.price) === 0;
 
+  // ADMINISTRATOR COURSE PREVIEW
+  if (isAdmin) {
+    const assignedInstructors =
+      course.instructors_details || [];
+
+    return (
+      <div className="course-details-page">
+        <div className="course-details-card">
+          <p className="course-details-label">
+            ADMIN COURSE PREVIEW
+          </p>
+
+          <h1>{course.title}</h1>
+
+          <p className="course-details-description">
+            {course.description}
+          </p>
+
+          <div className="course-details-info">
+            <p>
+              <strong>Assigned Instructor(s):</strong>
+            </p>
+
+            {assignedInstructors.length > 0 ? (
+              <ul>
+                {assignedInstructors.map((instructor) => (
+                  <li key={instructor.id}>
+                    {instructor.first_name ||
+                    instructor.last_name
+                      ? `${instructor.first_name || ""} ${
+                          instructor.last_name || ""
+                        }`.trim()
+                      : instructor.username}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No instructors assigned yet.</p>
+            )}
+
+            <p>
+              <strong>Price:</strong>{" "}
+              {isFree
+                ? "Free"
+                : `KSh ${Number(
+                    course.price
+                  ).toLocaleString("en-KE")}`}
+            </p>
+
+            <p>
+              <strong>Publication Status:</strong>{" "}
+              {course.is_published
+                ? "Published"
+                : "Not published"}
+            </p>
+          </div>
+
+          <Link to="/courses" className="login-btn">
+            Back to Courses
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  // STUDENT COURSE VIEW
   return (
     <div className="course-details-page">
       <div className="course-details-card">
-        <p className="course-details-label">COURSE DETAILS</p>
+        <p className="course-details-label">
+          COURSE DETAILS
+        </p>
 
         <h1>{course.title}</h1>
 
@@ -261,19 +336,33 @@ const handleMarkCompleted = async (lessonId) => {
         <div className="course-details-info">
           <p>
             <strong>Instructor:</strong>{" "}
-            {course.instructor_username}
+            {course.instructors_details?.length
+              ? course.instructors_details
+                  .map((instructor) =>
+                    instructor.first_name ||
+                    instructor.last_name
+                      ? `${instructor.first_name || ""} ${
+                          instructor.last_name || ""
+                        }`.trim()
+                      : instructor.username
+                  )
+                  .join(", ")
+              : course.instructor_username}
           </p>
 
           <p>
             <strong>Price:</strong>{" "}
             {isFree
               ? "Free"
-              : `KSh ${Number(course.price).toLocaleString("en-KE")}`}
+              : `KSh ${Number(
+                  course.price
+                ).toLocaleString("en-KE")}`}
           </p>
 
           {isEnrolled && (
             <p>
-              <strong>Total Lessons:</strong> {lessons.length}
+              <strong>Total Lessons:</strong>{" "}
+              {lessons.length}
             </p>
           )}
         </div>
@@ -290,13 +379,17 @@ const handleMarkCompleted = async (lessonId) => {
                 onClick={handleFreeEnrollment}
                 disabled={enrolling}
               >
-                {enrolling ? "Please wait..." : "Enroll Now"}
+                {enrolling
+                  ? "Please wait..."
+                  : "Enroll Now"}
               </button>
             ) : (
               <div className="payment-section">
                 <p>
                   Pay KSh{" "}
-                  {Number(course.price).toLocaleString("en-KE")}{" "}
+                  {Number(
+                    course.price
+                  ).toLocaleString("en-KE")}{" "}
                   using M-Pesa to unlock this course.
                 </p>
 
@@ -309,7 +402,9 @@ const handleMarkCompleted = async (lessonId) => {
                   type="tel"
                   placeholder="e.g. 0712345678"
                   value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  onChange={(e) =>
+                    setPhoneNumber(e.target.value)
+                  }
                   disabled={paymentSent}
                 />
 
@@ -355,32 +450,40 @@ const handleMarkCompleted = async (lessonId) => {
                       key={lesson.id}
                     >
                       <div>
-  <span>Lesson {index + 1}</span>
-  <h3>{lesson.title}</h3>
-  <p>{lesson.content}</p>
+                        <span>Lesson {index + 1}</span>
+                        <h3>{lesson.title}</h3>
+                        <p>{lesson.content}</p>
 
-  {progress.some(
-    (item) =>
-      Number(item.lesson) === Number(lesson.id) &&
-      item.is_completed
-  ) ? (
-    <button className="enroll-btn" disabled>
-      Completed ✓
-    </button>
-  ) : (
-    <button
-      className="enroll-btn"
-      onClick={() => handleMarkCompleted(lesson.id)}
-    >
-      Mark as Completed
-    </button>
-  )}
-</div>
+                        {progress.some(
+                          (item) =>
+                            Number(item.lesson) ===
+                              Number(lesson.id) &&
+                            item.is_completed
+                        ) ? (
+                          <button
+                            className="enroll-btn"
+                            disabled
+                          >
+                            Completed ✓
+                          </button>
+                        ) : (
+                          <button
+                            className="enroll-btn"
+                            onClick={() =>
+                              handleMarkCompleted(lesson.id)
+                            }
+                          >
+                            Mark as Completed
+                          </button>
+                        )}
+                      </div>
                     </div>
                   ))}
               </div>
             ) : (
-              <p>No lessons have been added to this course yet.</p>
+              <p>
+                No lessons have been added to this course yet.
+              </p>
             )}
 
             <p className="enrollment-message">
@@ -390,7 +493,9 @@ const handleMarkCompleted = async (lessonId) => {
         )}
 
         {message && (
-          <p className="enrollment-message">{message}</p>
+          <p className="enrollment-message">
+            {message}
+          </p>
         )}
 
         <Link to="/courses" className="login-btn">
