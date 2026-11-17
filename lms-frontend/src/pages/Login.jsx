@@ -3,6 +3,39 @@ import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { loginUser } from "../services/api";
 
+function EyeIcon({ visible }) {
+  return visible ? (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" />
+      <circle cx="12" cy="12" r="3" />
+    </svg>
+  ) : (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="m3 3 18 18" />
+      <path d="M10.6 5.1A10.7 10.7 0 0 1 12 5c6.5 0 10 7 10 7a15.5 15.5 0 0 1-4 4.8" />
+      <path d="M6.6 6.6C3.6 8.5 2 12 2 12s3.5 7 10 7c1.3 0 2.5-.3 3.6-.8" />
+    </svg>
+  );
+}
+
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -89,7 +122,7 @@ function Login() {
               onClick={() => setShowPassword(!showPassword)}
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
-              {showPassword ? "◉" : "⊘"}
+              <EyeIcon visible={showPassword} />
             </button>
           </div>
 
@@ -106,9 +139,13 @@ function Login() {
               type="button"
               className="password-toggle"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              aria-label={showConfirmPassword ? "Hide confirmation password" : "Show confirmation password"}
+              aria-label={
+                showConfirmPassword
+                  ? "Hide confirmation password"
+                  : "Show confirmation password"
+              }
             >
-              {showConfirmPassword ? "◉" : "⊘"}
+              <EyeIcon visible={showConfirmPassword} />
             </button>
           </div>
 
@@ -120,7 +157,8 @@ function Login() {
         <div className="auth-link">
           <p>Don't have a SkillNest account yet?</p>
           <p>
-            You need an invitation from our administrator before you can register.
+            You need an invitation from our administrator before you can
+            register.
           </p>
           <Link to="/join">Request an Invitation</Link>
         </div>
