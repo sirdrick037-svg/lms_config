@@ -306,15 +306,21 @@ function Courses() {
                     </strong>
 
                     <Link
-                      to={`/courses/${course.id}`}
-                      className="learn-more-btn"
-                    >
-                      {isAdmin
-                        ? "View Course"
-                        : isEnrolled
-                          ? "Continue Learning"
-                          : "Enroll Now"}
-                    </Link>
+  to={
+    isInstructor
+      ? `/instructor-lessons?course=${course.id}`
+      : `/courses/${course.id}`
+  }
+  className="learn-more-btn"
+>
+  {isAdmin
+    ? "View Course"
+    : isInstructor
+      ? "Create Lessons"
+      : isEnrolled
+        ? "Continue Learning"
+        : "Enroll Now"}
+</Link>
                   </div>
 
                   <span className="course-availability">
