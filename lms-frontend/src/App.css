@@ -2817,11 +2817,10 @@
 
 .admin-course-controls {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  gap: 15px;
-  flex-wrap: wrap;
-  margin: 25px 40px;
+  margin: 30px auto;
+  width: 100%;
 }
 
 .create-course-button {
