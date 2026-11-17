@@ -2229,6 +2229,7 @@
   }
 }
 
+
 /* Password fields with show/hide buttons */
 .password-input-wrapper {
   position: relative;
@@ -2240,28 +2241,38 @@
 
 .password-input-wrapper input {
   width: 100%;
-  padding-right: 48px;
+  padding-right: 52px;
   box-sizing: border-box;
 }
 
-.password-toggle {
+/* Show/hide password button */
+.auth-card .password-input-wrapper .password-toggle {
   position: absolute;
-  right: 12px;
+  right: 8px;
   top: 50%;
   transform: translateY(-50%);
-  background: transparent;
-  border: none;
-  padding: 5px;
+
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+
   margin: 0;
-  cursor: pointer;
-  font-size: 19px;
-  line-height: 1;
-  width: auto;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+
+  background: transparent;
   color: #315b4c;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  z-index: 2;
 }
 
-.password-toggle:hover {
-  background: transparent;
-  transform: translateY(-50%);
+.auth-card .password-input-wrapper .password-toggle:hover {
+  background: #f0f4f1;
 }
 
