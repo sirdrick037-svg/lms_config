@@ -49,6 +49,24 @@ export const createLesson = async (lessonData) => {
 
   return response.data;
 };
+// Instructor: Update an existing lesson
+export const updateLesson = async (lessonId, lessonData) => {
+  const response = await api.patch(
+    `courses/lessons/${lessonId}/`,
+    lessonData
+  );
+
+  return response.data;
+};
+
+// Instructor: Delete an existing lesson
+export const deleteLesson = async (lessonId) => {
+  const response = await api.delete(
+    `courses/lessons/${lessonId}/`
+  );
+
+  return response.data;
+};
 // Login
 export const loginUser = async (email, password) => {
   const response = await api.post("auth/token/", { email, password });
