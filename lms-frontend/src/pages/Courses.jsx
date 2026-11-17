@@ -122,24 +122,20 @@ function Courses() {
     <div className="courses-page">
 
       {isAdmin && (
-        <div className="admin-course-controls">
-          <Link to="/admin" className="admin-back-button">
-            ← Back to Admin Dashboard
-          </Link>
-
-          <button
-            type="button"
-            className="create-course-button"
-            onClick={() => {
-              setShowCreateForm(!showCreateForm);
-              setCreateError("");
-              setCreateMessage("");
-            }}
-          >
-            {showCreateForm ? "Close Form" : "+ Create New Course"}
-          </button>
-        </div>
-      )}
+  <div className="admin-course-controls">
+    <button
+      type="button"
+      className="create-course-button"
+      onClick={() => {
+        setShowCreateForm(!showCreateForm);
+        setCreateError("");
+        setCreateMessage("");
+      }}
+    >
+      {showCreateForm ? "Close Form" : "+ Create New Course"}
+    </button>
+  </div>
+)}
 
       {isAdmin && showCreateForm && (
         <section className="create-course-section">
