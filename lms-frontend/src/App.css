@@ -2792,4 +2792,23 @@
   }
 }
 
+/* Admin back to dashboard button */
+
+.admin-back-button {
+  display: inline-block;
+  margin-bottom: 25px;
+  padding: 11px 18px;
+  background: #315b4c;
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+
+.admin-back-button:hover {
+  background: #b46b4c;
+}
+
 
