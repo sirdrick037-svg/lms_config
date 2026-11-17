@@ -2278,4 +2278,134 @@
 }
 
 
+/* SKILLNEST SPLIT-SCREEN AUTHENTICATION DESIGN */
+
+.auth-page {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 50px;
+  padding: 50px 7%;
+  background:
+    linear-gradient(rgba(20, 43, 34, 0.78), rgba(20, 43, 34, 0.78)),
+    url("https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&w=1920&q=85");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* LEFT INFORMATION PANEL */
+
+.auth-intro {
+  flex: 1;
+  max-width: 550px;
+  color: #ffffff;
+  padding: 25px;
+}
+
+.auth-brand {
+  font-size: 52px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+}
+
+.auth-brand span {
+  color: #e6b58d;
+}
+
+.auth-tagline {
+  color: #e6b58d;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  margin-top: 5px;
+}
+
+.auth-intro-content {
+  margin-top: 65px;
+}
+
+.auth-intro-content h2 {
+  font-size: clamp(32px, 4vw, 48px);
+  line-height: 1.2;
+  color: #ffffff;
+  margin-bottom: 20px;
+}
+
+.auth-intro-content > p {
+  color: #e9eee5;
+  font-size: 18px;
+  line-height: 1.8;
+  max-width: 470px;
+}
+
+.auth-benefits {
+  margin-top: 30px;
+}
+
+.auth-benefits p {
+  color: #ffffff;
+  font-size: 16px;
+  margin-bottom: 18px;
+}
+
+.auth-intro-content h3 {
+  color: #e6b58d;
+  font-size: 24px;
+  font-style: italic;
+  margin-top: 45px;
+}
+
+/* RIGHT LOGIN CARD */
+
+.auth-card {
+  flex: 0 1 450px;
+  width: 100%;
+  max-width: 450px;
+  position: relative;
+  z-index: 2;
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.25);
+}
+
+/* MOBILE RESPONSIVENESS */
+
+@media (max-width: 850px) {
+  .auth-page {
+    flex-direction: column;
+    justify-content: center;
+    gap: 25px;
+    padding: 35px 18px;
+  }
+
+  .auth-intro {
+    width: 100%;
+    max-width: 500px;
+    padding: 10px;
+  }
+
+  .auth-intro-content {
+    margin-top: 25px;
+  }
+
+  .auth-intro-content h2 {
+    font-size: 30px;
+  }
+
+  .auth-intro-content h3 {
+    margin-top: 20px;
+  }
+
+  .auth-card {
+    flex: none;
+    max-width: 450px;
+    padding: 30px 24px;
+  }
+}
+
 
