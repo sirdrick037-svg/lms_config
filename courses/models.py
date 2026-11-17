@@ -15,12 +15,14 @@ class Course(models.Model):
         on_delete=models.CASCADE,
         related_name="courses_taught",
     )
-    instructors = models.ManyToManyField(
-        settings.AUTH_USER_MODEL,
-        related_name="courses_as_instructor",
-        blank=True,
-    )
-    is_published = models.BooleanField(default=False)
+    instructor = models.ForeignKey(
+    settings.AUTH_USER_MODEL,
+    on_delete=models.SET_NULL,
+    related_name="courses_taught",
+    null=True,
+    blank=True,
+)
+    _published = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
