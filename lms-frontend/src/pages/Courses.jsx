@@ -4,14 +4,30 @@ import { Link } from "react-router-dom";
 import {
   getCourses,
   getEnrollments,
+  createCourse,
 } from "../services/api";
 
 function Courses() {
+  const user = JSON.parse(localStorage.getItem("user") || "null");
+  const isAdmin = Boolean(user?.is_staff);
+
   const [courses, setCourses] = useState([]);
   const [enrolledCourseIds, setEnrolledCourseIds] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
+
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [creating, setCreating] = useState(false);
+  const [createMessage, setCreateMessage] = useState("");
+  const [createError, setCreateError] = useState("");
+
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    price: "0",
+    is_published: false,
+  });
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -19,7 +35,6 @@ function Courses() {
         const courseData = await getCourses();
         setCourses(courseData.results || courseData);
 
-        // Check which courses the student has enrolled in.
         try {
           const enrollmentData = await getEnrollments();
           const enrollments =
@@ -31,7 +46,6 @@ function Courses() {
             )
           );
         } catch (err) {
-          // Visitors who are not logged in have no enrollments.
           setEnrolledCourseIds([]);
         }
       } catch (err) {
@@ -44,6 +58,60 @@ function Courses() {
     fetchCourses();
   }, []);
 
+  const handleFormChange = (e) => {
+    const { name, value, type, checked } = e.target;
+
+    setFormData((previous) => ({
+      ...previous,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  const handleCreateCourse = async (e) => {
+    e.preventDefault();
+
+    setCreating(true);
+    setCreateMessage("");
+    setCreateError("");
+
+    try {
+      const newCourse = await createCourse({
+        ...formData,
+        price: Number(formData.price),
+      });
+
+      setCourses((previous) => [...previous, newCourse]);
+
+      setFormData({
+        title: "",
+        description: "",
+        price: "0",
+        is_published: false,
+      });
+
+      setCreateMessage("Course created successfully!");
+      setShowCreateForm(false);
+    } catch (err) {
+      const data = err.response?.data;
+
+      setCreateError(
+        data
+          ? Object.entries(data)
+              .map(([field, messages]) =>
+                `${field}: ${
+                  Array.isArray(messages)
+                    ? messages.join(", ")
+                    : messages
+                }`
+              )
+              .join(" | ")
+          : "Unable to create course. Please try again."
+      );
+    } finally {
+      setCreating(false);
+    }
+  };
+
   const filteredCourses = courses.filter((course) =>
     `${course.title} ${course.category || ""}`
       .toLowerCase()
@@ -52,6 +120,89 @@ function Courses() {
 
   return (
     <div className="courses-page">
+
+      {isAdmin && (
+        <div className="admin-course-controls">
+          <Link to="/admin" className="admin-back-button">
+            ← Back to Admin Dashboard
+          </Link>
+
+          <button
+            type="button"
+            className="create-course-button"
+            onClick={() => {
+              setShowCreateForm(!showCreateForm);
+              setCreateError("");
+              setCreateMessage("");
+            }}
+          >
+            {showCreateForm ? "Close Form" : "+ Create New Course"}
+          </button>
+        </div>
+      )}
+
+      {isAdmin && showCreateForm && (
+        <section className="create-course-section">
+          <h2>Create a New Course</h2>
+          <p>Enter the details of the course you want to add.</p>
+
+          <form onSubmit={handleCreateCourse}>
+            <label>Course Title</label>
+            <input
+              type="text"
+              name="title"
+              value={formData.title}
+              onChange={handleFormChange}
+              placeholder="Enter course title"
+              required
+            />
+
+            <label>Course Description</label>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleFormChange}
+              placeholder="Describe what students will learn"
+              rows="5"
+              required
+            />
+
+            <label>Course Price (KES)</label>
+            <input
+              type="number"
+              name="price"
+              value={formData.price}
+              onChange={handleFormChange}
+              min="0"
+              step="0.01"
+              required
+            />
+
+            <label className="publish-course-label">
+              <input
+                type="checkbox"
+                name="is_published"
+                checked={formData.is_published}
+                onChange={handleFormChange}
+              />
+              Publish this course immediately
+            </label>
+
+            {createError && (
+              <p className="error-message">{createError}</p>
+            )}
+
+            <button type="submit" disabled={creating}>
+              {creating ? "Creating Course..." : "Save Course"}
+            </button>
+          </form>
+        </section>
+      )}
+
+      {createMessage && (
+        <p className="success-message">{createMessage}</p>
+      )}
+
       <section className="courses-page-hero">
         <span>LEARN SOMETHING NEW</span>
         <h1>Explore Our Courses</h1>
@@ -80,7 +231,6 @@ function Courses() {
         </div>
 
         {loading && <p>Loading courses...</p>}
-
         {error && <p className="error-message">{error}</p>}
 
         {!loading && !error && filteredCourses.length === 0 && (
@@ -100,12 +250,7 @@ function Courses() {
                 <article className="course-card" key={course.id}>
                   <div className="course-icon">✦</div>
 
-                  <span className="course-category">
-                    {course.category || "Online Course"}
-                  </span>
-
                   <h3>{course.title}</h3>
-
                   <p>{course.description}</p>
 
                   <div className="course-card-bottom">
@@ -119,9 +264,11 @@ function Courses() {
                       to={`/courses/${course.id}`}
                       className="learn-more-btn"
                     >
-                      {isEnrolled
-                        ? "Continue Learning"
-                        : "Enroll Now"}
+                      {isAdmin
+                        ? "View Course"
+                        : isEnrolled
+                          ? "Continue Learning"
+                          : "Enroll Now"}
                     </Link>
                   </div>
 
