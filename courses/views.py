@@ -116,13 +116,15 @@ class LessonListCreateView(generics.ListCreateAPIView):
 
         # Instructors can add lessons only to their own courses.
         if (
-            user.role != "INSTRUCTOR"
-            or course.instructor_id != user.id
-        ):
-            raise PermissionDenied(
-                "You can only add lessons to your own courses."
-            )
-
+    user.role != "INSTRUCTOR"
+    or (
+        course.instructor_id != user.id
+        and not course.instructors.filter(id=user.id).exists()
+    )
+):
+              raise PermissionDenied(
+        "You can only add lessons to courses assigned to you."
+    )
         serializer.save()
 
 
