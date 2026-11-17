@@ -40,6 +40,15 @@ export const getLessons = async (courseId) => {
   return response.data;
 };
 
+// Instructor: Create a lesson for an assigned course
+export const createLesson = async (lessonData) => {
+  const response = await api.post(
+    "courses/lessons/",
+    lessonData
+  );
+
+  return response.data;
+};
 // Login
 export const loginUser = async (email, password) => {
   const response = await api.post("auth/token/", { email, password });
