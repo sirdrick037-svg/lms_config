@@ -158,6 +158,11 @@ export const getQuizAttempts = async () => {
   const response = await api.get("assessments/attempts/");
   return response.data;
 };
+// Admin: Get registered students and instructors
+export const getAdminUsers = async () => {
+  const response = await api.get("auth/admin/users/");
+  return response.data;
+};
 
 
 export default api;
