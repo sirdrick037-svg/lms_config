@@ -141,7 +141,9 @@ class LessonDetailView(generics.RetrieveUpdateDestroyAPIView):
 
         # Instructors can manage lessons in their own courses.
         if user.role == "INSTRUCTOR":
-            return queryset.filter(course__instructor=user)
+            return queryset.filter(
+        Q(course__instructor=user) | Q(course__instructors=user)
+    ).distinct()
 
         # Students can only view lessons in courses
         # they have enrolled in.
