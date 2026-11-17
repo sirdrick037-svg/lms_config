@@ -173,10 +173,13 @@ class LessonDetailView(generics.RetrieveUpdateDestroyAPIView):
                 serializer.instance.course
             )
 
-            if course.instructor_id != user.id:
-                raise PermissionDenied(
-                    "You can only edit lessons in your own courses."
-                )
+            if (
+    course.instructor_id != user.id
+    and not course.instructors.filter(id=user.id).exists()
+):
+             raise PermissionDenied(
+        "You can only edit lessons in courses assigned to you."
+    )
 
             serializer.save()
             return
