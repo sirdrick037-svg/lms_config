@@ -35,39 +35,48 @@ function Courses() {
   });
 
   useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        if (isAdmin) {
-  const userData = await getAdminUsers();
-  const allUsers = userData.results || userData;
+  const fetchCourses = async () => {
+    try {
+      const courseData = await getCourses();
 
-  setInstructors(
-    allUsers.filter((person) => person.role === "INSTRUCTOR")
-  );
-}
+      const allCourses = Array.isArray(courseData)
+        ? courseData
+        : courseData.results || [];
 
-        try {
-          const enrollmentData = await getEnrollments();
-          const enrollments =
-            enrollmentData.results || enrollmentData;
+      setCourses(allCourses);
 
-          setEnrolledCourseIds(
-            enrollments.map((enrollment) =>
-              Number(enrollment.course)
-            )
-          );
-        } catch (err) {
-          setEnrolledCourseIds([]);
-        }
-      } catch (err) {
-        setError("Unable to load courses. Please try again.");
-      } finally {
-        setLoading(false);
+      if (isAdmin) {
+        const userData = await getAdminUsers();
+        const allUsers = userData.results || userData;
+
+        setInstructors(
+          allUsers.filter((person) => person.role === "INSTRUCTOR")
+        );
       }
-    };
 
-    fetchCourses();
-  }, []);
+      try {
+        const enrollmentData = await getEnrollments();
+        const enrollments =
+          enrollmentData.results || enrollmentData;
+
+        setEnrolledCourseIds(
+          enrollments.map((enrollment) =>
+            Number(enrollment.course)
+          )
+        );
+      } catch (err) {
+        setEnrolledCourseIds([]);
+      }
+    } catch (err) {
+      console.error("Course loading error:", err);
+      setError("Unable to load courses. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchCourses();
+}, []);
 
   const handleFormChange = (e) => {
     const { name, value, type, checked } = e.target;
