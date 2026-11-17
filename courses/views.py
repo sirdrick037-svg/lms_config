@@ -196,6 +196,13 @@ class LessonDetailView(generics.RetrieveUpdateDestroyAPIView):
             return
 
         if user.role == "INSTRUCTOR":
+            if (
+                instance.course.instructor_id != user.id
+                and not instance.course.instructors.filter(id=user.id).exists()
+            ):
+                raise PermissionDenied(
+                    "You can only delete lessons in courses assigned to you."
+                )
             instance.delete()
             return
 
