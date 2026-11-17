@@ -5,6 +5,8 @@ import {
   getCourses,
   getLessons,
   createLesson,
+  updateLesson,
+  deleteLesson,
 } from "../services/api";
 
 function InstructorLessons() {
@@ -22,6 +24,8 @@ function InstructorLessons() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [order, setOrder] = useState(1);
+  const [editingLessonId, setEditingLessonId] = useState(null);
+  const [deletingLessonId, setDeletingLessonId] = useState(null);
 
   const [loading, setLoading] = useState(true);
   const [lessonsLoading, setLessonsLoading] = useState(false);
