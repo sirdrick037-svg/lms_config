@@ -37,6 +37,7 @@ function Header() {
         ) : isInstructor ? (
           <>
             <Link to="/courses">My Assigned Courses</Link>
+            <Link to="/instructor-lessons">My Lessons</Link>
             <Link to="/quiz-reviews">Quiz Reviews</Link>
           </>
         ) : (
