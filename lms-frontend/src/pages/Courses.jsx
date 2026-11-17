@@ -85,10 +85,10 @@ function Courses() {
 
     try {
       const newCourse = await createCourse({
-        ...formData,
-        price: Number(formData.price),
-      });
-
+  ...formData,
+  price: Number(formData.price),
+  instructors: selectedInstructors,
+});
       setCourses((previous) => [...previous, newCourse]);
 
       setFormData({
