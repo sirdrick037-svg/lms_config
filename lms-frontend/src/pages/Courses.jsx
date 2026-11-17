@@ -97,6 +97,7 @@ function Courses() {
         price: "0",
         is_published: false,
       });
+      setSelectedInstructors([]);
 
       setCreateMessage("Course created successfully!");
       setShowCreateForm(false);
