@@ -2,6 +2,9 @@ from django.utils import timezone
 from drf_spectacular.utils import extend_schema
 from django.core.mail import send_mail
 from django.conf import settings
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 from rest_framework import generics, status
 from rest_framework.permissions import AllowAny, IsAdminUser
@@ -15,6 +18,7 @@ from .serializers import (
     EmailTokenObtainPairSerializer,
     JoinRequestSerializer,
     JoinRequestReviewSerializer,
+    AdminUserSerializer,
 )
 from .services import create_invitation
 
@@ -206,3 +210,12 @@ The SkillNest Team
 class AcceptInvitationView(generics.CreateAPIView):
     serializer_class = AcceptInvitationSerializer
     permission_classes = [AllowAny]
+
+class AdminUserListView(generics.ListAPIView):
+    serializer_class = AdminUserSerializer
+    permission_classes = [IsAdminUser]
+
+    def get_queryset(self):
+        return User.objects.filter(
+            role__in=["STUDENT", "INSTRUCTOR"]
+        ).order_by("-date_joined")
