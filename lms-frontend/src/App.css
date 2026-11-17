@@ -2936,4 +2936,177 @@
   }
 }
 
+/* =================================
+   SKILLNEST - INSTRUCTOR LESSONS
+================================= */
+
+.instructor-lessons-page {
+  min-height: 100vh;
+  padding: 60px 7%;
+  background: #f7f5ef;
+  color: #243c35;
+}
+
+.instructor-lessons-hero {
+  background: #e9eee5;
+  padding: 45px;
+  border-radius: 15px;
+  margin-bottom: 35px;
+}
+
+.instructor-lessons-hero h1 {
+  color: #243c35;
+  font-size: 34px;
+  margin-bottom: 12px;
+}
+
+.instructor-lessons-hero p {
+  color: #718078;
+  line-height: 1.7;
+}
+
+.instructor-course-selector,
+.instructor-lesson-form-section,
+.instructor-existing-lessons {
+  background: #ffffff;
+  padding: 30px;
+  margin-bottom: 30px;
+  border-radius: 14px;
+  box-shadow: 0 5px 20px rgba(36, 60, 53, 0.06);
+}
+
+.instructor-course-selector label,
+.instructor-lesson-form-section label {
+  display: block;
+  color: #315b4c;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.instructor-course-selector select,
+.instructor-lesson-form-section input,
+.instructor-lesson-form-section textarea {
+  width: 100%;
+  padding: 13px;
+  margin-bottom: 18px;
+  border: 1px solid #d8ded5;
+  border-radius: 7px;
+  font-size: 15px;
+  color: #243c35;
+  background: #fbfcfa;
+}
+
+.instructor-lesson-form-section input:focus,
+.instructor-lesson-form-section textarea:focus,
+.instructor-course-selector select:focus {
+  outline: none;
+  border-color: #315b4c;
+  box-shadow: 0 0 0 3px rgba(49, 91, 76, 0.1);
+}
+
+.instructor-lesson-form-section button,
+.instructor-lesson-actions button {
+  border: none;
+  border-radius: 7px;
+  padding: 12px 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.instructor-lesson-form-section button {
+  background: #315b4c;
+  color: #ffffff;
+}
+
+.instructor-lesson-form-section button:hover {
+  background: #b46b4c;
+}
+
+.instructor-existing-lessons h2 {
+  color: #243c35;
+  margin-bottom: 22px;
+}
+
+.instructor-lessons-list {
+  display: grid;
+  gap: 18px;
+}
+
+.instructor-lesson-card {
+  background: #f9faf7;
+  border: 1px solid #e6ebe3;
+  border-left: 4px solid #315b4c;
+  padding: 24px;
+  border-radius: 10px;
+}
+
+.instructor-lesson-card h3 {
+  color: #315b4c;
+  margin-bottom: 10px;
+}
+
+.instructor-lesson-card p {
+  color: #718078;
+  line-height: 1.7;
+}
+
+.instructor-lesson-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.instructor-lesson-actions button:first-child {
+  background: #315b4c;
+  color: #ffffff;
+}
+
+.instructor-lesson-actions button:first-child:hover {
+  background: #243c35;
+}
+
+.instructor-lesson-actions button:last-child {
+  background: #b46b4c;
+  color: #ffffff;
+}
+
+.instructor-lesson-actions button:last-child:hover {
+  background: #96563d;
+}
+
+.instructor-lessons-empty {
+  text-align: center;
+  padding: 35px;
+  color: #718078;
+  background: #ffffff;
+  border-radius: 12px;
+}
+
+@media (max-width: 600px) {
+  .instructor-lessons-page {
+    padding: 35px 5%;
+  }
+
+  .instructor-lessons-hero,
+  .instructor-lesson-form-section,
+  .instructor-existing-lessons,
+  .instructor-course-selector {
+    padding: 22px;
+  }
+
+  .instructor-lessons-hero h1 {
+    font-size: 27px;
+  }
+
+  .instructor-lesson-actions {
+    flex-direction: column;
+  }
+
+  .instructor-lesson-actions button {
+    width: 100%;
+  }
+}
+
 
