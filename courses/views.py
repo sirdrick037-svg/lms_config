@@ -82,7 +82,9 @@ class LessonListCreateView(generics.ListCreateAPIView):
 
         # Instructors can access lessons in their own courses.
         elif user.role == "INSTRUCTOR":
-            queryset = queryset.filter(course__instructor=user)
+         queryset = queryset.filter(
+        Q(course__instructor=user) | Q(course__instructors=user)
+    ).distinct()
 
         # Students can only access lessons in courses
         # they have enrolled in.
