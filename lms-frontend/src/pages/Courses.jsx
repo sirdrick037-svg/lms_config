@@ -11,8 +11,10 @@ import {
 function Courses() {
   const user = JSON.parse(localStorage.getItem("user") || "null");
   const isAdmin = Boolean(user?.is_staff);
+  const isInstructor = user?.role === "INSTRUCTOR" && !isAdmin;
   console.log("Logged-in user:", user);
   console.log("Is admin:", isAdmin);
+  console.log("Is instructor:", isInstructor);
 
   const [courses, setCourses] = useState([]);
   const [instructors, setInstructors] = useState([]);
