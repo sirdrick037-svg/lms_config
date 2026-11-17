@@ -2408,4 +2408,233 @@
   }
 }
 
+/* =========================================
+   SKILLNEST INVITATION PAGE - SPLIT DESIGN
+========================================= */
+
+.join-request-page {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 45px;
+  padding: 55px 7%;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(20, 43, 34, 0.94),
+      rgba(20, 43, 34, 0.72)
+    ),
+    url("https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=1920&q=85");
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* LEFT SKILLNEST PANEL */
+
+.join-intro {
+  flex: 1;
+  max-width: 540px;
+  color: #ffffff;
+  padding: 20px;
+}
+
+.join-brand {
+  color: #ffffff;
+  font-size: 52px;
+  font-weight: 800;
+  margin: 0;
+}
+
+.join-brand span {
+  color: #e6b58d;
+}
+
+.join-tagline {
+  color: #e6b58d;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  margin-top: 5px;
+}
+
+.join-intro-content {
+  margin-top: 65px;
+}
+
+.join-eyebrow {
+  color: #e6b58d;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.join-intro-content h2 {
+  color: #ffffff;
+  font-size: clamp(32px, 4vw, 46px);
+  line-height: 1.2;
+  margin: 18px 0;
+}
+
+.join-intro-content > p {
+  color: #e9eee5;
+  font-size: 17px;
+  line-height: 1.8;
+  max-width: 480px;
+}
+
+.join-benefits {
+  margin-top: 30px;
+}
+
+.join-benefits p {
+  color: #ffffff;
+  font-size: 16px;
+  margin-bottom: 18px;
+}
+
+.join-intro-content h3 {
+  color: #e6b58d;
+  font-size: 23px;
+  font-style: italic;
+  margin-top: 40px;
+}
+
+/* RIGHT INVITATION FORM */
+
+.join-request-container {
+  flex: 0 1 520px;
+  width: 100%;
+  max-width: 520px;
+  margin: 0;
+  padding: 38px;
+  background: #ffffff;
+  border-radius: 16px;
+  border-top: 5px solid #b46b4c;
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.25);
+}
+
+.join-request-container h1 {
+  color: #243c35;
+  font-size: 30px;
+}
+
+.join-request-container > p {
+  color: #718078;
+  line-height: 1.7;
+}
+
+.join-request-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.join-request-container label {
+  color: #315b4c;
+  font-weight: 700;
+}
+
+.join-request-container input,
+.join-request-container select,
+.join-request-container textarea {
+  width: 100%;
+  padding: 13px 14px;
+  border: 1px solid #d8ded5;
+  border-radius: 8px;
+  background: #fbfcfa;
+  color: #243c35;
+  font-size: 15px;
+}
+
+.join-request-container input:focus,
+.join-request-container select:focus,
+.join-request-container textarea:focus {
+  outline: none;
+  border-color: #315b4c;
+  box-shadow: 0 0 0 3px rgba(49, 91, 76, 0.10);
+}
+
+.join-request-container textarea {
+  resize: vertical;
+}
+
+.join-request-container form button {
+  background: #315b4c;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 15px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.join-request-container form button:hover {
+  background: #b46b4c;
+  transform: translateY(-2px);
+}
+
+.join-request-container form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.join-request-container .join-note {
+  font-size: 13px;
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* MOBILE RESPONSIVENESS */
+
+@media (max-width: 900px) {
+  .join-request-page {
+    flex-direction: column;
+    justify-content: center;
+    gap: 25px;
+    padding: 35px 18px;
+  }
+
+  .join-intro {
+    width: 100%;
+    max-width: 520px;
+    padding: 10px;
+  }
+
+  .join-intro-content {
+    margin-top: 25px;
+  }
+
+  .join-intro-content h2 {
+    font-size: 32px;
+  }
+
+  .join-intro-content h3 {
+    margin-top: 20px;
+  }
+
+  .join-request-container {
+    flex: none;
+    max-width: 520px;
+    padding: 28px 22px;
+  }
+}
+
+@media (max-width: 500px) {
+  .join-brand {
+    font-size: 40px;
+  }
+
+  .join-request-container h1 {
+    font-size: 25px;
+  }
+}
+
 
