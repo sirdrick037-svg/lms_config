@@ -11,6 +11,7 @@ import Register from "./pages/Register";
 import CourseDetails from "./pages/CourseDetails";
 import About from "./pages/About";
 import Dashboard from "./pages/Dashboard";
+import AdminDashboard from "./pages/AdminDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Quizzes from "./Quizzes";
 import QuizReviews from "./pages/QuizReviews";
@@ -30,6 +31,16 @@ function AdminOnlyRoute() {
   );
 }
 
+function AdminDashboardRoute() {
+  const user = JSON.parse(localStorage.getItem("user") || "null");
+
+  return user?.is_staff ? (
+    <AdminDashboard />
+  ) : (
+    <h2>You do not have permission to access this page.</h2>
+  );
+}
+
 function QuizReviewRoute() {
   const user = JSON.parse(localStorage.getItem("user") || "null");
 
@@ -41,7 +52,6 @@ function QuizReviewRoute() {
 }
 
 function App() {
-  
   return (
     <BrowserRouter>
       <div className="app">
@@ -57,10 +67,51 @@ function App() {
             <Route path="/accept-invitation" element={<AcceptInvitation />} />
             <Route path="/courses/:id" element={<CourseDetails />} />
             <Route path="/about" element={<About />} />
-            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-            <Route path="/quizzes" element={<ProtectedRoute><Quizzes /></ProtectedRoute>} />
-            <Route path="/admin/join-requests" element={<ProtectedRoute><AdminOnlyRoute /></ProtectedRoute>}/>
-            <Route path="/quiz-reviews" element={<ProtectedRoute><QuizReviewRoute /></ProtectedRoute>}/>
+
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute>
+                  <AdminDashboardRoute />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/quizzes"
+              element={
+                <ProtectedRoute>
+                  <Quizzes />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin/join-requests"
+              element={
+                <ProtectedRoute>
+                  <AdminOnlyRoute />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/quiz-reviews"
+              element={
+                <ProtectedRoute>
+                  <QuizReviewRoute />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </main>
 
