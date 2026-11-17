@@ -24,6 +24,7 @@ function InstructorLessons() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [order, setOrder] = useState(1);
+
   const [editingLessonId, setEditingLessonId] = useState(null);
   const [deletingLessonId, setDeletingLessonId] = useState(null);
 
@@ -150,6 +151,99 @@ function InstructorLessons() {
     }
   };
 
+  const handleEditLesson = (lesson) => {
+    setEditingLessonId(lesson.id);
+    setTitle(lesson.title);
+    setContent(lesson.content);
+    setOrder(lesson.order);
+    setSuccess("");
+    setError("");
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
+  const handleCancelEdit = () => {
+    setEditingLessonId(null);
+    setTitle("");
+    setContent("");
+    setOrder(lessons.length + 1);
+    setError("");
+    setSuccess("");
+  };
+
+  const handleUpdateLesson = async (e) => {
+    e.preventDefault();
+
+    setSaving(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      const updatedLesson = await updateLesson(editingLessonId, {
+        course: Number(selectedCourseId),
+        title,
+        content,
+        order: Number(order),
+      });
+
+      setLessons((previous) =>
+        previous
+          .map((lesson) =>
+            lesson.id === editingLessonId
+              ? updatedLesson
+              : lesson
+          )
+          .sort((a, b) => Number(a.order) - Number(b.order))
+      );
+
+      setEditingLessonId(null);
+      setTitle("");
+      setContent("");
+      setOrder(lessons.length + 1);
+
+      setSuccess("Lesson updated successfully!");
+    } catch (err) {
+      console.error("Lesson update error:", err);
+      setError("Unable to update lesson. Please try again.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDeleteLesson = async (lessonId) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this lesson?"
+    );
+
+    if (!confirmed) return;
+
+    setDeletingLessonId(lessonId);
+    setError("");
+    setSuccess("");
+
+    try {
+      await deleteLesson(lessonId);
+
+      setLessons((previous) =>
+        previous.filter((lesson) => lesson.id !== lessonId)
+      );
+
+      if (editingLessonId === lessonId) {
+        handleCancelEdit();
+      }
+
+      setSuccess("Lesson deleted successfully!");
+    } catch (err) {
+      console.error("Lesson deletion error:", err);
+      setError("Unable to delete lesson. Please try again.");
+    } finally {
+      setDeletingLessonId(null);
+    }
+  };
+
   const selectedCourse = courses.find(
     (course) => Number(course.id) === Number(selectedCourseId)
   );
@@ -210,6 +304,7 @@ function InstructorLessons() {
                 setSelectedCourseId(e.target.value);
                 setSuccess("");
                 setError("");
+                handleCancelEdit();
               }}
             >
               {courses.map((course) => (
@@ -225,12 +320,22 @@ function InstructorLessons() {
           </section>
 
           <section className="instructor-lesson-form-section">
-            <h2>Create a New Lesson</h2>
+            <h2>
+              {editingLessonId ? "Edit Lesson" : "Create a New Lesson"}
+            </h2>
             <p>
-              Add learning material to the selected course.
+              {editingLessonId
+                ? "Update the details of this lesson."
+                : "Add learning material to the selected course."}
             </p>
 
-            <form onSubmit={handleCreateLesson}>
+            <form
+              onSubmit={
+                editingLessonId
+                  ? handleUpdateLesson
+                  : handleCreateLesson
+              }
+            >
               <label htmlFor="lesson-title">
                 Lesson Title
               </label>
@@ -271,8 +376,22 @@ function InstructorLessons() {
               />
 
               <button type="submit" disabled={saving}>
-                {saving ? "Saving Lesson..." : "Create Lesson"}
+                {saving
+                  ? "Saving Lesson..."
+                  : editingLessonId
+                    ? "Update Lesson"
+                    : "Create Lesson"}
               </button>
+
+              {editingLessonId && (
+                <button
+                  type="button"
+                  onClick={handleCancelEdit}
+                  disabled={saving}
+                >
+                  Cancel Editing
+                </button>
+              )}
             </form>
           </section>
 
@@ -293,6 +412,28 @@ function InstructorLessons() {
                     <span>LESSON {lesson.order}</span>
                     <h3>{lesson.title}</h3>
                     <p>{lesson.content}</p>
+
+                    <div className="instructor-lesson-actions">
+                      <button
+                        type="button"
+                        onClick={() => handleEditLesson(lesson)}
+                        disabled={saving || deletingLessonId !== null}
+                      >
+                        Edit Lesson
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteLesson(lesson.id)}
+                        disabled={
+                          deletingLessonId === lesson.id || saving
+                        }
+                      >
+                        {deletingLessonId === lesson.id
+                          ? "Deleting..."
+                          : "Delete Lesson"}
+                      </button>
+                    </div>
                   </article>
                 ))}
               </div>
