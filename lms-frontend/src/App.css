@@ -2811,4 +2811,130 @@
   background: #b46b4c;
 }
 
+/* =================================
+   ADMIN COURSE MANAGEMENT
+================================= */
+
+.admin-course-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin: 25px 40px;
+}
+
+.create-course-button {
+  padding: 12px 22px;
+  background: #315b4c;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.create-course-button:hover {
+  background: #b46b4c;
+}
+
+.create-course-section {
+  max-width: 750px;
+  margin: 25px auto 40px;
+  padding: 35px;
+  background: #ffffff;
+  border: 1px solid #e8e5dc;
+  border-radius: 16px;
+  box-shadow: 0 5px 18px rgba(36, 60, 53, 0.06);
+}
+
+.create-course-section h2 {
+  color: #315b4c;
+  margin-bottom: 10px;
+}
+
+.create-course-section > p {
+  color: #718078;
+  margin-bottom: 25px;
+}
+
+.create-course-section form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.create-course-section form label {
+  color: #243c35;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.create-course-section input:not([type="checkbox"]),
+.create-course-section textarea {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #d9ded9;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.create-course-section input:focus,
+.create-course-section textarea:focus {
+  outline: none;
+  border-color: #315b4c;
+}
+
+.create-course-section textarea {
+  resize: vertical;
+}
+
+.create-course-section .publish-course-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.create-course-section form button {
+  padding: 14px;
+  background: #315b4c;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.create-course-section form button:hover {
+  background: #b46b4c;
+}
+
+.create-course-section form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.success-message {
+  color: #315b4c;
+  background: #e8f2ec;
+  padding: 12px 18px;
+  border-radius: 8px;
+  margin: 15px 40px;
+}
+
+@media (max-width: 600px) {
+  .admin-course-controls {
+    margin: 20px;
+  }
+
+  .create-course-section {
+    margin: 20px;
+    padding: 22px;
+  }
+}
+
 
