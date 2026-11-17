@@ -90,6 +90,33 @@ function Register() {
 
   return (
     <div className="auth-page">
+
+<div className="auth-intro">
+  <h1 className="auth-brand">
+    Skill<span>Nest</span>
+  </h1>
+
+  <p className="auth-tagline">LEARN • PRACTICE • GROW</p>
+
+  <div className="auth-intro-content">
+    <h2>Start Your Learning Journey</h2>
+
+    <p>
+      Join SkillNest and take the next step towards
+      building your knowledge and developing valuable skills.
+    </p>
+
+    <div className="auth-benefits">
+      <p>✓ Explore quality learning materials</p>
+      <p>✓ Learn at your own pace</p>
+      <p>✓ Complete quizzes and track progress</p>
+      <p>✓ Work towards your learning goals</p>
+    </div>
+
+    <h3>Your Future Starts Here.</h3>
+  </div>
+</div>
+
       <div className="auth-card">
         <h1>Create Your Account</h1>
         <p>Join SkillNest and take the next step in your learning journey.</p>
