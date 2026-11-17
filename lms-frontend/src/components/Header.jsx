@@ -27,7 +27,10 @@ function Header() {
 
       <nav className="navbar">
         {isAdmin ? (
-          <Link to="/admin/join-requests">Invitation Requests</Link>
+          <>
+            <Link to="/admin">Admin Dashboard</Link>
+            <Link to="/admin/join-requests">Invitation Requests</Link>
+          </>
         ) : isInstructor ? (
           <Link to="/quiz-reviews">Quiz Reviews</Link>
         ) : (
