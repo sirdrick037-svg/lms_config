@@ -39,9 +39,7 @@ function EyeIcon({ visible }) {
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -53,12 +51,6 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-
-    if (password !== confirmPassword) {
-      setError("Passwords do not match.");
-      return;
-    }
-
     setLoading(true);
 
     try {
@@ -84,7 +76,6 @@ function Login() {
 
   return (
     <div className="auth-page">
-
       <div className="auth-intro">
         <h1 className="auth-brand">
           Skill<span>Nest</span>
@@ -150,29 +141,6 @@ function Login() {
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
               <EyeIcon visible={showPassword} />
-            </button>
-          </div>
-
-          <label>Confirm Password</label>
-          <div className="password-input-wrapper">
-            <input
-              type={showConfirmPassword ? "text" : "password"}
-              placeholder="Re-enter your password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-            />
-            <button
-              type="button"
-              className="password-toggle"
-              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              aria-label={
-                showConfirmPassword
-                  ? "Hide confirmation password"
-                  : "Show confirmation password"
-              }
-            >
-              <EyeIcon visible={showConfirmPassword} />
             </button>
           </div>
 
