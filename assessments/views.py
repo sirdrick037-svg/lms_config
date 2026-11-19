@@ -1,5 +1,4 @@
 
-from django.http import request
 from django.shortcuts import get_object_or_404
 from django.db import transaction
 from django.db.models import Q
@@ -47,9 +46,9 @@ class QuizListCreateView(generics.ListCreateAPIView):
 
         if user.role == "INSTRUCTOR":
             return queryset.filter(
-        Q(course__instructor=user) |
-        Q(course__instructors=user)
-    ).distinct()
+                Q(course__instructor=user) |
+                Q(course__instructors=user)
+            ).distinct()
 
         return queryset.filter(
             is_published=True,
@@ -65,11 +64,11 @@ class QuizListCreateView(generics.ListCreateAPIView):
             return
 
         if user.role != "INSTRUCTOR" or not (
-    course.instructor_id == user.id or
-    course.instructors.filter(id=user.id).exists()
-):
+            course.instructor_id == user.id or
+            course.instructors.filter(id=user.id).exists()
+        ):
             raise PermissionDenied(
-                "You can only create quizzes for your own courses."
+                "You can only create quizzes for your assigned courses."
             )
 
         serializer.save()
@@ -93,7 +92,7 @@ class QuizDetailView(generics.RetrieveUpdateDestroyAPIView):
         if user.is_staff:
             return queryset
 
-        if user.role == "INSTRUCTOR":   
+        if user.role == "INSTRUCTOR":
             return queryset.filter(
                 Q(course__instructor=user) |
                 Q(course__instructors=user)
@@ -107,8 +106,15 @@ class QuizDetailView(generics.RetrieveUpdateDestroyAPIView):
     def _check_instructor(self, request, quiz):
         user = request.user
 
-        if user.role == "INSTRUCTOR":
-           is_assigned = (
+        if user.is_staff:
+            return
+
+        if user.role != "INSTRUCTOR":
+            raise PermissionDenied(
+                "You are not allowed to manage quizzes."
+            )
+
+        is_assigned = (
             quiz.course.instructor_id == user.id or
             quiz.course.instructors.filter(id=user.id).exists()
         )
@@ -153,8 +159,9 @@ class QuestionListCreateView(generics.ListCreateAPIView):
 
         if user.role == "INSTRUCTOR":
             return queryset.filter(
-                quiz__course__instructor=user
-            )
+                Q(quiz__course__instructor=user) |
+                Q(quiz__course__instructors=user)
+            ).distinct()
 
         return queryset.filter(
             quiz__is_published=True,
@@ -179,12 +186,12 @@ class QuestionListCreateView(generics.ListCreateAPIView):
             serializer.save(quiz=quiz)
             return
 
-        if (
-            user.role != "INSTRUCTOR"
-            or quiz.course.instructor_id != user.id
+        if user.role != "INSTRUCTOR" or not (
+            quiz.course.instructor_id == user.id or
+            quiz.course.instructors.filter(id=user.id).exists()
         ):
             raise PermissionDenied(
-                "You can only add questions to your own quizzes."
+                "You can only add questions to your assigned courses."
             )
 
         serializer.save(quiz=quiz)
@@ -232,10 +239,6 @@ class QuizAttemptListCreateView(generics.ListCreateAPIView):
 
         serializer.save(student=user)
 
-
-# --------------------------------------------------
-# SUBMIT QUIZ
-# --------------------------------------------------
 
 # --------------------------------------------------
 # SUBMIT QUIZ
@@ -340,7 +343,7 @@ class SubmitQuizView(APIView):
                 }
             )
 
-        # IMPORTANT: Save the selected instructor on the attempt
+        # Save the selected instructor on the attempt
         attempt.selected_reviewer = selected_reviewer
 
         # Get all questions belonging to this quiz
