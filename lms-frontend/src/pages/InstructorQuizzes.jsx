@@ -47,6 +47,41 @@ const [isPublished, setIsPublished] = useState(false);
     }
   };
 
+  const handleCreateQuiz = async (e) => {
+    e.preventDefault();
+
+    if (!selectedCourse || !quizTitle.trim()) {
+      setError("Please select a course and enter a quiz title.");
+      return;
+    }
+
+    try {
+      setError("");
+      setSuccess("");
+
+      await createQuiz({
+        course: Number(selectedCourse),
+        title: quizTitle,
+        description: quizDescription,
+        passing_score: Number(passingScore),
+        is_published: isPublished,
+      });
+
+      setQuizTitle("");
+      setQuizDescription("");
+      setPassingScore(50);
+      setIsPublished(false);
+
+      setSuccess("Quiz created successfully!");
+      await loadData();
+    } catch (err) {
+      setError(
+        err.response?.data?.detail || "Unable to create the quiz."
+      );
+    }
+  };
+
+
   if (loading) {
     return <div className="instructor-quizzes-page">Loading quizzes...</div>;
   }
