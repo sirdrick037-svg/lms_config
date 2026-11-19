@@ -201,17 +201,19 @@ export const getQuizSubmissionsForReview = async () => {
   return response.data;
 };
 
-// Instructor/Admin: Review a quiz attempt
-export const reviewQuizAttempt = async (attemptId, reviewStatus) => {
+
+// Instructor/Admin: Award marks and review a quiz attempt
+export const reviewQuizAttempt = async (attemptId, reviewedScore) => {
   const response = await api.patch(
     `assessments/attempts/${attemptId}/review/`,
     {
-      review_status: reviewStatus,
+      reviewed_score: Number(reviewedScore),
     }
   );
 
   return response.data;
 };
+
 // Student quiz attempts
 export const getQuizAttempts = async () => {
   const response = await api.get("assessments/attempts/");
