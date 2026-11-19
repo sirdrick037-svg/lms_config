@@ -226,13 +226,23 @@ const handleUpdateQuiz = async (e) => {
         ) : (
           quizzes.map((quiz) => (
             <div className="instructor-quiz-card" key={quiz.id}>
-              <h3>{quiz.title}</h3>
-              <p>{quiz.description}</p>
-              <p>Passing score: {quiz.passing_score}%</p>
-              <p>
-                Status: {quiz.is_published ? "Published" : "Draft"}
-              </p>
-            </div>
+  <h3>{quiz.title}</h3>
+  <p>{quiz.description}</p>
+  <p>Passing score: {quiz.passing_score}%</p>
+  <p>
+    Status: {quiz.is_published ? "Published" : "Draft"}
+  </p>
+
+  <div className="instructor-quiz-actions">
+    <button onClick={() => handleEditQuiz(quiz)}>
+      Edit Quiz
+    </button>
+
+    <button onClick={() => handleDeleteQuiz(quiz.id)}>
+      Delete Quiz
+    </button>
+  </div>
+</div>
           ))
         )}
       </div>
