@@ -1,4 +1,5 @@
 
+from django.http import request
 from django.shortcuts import get_object_or_404
 from django.db import transaction
 from django.db.models import Q
@@ -103,31 +104,33 @@ class QuizDetailView(generics.RetrieveUpdateDestroyAPIView):
             course__is_published=True
         )
 
-    def _check_instructor(self):
-        quiz = self.get_object()
-        user = self.request.user
+    def _check_instructor(self, request, quiz):
+        user = request.user
 
-        if user.is_staff:
-            return
+        if user.role == "INSTRUCTOR":
+           is_assigned = (
+            quiz.course.instructor_id == user.id or
+            quiz.course.instructors.filter(id=user.id).exists()
+        )
 
-        if (
-            user.role != "INSTRUCTOR"
-            or quiz.course.instructor_id != user.id
-        ):
+        if not is_assigned:
             raise PermissionDenied(
-                "Only the course instructor or administrator can modify this quiz."
+                "You can only manage quizzes for your assigned courses."
             )
 
     def update(self, request, *args, **kwargs):
-        self._check_instructor()
+        quiz = self.get_object()
+        self._check_instructor(request, quiz)
         return super().update(request, *args, **kwargs)
 
     def partial_update(self, request, *args, **kwargs):
-        self._check_instructor()
+        quiz = self.get_object()
+        self._check_instructor(request, quiz)
         return super().partial_update(request, *args, **kwargs)
 
     def destroy(self, request, *args, **kwargs):
-        self._check_instructor()
+        quiz = self.get_object()
+        self._check_instructor(request, quiz)
         return super().destroy(request, *args, **kwargs)
 
 
