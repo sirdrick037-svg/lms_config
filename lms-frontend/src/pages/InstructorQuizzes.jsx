@@ -276,12 +276,33 @@ const handleOpenQuiz = async (quiz) => {
   <p>
     Status: {quiz.is_published ? "Published" : "Draft"}
   </p>
+  {selectedQuiz && (
+  <div className="instructor-questions-section">
+    <h2>Manage Questions: {selectedQuiz.title}</h2>
+
+    {questions.length === 0 ? (
+      <p>No questions have been added to this quiz yet.</p>
+    ) : (
+      questions.map((question, index) => (
+        <div className="instructor-question-card" key={question.id}>
+          <h3>Question {index + 1}</h3>
+          <p>{question.text}</p>
+
+          <p>A. {question.option_a}</p>
+          <p>B. {question.option_b}</p>
+          <p>C. {question.option_c}</p>
+          <p>D. {question.option_d}</p>
+        </div>
+      ))
+    )}
+  </div>
+)}
 
   <div className="instructor-quiz-actions">
     <button onClick={() => handleEditQuiz(quiz)}>
       Edit Quiz
     </button>
-    
+
     <button onClick={() => handleOpenQuiz(quiz)}>
   Manage Questions
 </button>
