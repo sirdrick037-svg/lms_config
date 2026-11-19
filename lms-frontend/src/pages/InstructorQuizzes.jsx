@@ -24,6 +24,14 @@ function InstructorQuizzes() {
   const [passingScore, setPassingScore] = useState(50);
   const [isPublished, setIsPublished] = useState(false);
   const [editingQuizId, setEditingQuizId] = useState(null);
+  const [selectedQuiz, setSelectedQuiz] = useState(null);
+  const [questions, setQuestions] = useState([]);
+  const [questionText, setQuestionText] = useState("");
+  const [optionA, setOptionA] = useState("");
+  const [optionB, setOptionB] = useState("");
+  const [optionC, setOptionC] = useState("");
+  const [optionD, setOptionD] = useState("");
+  const [correctAnswer, setCorrectAnswer] = useState("A");
 
   useEffect(() => {
     loadData();
