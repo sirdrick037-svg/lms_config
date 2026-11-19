@@ -144,6 +144,7 @@ class QuizDetailView(generics.RetrieveUpdateDestroyAPIView):
 # QUESTION LIST AND CREATE
 # --------------------------------------------------
 
+
 class QuestionListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
@@ -164,12 +165,15 @@ class QuestionListCreateView(generics.ListCreateAPIView):
             ).distinct()
 
         return queryset.filter(
+            is_active=True,
             quiz__is_published=True,
             quiz__course__is_published=True
         )
 
     def get_serializer_class(self):
-        if self.request.method == "POST":
+        user = self.request.user
+
+        if user.is_staff or user.role == "INSTRUCTOR":
             return QuestionWriteSerializer
 
         return QuestionSerializer
@@ -195,6 +199,7 @@ class QuestionListCreateView(generics.ListCreateAPIView):
             )
 
         serializer.save(quiz=quiz)
+
 
 
 # --------------------------------------------------
