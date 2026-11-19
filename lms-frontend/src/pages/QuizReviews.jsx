@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import {
   getQuizSubmissionsForReview,
@@ -7,6 +8,8 @@ import "./QuizReviews.css";
 
 function QuizReviews() {
   const [attempts, setAttempts] = useState([]);
+  const [marks, setMarks] = useState({});
+  const [reviewingId, setReviewingId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
@@ -19,13 +22,19 @@ function QuizReviews() {
 
       const data = await getQuizSubmissionsForReview();
 
-      console.log("Review attempts:", data);
-
       const results = Array.isArray(data)
         ? data
         : data.results || [];
 
       setAttempts(results);
+
+      const initialMarks = {};
+      results.forEach((attempt) => {
+        initialMarks[attempt.id] =
+          attempt.reviewed_score ?? "";
+      });
+
+      setMarks(initialMarks);
     } catch (err) {
       console.error("Error fetching submissions:", err);
 
@@ -42,16 +51,37 @@ function QuizReviews() {
     fetchAttempts();
   }, []);
 
-  // Approve or reject a submission
-  const handleReview = async (attemptId, reviewStatus) => {
-    console.log("Review button clicked:", attemptId, reviewStatus);
+  // Update the mark entered for a student
+  const handleMarkChange = (attemptId, value) => {
+    setMarks((previousMarks) => ({
+      ...previousMarks,
+      [attemptId]: value,
+    }));
+  };
+
+  // Award marks and submit the review
+  const handleReview = async (attemptId) => {
+    const enteredMark = marks[attemptId];
+
+    if (
+      enteredMark === "" ||
+      enteredMark === undefined ||
+      !Number.isInteger(Number(enteredMark)) ||
+      Number(enteredMark) < 0 ||
+      Number(enteredMark) > 100
+    ) {
+      setError("Please enter a whole-number mark between 0 and 100.");
+      return;
+    }
+
     try {
       setMessage("");
       setError("");
+      setReviewingId(attemptId);
 
       const updatedAttempt = await reviewQuizAttempt(
         attemptId,
-        reviewStatus
+        Number(enteredMark)
       );
 
       setAttempts((previousAttempts) =>
@@ -61,7 +91,7 @@ function QuizReviews() {
       );
 
       setMessage(
-        `Quiz attempt #${attemptId} marked as ${reviewStatus}.`
+        `Attempt #${attemptId} has been reviewed successfully.`
       );
     } catch (err) {
       console.error("Error reviewing quiz:", err);
@@ -70,6 +100,8 @@ function QuizReviews() {
         err.response?.data?.detail ||
           "Failed to review this quiz attempt."
       );
+    } finally {
+      setReviewingId(null);
     }
   };
 
@@ -116,126 +148,152 @@ function QuizReviews() {
         </div>
       ) : (
         <div className="review-list">
-          {attempts.map((attempt) => (
-            <div className="review-card" key={attempt.id}>
-              {/* Student information */}
-              <div className="review-card-header">
-                <div>
-                  <h2>{attempt.quiz_title || "Quiz"}</h2>
+          {attempts.map((attempt) => {
+            const isReviewed =
+              attempt.review_status === "PASS" ||
+              attempt.review_status === "FAIL";
 
-                  <p>
-                    Student:{" "}
-                    {attempt.student_username ||
-                      `Student #${attempt.student}`}
-                  </p>
+            return (
+              <div className="review-card" key={attempt.id}>
+                {/* Student information */}
+                <div className="review-card-header">
+                  <div>
+                    <h2>{attempt.quiz_title || "Quiz"}</h2>
 
-                  <p>Attempt ID: {attempt.id}</p>
+                    <p>
+                      Student:{" "}
+                      {attempt.student_username ||
+                        `Student #${attempt.student}`}
+                    </p>
+
+                    <p>Attempt ID: {attempt.id}</p>
+                  </div>
+
+                  <span
+                    className={`review-status ${
+                      (attempt.review_status || "PENDING").toLowerCase()
+                    }`}
+                  >
+                    {attempt.review_status || "PENDING"}
+                  </span>
                 </div>
 
-                <span
-                  className={`review-status ${
-                    (attempt.review_status || "PENDING").toLowerCase()
-                  }`}
-                >
-                  {attempt.review_status || "PENDING"}
-                </span>
-              </div>
+                {/* Automatic score */}
+                <div className="review-score">
+                  <strong>Automatic score:</strong>{" "}
+                  {attempt.score ?? 0}%
+                </div>
 
-              {/* Score */}
-              <div className="review-score">
-                <strong>Automatic score:</strong>{" "}
-                {attempt.score ?? 0}%
-              </div>
+                {/* Student answers */}
+                <div className="review-answers">
+                  <h3>Student Answers</h3>
 
-              {/* Student answers */}
-              <div className="review-answers">
-                <h3>Student Answers</h3>
+                  {attempt.answers && attempt.answers.length > 0 ? (
+                    attempt.answers.map((answer) => (
+                      <div
+                        className="review-answer"
+                        key={answer.id}
+                      >
+                        <h4>
+                          {answer.question_text ||
+                            `Question #${answer.question}`}
+                        </h4>
 
-                {attempt.answers && attempt.answers.length > 0 ? (
-                  attempt.answers.map((answer) => (
-                    <div
-                      className="review-answer"
-                      key={answer.id}
-                    >
-                      <h4>
-                        {answer.question_text ||
-                          `Question #${answer.question}`}
-                      </h4>
+                        <div className="answer-options">
+                          {[
+                            ["A", answer.option_a],
+                            ["B", answer.option_b],
+                            ["C", answer.option_c],
+                            ["D", answer.option_d],
+                          ].map(([letter, option]) => (
+                            <div
+                              className="answer-option"
+                              key={letter}
+                            >
+                              <strong>{letter}:</strong>{" "}
+                              {option || "Option not available"}
+                            </div>
+                          ))}
+                        </div>
 
-                      {/* Answer options */}
-                      <div className="answer-options">
-                        {[
-                          ["A", answer.option_a],
-                          ["B", answer.option_b],
-                          ["C", answer.option_c],
-                          ["D", answer.option_d],
-                        ].map(([letter, option]) => (
-                          <div
-                            className="answer-option"
-                            key={letter}
-                          >
-                            <strong>{letter}:</strong>{" "}
-                            {option || "Option not available"}
-                          </div>
-                        ))}
+                        <p>
+                          <strong>Student selected:</strong>{" "}
+                          {answer.selected_answer || "Not answered"}
+                        </p>
+
+                        <p>
+                          <strong>Automatic marking:</strong>{" "}
+                          {answer.is_correct ? "Correct" : "Incorrect"}
+                        </p>
                       </div>
+                    ))
+                  ) : (
+                    <p>No answers found for this attempt.</p>
+                  )}
+                </div>
 
-                      {/* Selected answer */}
+                {/* Instructor grading */}
+                <div className="review-actions">
+                  {!isReviewed ? (
+                    <>
+                      <label>
+                        **Awarded Mark (%)**
+                      </label>
+
+                      <input
+                        type="number"
+                        min="0"
+                        max="100"
+                        step="1"
+                        placeholder="Enter mark from 0 to 100"
+                        value={marks[attempt.id] ?? ""}
+                        onChange={(event) =>
+                          handleMarkChange(
+                            attempt.id,
+                            event.target.value
+                          )
+                        }
+                      />
+
+                      <button
+                        className="pass-button"
+                        disabled={reviewingId === attempt.id}
+                        onClick={() => handleReview(attempt.id)}
+                      >
+                        {reviewingId === attempt.id
+                          ? "Submitting..."
+                          : "Award Mark"}
+                      </button>
+                    </>
+                  ) : (
+                    <div className="final-review-result">
+                      <h3>
+                        Final Result: {attempt.review_status}
+                      </h3>
+
                       <p>
-                        <strong>Student selected:</strong>{" "}
-                        {answer.selected_answer || "Not answered"}
+                        <strong>Awarded Mark:</strong>{" "}
+                        {attempt.reviewed_score}%
                       </p>
 
-                      {/* Automatic marking */}
                       <p>
-                        <strong>Automatic marking:</strong>{" "}
-                        {answer.is_correct ? "Correct" : "Incorrect"}
+                        <strong>Feedback:</strong>{" "}
+                        {attempt.instructor_feedback}
                       </p>
                     </div>
-                  ))
-                ) : (
-                  <p>No answers found for this attempt.</p>
+                  )}
+                </div>
+
+                {/* Review date */}
+                {attempt.reviewed_at && (
+                  <p className="reviewed-date">
+                    Reviewed on:{" "}
+                    {new Date(attempt.reviewed_at).toLocaleString()}
+                  </p>
                 )}
               </div>
-
-              {/* Approve and reject buttons */}
-              <div className="review-actions">
-                <button
-                  className="pass-button"
-                  disabled={
-                    attempt.review_status === "PASS" ||
-                    attempt.review_status === "FAIL"
-                  }
-                  onClick={() =>
-                    handleReview(attempt.id, "PASS")
-                  }
-                >
-                  Approve
-                </button>
-
-                <button
-                  className="fail-button"
-                  disabled={
-                    attempt.review_status === "PASS" ||
-                    attempt.review_status === "FAIL"
-                  }
-                  onClick={() =>
-                    handleReview(attempt.id, "FAIL")
-                  }
-                >
-                  Reject
-                </button>
-              </div>
-
-              {/* Review date */}
-              {attempt.reviewed_at && (
-                <p className="reviewed-date">
-                  Reviewed on:{" "}
-                  {new Date(attempt.reviewed_at).toLocaleString()}
-                </p>
-              )}
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>
