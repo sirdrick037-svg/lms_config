@@ -81,6 +81,17 @@ function InstructorQuizzes() {
       );
     }
   };
+const handleEditQuiz = (quiz) => {
+  setEditingQuizId(quiz.id);
+  setSelectedCourse(String(quiz.course));
+  setQuizTitle(quiz.title);
+  setQuizDescription(quiz.description || "");
+  setPassingScore(quiz.passing_score);
+  setIsPublished(quiz.is_published);
+
+  setError("");
+  setSuccess("");
+};
 
 
   if (loading) {
