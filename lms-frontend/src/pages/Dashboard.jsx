@@ -232,57 +232,84 @@ const studentInitial = studentName.charAt(0).toUpperCase();
               </div>
             )}
           </section>
-          <section className="dashboard-content">
+          
+<section className="dashboard-content">
   <h2>My Quiz Results</h2>
 
   {quizAttempts.length === 0 ? (
     <p>You haven't attempted any quizzes yet.</p>
   ) : (
     <div className="courses-grid">
-      {quizAttempts.map((attempt) => (
-        <article className="course-card" key={attempt.id}>
-          <span className="course-category">QUIZ RESULT</span>
+      {quizAttempts.map((attempt) => {
+        const isPending = attempt.review_status === "PENDING";
+        const isPassed = attempt.review_status === "PASS";
 
-          <h3>{attempt.quiz_title || `Quiz #${attempt.quiz}`}</h3>
+        return (
+          <article className="course-card" key={attempt.id}>
+            <span className="course-category">QUIZ RESULT</span>
 
-          <p>
-            Score: <strong>{attempt.score}%</strong>
-          </p>
+            <h3>{attempt.quiz_title || `Quiz #${attempt.quiz}`}</h3>
 
-          <p>
-  Review Status:{" "}
-  <span
-    className={`quiz-status ${(attempt.review_status || "PENDING").toLowerCase()}`}
-  >
-    {attempt.review_status === "PASS"
-      ? "APPROVED"
-      : attempt.review_status === "FAIL"
-      ? "REJECTED"
-      : "PENDING"}
-  </span>
-</p>
+            {isPending ? (
+              <>
+                <span className="quiz-status pending">
+                  PENDING REVIEW
+                </span>
+                <p>
+                  Your quiz has been submitted successfully.
+                  Your instructor will review it and award your final mark.
+                </p>
+              </>
+            ) : (
+              <>
+                <p>
+                  Final Awarded Mark:{" "}
+                  <strong>
+                    {attempt.reviewed_score ?? "Not available"}%
+                  </strong>
+                </p>
 
-<p>
-  Final Result:{" "}
-  <strong>
-    {attempt.review_status === "PENDING"
-      ? "Awaiting instructor review"
-      : attempt.review_status === "PASS"
-      ? "Congratulations! Your quiz was approved."
-      : "Your quiz was rejected. Please contact your instructor."}
-  </strong>
-</p>
+                <p>
+                  Result:{" "}
+                  <span
+                    className={`quiz-status ${
+                      isPassed ? "pass" : "fail"
+                    }`}
+                  >
+                    {isPassed ? "PASS" : "FAIL"}
+                  </span>
+                </p>
 
-{attempt.reviewed_by_username && (
-  <p>
-    Reviewed by: <strong>{attempt.reviewed_by_username}</strong>
-  </p>
-)}
-        </article>
-      ))}
+                <p>
+                  <strong>Instructor Feedback:</strong>
+                </p>
+                <p>
+                  {attempt.instructor_feedback ||
+                    "No feedback available."}
+                </p>
+
+                {attempt.reviewed_by_username && (
+                  <p>
+                    Reviewed by:{" "}
+                    <strong>{attempt.reviewed_by_username}</strong>
+                  </p>
+                )}
+
+                {attempt.reviewed_at && (
+                  <p>
+                    Reviewed on:{" "}
+                    {new Date(attempt.reviewed_at).toLocaleDateString()}
+                  </p>
+                )}
+              </>
+            )}
+          </article>
+        );
+      })}
     </div>
   )}
 </section>
+
         </>
       )}
     </div>
