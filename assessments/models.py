@@ -1,3 +1,4 @@
+
 from django.conf import settings
 from django.core.validators import MaxValueValidator
 from django.db import models
@@ -73,6 +74,17 @@ class QuizAttempt(models.Model):
 
     score = models.PositiveIntegerField(default=0)
 
+    reviewed_score = models.PositiveIntegerField(
+        null=True,
+        blank=True,
+        validators=[MaxValueValidator(100)],
+    )
+
+    instructor_feedback = models.TextField(
+        blank=True,
+        default="",
+    )
+
     passed = models.BooleanField(default=False)
 
     review_status = models.CharField(
@@ -90,6 +102,7 @@ class QuizAttempt(models.Model):
     )
 
     reviewed_at = models.DateTimeField(null=True, blank=True)
+
     selected_reviewer = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
