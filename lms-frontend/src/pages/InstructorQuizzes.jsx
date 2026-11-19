@@ -152,6 +152,19 @@ const handleDeleteQuiz = async (quizId) => {
     );
   }
 };
+const handleOpenQuiz = async (quiz) => {
+  try {
+    setError("");
+    setSuccess("");
+
+    const questionsData = await getQuizQuestions(quiz.id);
+
+    setSelectedQuiz(quiz);
+    setQuestions(questionsData);
+  } catch (err) {
+    setError("Unable to load questions for this quiz.");
+  }
+};
 
 
   if (loading) {
