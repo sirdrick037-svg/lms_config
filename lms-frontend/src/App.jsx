@@ -19,6 +19,7 @@ import JoinRequest from "./pages/JoinRequest";
 import AcceptInvitation from "./pages/AcceptInvitation";
 import AdminJoinRequests from "./pages/AdminJoinRequests";
 import InstructorLessons from "./pages/InstructorLessons";
+import InstructorQuizzes from "./pages/InstructorQuizzes";
 
 import "./App.css";
 
@@ -68,6 +69,14 @@ function App() {
             <Route path="/accept-invitation" element={<AcceptInvitation />} />
             <Route path="/courses/:id" element={<CourseDetails />} />
             <Route path="/instructor-lessons" element={<ProtectedRoute><InstructorLessons /></ProtectedRoute>} />
+            <Route
+  path="/instructor-quizzes"
+  element={
+    <ProtectedRoute>
+      <InstructorQuizzes />
+    </ProtectedRoute>
+  }
+/>
             <Route path="/about" element={<About />} />
             <Route
               path="/dashboard"
