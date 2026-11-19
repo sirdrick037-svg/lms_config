@@ -19,13 +19,16 @@ function InstructorQuizzes() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+
   const [quizTitle, setQuizTitle] = useState("");
   const [quizDescription, setQuizDescription] = useState("");
   const [passingScore, setPassingScore] = useState(50);
   const [isPublished, setIsPublished] = useState(false);
   const [editingQuizId, setEditingQuizId] = useState(null);
+
   const [selectedQuiz, setSelectedQuiz] = useState(null);
   const [questions, setQuestions] = useState([]);
+
   const [questionText, setQuestionText] = useState("");
   const [optionA, setOptionA] = useState("");
   const [optionB, setOptionB] = useState("");
@@ -89,124 +92,177 @@ function InstructorQuizzes() {
       );
     }
   };
-   const handleEditQuiz = (quiz) => {
-  setEditingQuizId(quiz.id);
-  setSelectedCourse(String(quiz.course));
-  setQuizTitle(quiz.title);
-  setQuizDescription(quiz.description || "");
-  setPassingScore(quiz.passing_score);
-  setIsPublished(quiz.is_published);   
 
-  setError("");
-  setSuccess("");
-};
-const handleUpdateQuiz = async (e) => {
-  e.preventDefault();
+  const handleEditQuiz = (quiz) => {
+    setEditingQuizId(quiz.id);
+    setSelectedCourse(String(quiz.course));
+    setQuizTitle(quiz.title);
+    setQuizDescription(quiz.description || "");
+    setPassingScore(quiz.passing_score);
+    setIsPublished(quiz.is_published);
 
-  try {
     setError("");
     setSuccess("");
+  };
 
-    await updateQuiz(editingQuizId, {
-      course: Number(selectedCourse),
-      title: quizTitle,
-      description: quizDescription,
-      passing_score: Number(passingScore),
-      is_published: isPublished,
-    });
+  const handleUpdateQuiz = async (e) => {
+    e.preventDefault();
 
+    try {
+      setError("");
+      setSuccess("");
+
+      await updateQuiz(editingQuizId, {
+        course: Number(selectedCourse),
+        title: quizTitle,
+        description: quizDescription,
+        passing_score: Number(passingScore),
+        is_published: isPublished,
+      });
+
+      setEditingQuizId(null);
+      setQuizTitle("");
+      setQuizDescription("");
+      setPassingScore(50);
+      setIsPublished(false);
+
+      setSuccess("Quiz updated successfully!");
+      await loadData();
+    } catch (err) {
+      setError(
+        err.response?.data?.detail || "Unable to update the quiz."
+      );
+    }
+  };
+
+  const handleCancelEdit = () => {
     setEditingQuizId(null);
     setQuizTitle("");
     setQuizDescription("");
     setPassingScore(50);
     setIsPublished(false);
-
-    setSuccess("Quiz updated successfully!");
-    await loadData();
-  } catch (err) {
-    setError(
-      err.response?.data?.detail || "Unable to update the quiz."
-    );
-  }
-};
-const handleDeleteQuiz = async (quizId) => {
-  const confirmed = window.confirm(
-    "Are you sure you want to delete this quiz? Its questions and attempts will also be deleted."
-  );
-
-  if (!confirmed) {
-    return;
-  }
-
-  try {
     setError("");
     setSuccess("");
+  };
 
-    await deleteQuiz(quizId);
-
-    setSuccess("Quiz deleted successfully!");
-    await loadData();
-  } catch (err) {
-    setError(
-      err.response?.data?.detail || "Unable to delete the quiz."
+  const handleDeleteQuiz = async (quizId) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this quiz? Quizzes with student attempts are protected."
     );
-  }
-};
-const handleOpenQuiz = async (quiz) => {
-  try {
-    setError("");
-    setSuccess("");
 
-    const questionsData = await getQuizQuestions(quiz.id);
+    if (!confirmed) return;
 
-    setSelectedQuiz(quiz);
-    setQuestions(questionsData);
-  } catch (err) {
-    setError("Unable to load questions for this quiz.");
-  }
-};
-const handleCreateQuestion = async (e) => {
-  e.preventDefault();
+    try {
+      setError("");
+      setSuccess("");
 
-  if (!selectedQuiz) {
-    setError("Please select a quiz first.");
-    return;
-  }
+      await deleteQuiz(quizId);
 
-  try {
-    setError("");
-    setSuccess("");
+      if (selectedQuiz?.id === quizId) {
+        setSelectedQuiz(null);
+        setQuestions([]);
+      }
 
-    await createQuestion(selectedQuiz.id, {
-      text: questionText,
-      option_a: optionA,
-      option_b: optionB,
-      option_c: optionC,
-      option_d: optionD,
-      correct_answer: correctAnswer,
-    });
+      setSuccess("Quiz deleted successfully!");
+      await loadData();
+    } catch (err) {
+      setError(
+        err.response?.data?.detail ||
+        err.response?.data?.non_field_errors?.[0] ||
+        "Unable to delete the quiz."
+      );
+    }
+  };
 
-    setQuestionText("");
-    setOptionA("");
-    setOptionB("");
-    setOptionC("");
-    setOptionD("");
-    setCorrectAnswer("A");
+  const handleOpenQuiz = async (quiz) => {
+    try {
+      setError("");
+      setSuccess("");
 
-    const questionsData = await getQuizQuestions(selectedQuiz.id);
-    setQuestions(questionsData);
+      const questionsData = await getQuizQuestions(quiz.id);
 
-    setSuccess("Question added successfully!");
-  } catch (err) {
-    setError(
-      err.response?.data?.detail || "Unable to add the question."
+      setSelectedQuiz(quiz);
+      setQuestions(questionsData);
+      setQuestionText("");
+      setOptionA("");
+      setOptionB("");
+      setOptionC("");
+      setOptionD("");
+      setCorrectAnswer("A");
+    } catch (err) {
+      setError("Unable to load questions for this quiz.");
+    }
+  };
+
+  const handleCreateQuestion = async (e) => {
+    e.preventDefault();
+
+    if (!selectedQuiz) {
+      setError("Please select a quiz first.");
+      return;
+    }
+
+    try {
+      setError("");
+      setSuccess("");
+
+      await createQuestion(selectedQuiz.id, {
+        text: questionText,
+        option_a: optionA,
+        option_b: optionB,
+        option_c: optionC,
+        option_d: optionD,
+        correct_answer: correctAnswer,
+      });
+
+      setQuestionText("");
+      setOptionA("");
+      setOptionB("");
+      setOptionC("");
+      setOptionD("");
+      setCorrectAnswer("A");
+
+      const questionsData = await getQuizQuestions(selectedQuiz.id);
+      setQuestions(questionsData);
+
+      setSuccess("Question added successfully!");
+    } catch (err) {
+      setError(
+        err.response?.data?.detail || "Unable to add the question."
+      );
+    }
+  };
+
+  const handleArchiveQuestion = async (question) => {
+    const confirmed = window.confirm(
+      "Archive this question? It will no longer be available to students starting new attempts."
     );
-  }
-};
 
+    if (!confirmed) return;
+
+    try {
+      setError("");
+      setSuccess("");
+
+      await deleteQuestion(question.id);
+
+      const questionsData = await getQuizQuestions(selectedQuiz.id);
+      setQuestions(questionsData);
+
+      setSuccess("Question archived successfully!");
+    } catch (err) {
+      setError(
+        err.response?.data?.detail || "Unable to archive the question."
+      );
+    }
+  };
 
   if (loading) {
-    return <div className="instructor-quizzes-page">Loading quizzes...</div>;
+    return (
+      <div className="instructor-quizzes-page">
+        Loading quizzes...
+      </div>
+    );
   }
 
   return (
@@ -237,11 +293,14 @@ const handleCreateQuestion = async (e) => {
         </select>
       </div>
 
-
       <div className="instructor-quiz-form-section">
-        <h2>Create a New Quiz</h2>
+        <h2>{editingQuizId ? "Update Quiz" : "Create a New Quiz"}</h2>
 
-        <form onSubmit={editingQuizId ? handleUpdateQuiz : handleCreateQuiz}>
+        <form
+          onSubmit={
+            editingQuizId ? handleUpdateQuiz : handleCreateQuiz
+          }
+        >
           <label>Quiz Title</label>
           <input
             type="text"
@@ -278,27 +337,16 @@ const handleCreateQuestion = async (e) => {
           </label>
 
           <button type="submit" disabled={!selectedCourse}>
-  {editingQuizId ? "Update Quiz" : "Create Quiz"}
-</button>
-{editingQuizId && (
-  <button
-    type="button"
-    onClick={() => {
-      setEditingQuizId(null);
-      setQuizTitle("");
-      setQuizDescription("");
-      setPassingScore(50);
-      setIsPublished(false);
-      setError("");
-      setSuccess("");
-    }}
-  >
-    Cancel
-  </button>
-)}
+            {editingQuizId ? "Update Quiz" : "Create Quiz"}
+          </button>
+
+          {editingQuizId && (
+            <button type="button" onClick={handleCancelEdit}>
+              Cancel
+            </button>
+          )}
         </form>
       </div>
-
 
       <div className="instructor-quizzes-list">
         <h2>Existing Quizzes</h2>
@@ -308,107 +356,129 @@ const handleCreateQuestion = async (e) => {
         ) : (
           quizzes.map((quiz) => (
             <div className="instructor-quiz-card" key={quiz.id}>
-  <h3>{quiz.title}</h3>
-  <p>{quiz.description}</p>
-  <p>Passing score: {quiz.passing_score}%</p>
-  <p>
-    Status: {quiz.is_published ? "Published" : "Draft"}
-  </p>
-  {selectedQuiz && (
-  <div className="instructor-questions-section">
-    <h2>Manage Questions: {selectedQuiz.title}</h2>
-    <form onSubmit={handleCreateQuestion}>
-  <h3>Add a New Question</h3>
+              <h3>{quiz.title}</h3>
+              <p>{quiz.description}</p>
+              <p>Passing score: {quiz.passing_score}%</p>
 
-  <label>Question</label>
-  <textarea
-    value={questionText}
-    onChange={(e) => setQuestionText(e.target.value)}
-    placeholder="Enter your question"
-    required
-  />
+              <p>
+                Status: {quiz.is_published ? "Published" : "Draft"}
+              </p>
 
-  <label>Option A</label>
-  <input
-    type="text"
-    value={optionA}
-    onChange={(e) => setOptionA(e.target.value)}
-    required
-  />
+              <div className="instructor-quiz-actions">
+                <button onClick={() => handleEditQuiz(quiz)}>
+                  Edit Quiz
+                </button>
 
-  <label>Option B</label>
-  <input
-    type="text"
-    value={optionB}
-    onChange={(e) => setOptionB(e.target.value)}
-    required
-  />
+                <button onClick={() => handleOpenQuiz(quiz)}>
+                  Manage Questions
+                </button>
 
-  <label>Option C</label>
-  <input
-    type="text"
-    value={optionC}
-    onChange={(e) => setOptionC(e.target.value)}
-    required
-  />
-
-  <label>Option D</label>
-  <input
-    type="text"
-    value={optionD}
-    onChange={(e) => setOptionD(e.target.value)}
-    required
-  />
-
-  <label>Correct Answer</label>
-  <select
-    value={correctAnswer}
-    onChange={(e) => setCorrectAnswer(e.target.value)}
-  >
-    <option value="A">Option A</option>
-    <option value="B">Option B</option>
-    <option value="C">Option C</option>
-    <option value="D">Option D</option>
-  </select>
-
-  <button type="submit">Add Question</button>
-</form>
-
-    {questions.length === 0 ? (
-      <p>No questions have been added to this quiz yet.</p>
-    ) : (
-      questions.map((question, index) => (
-        <div className="instructor-question-card" key={question.id}>
-          <h3>Question {index + 1}</h3>
-          <p>{question.text}</p>
-
-          <p>A. {question.option_a}</p>
-          <p>B. {question.option_b}</p>
-          <p>C. {question.option_c}</p>
-          <p>D. {question.option_d}</p>
-        </div>
-      ))
-    )}
-  </div>
-)}
-
-  <div className="instructor-quiz-actions">
-    <button onClick={() => handleEditQuiz(quiz)}>
-      Edit Quiz
-    </button>
-
-    <button onClick={() => handleOpenQuiz(quiz)}>
-  Manage Questions
-</button>
-
-    <button onClick={() => handleDeleteQuiz(quiz.id)}>
-      Delete Quiz
-    </button>
-  </div>
-</div>
+                <button onClick={() => handleDeleteQuiz(quiz.id)}>
+                  Delete Quiz
+                </button>
+              </div>
+            </div>
           ))
         )}
       </div>
+
+      {selectedQuiz && (
+        <div className="instructor-questions-section">
+          <h2>Manage Questions: {selectedQuiz.title}</h2>
+
+          <form onSubmit={handleCreateQuestion}>
+            <h3>Add a New Question</h3>
+
+            <label>Question</label>
+            <textarea
+              value={questionText}
+              onChange={(e) => setQuestionText(e.target.value)}
+              placeholder="Enter your question"
+              required
+            />
+
+            <label>Option A</label>
+            <input
+              type="text"
+              value={optionA}
+              onChange={(e) => setOptionA(e.target.value)}
+              required
+            />
+
+            <label>Option B</label>
+            <input
+              type="text"
+              value={optionB}
+              onChange={(e) => setOptionB(e.target.value)}
+              required
+            />
+
+            <label>Option C</label>
+            <input
+              type="text"
+              value={optionC}
+              onChange={(e) => setOptionC(e.target.value)}
+              required
+            />
+
+            <label>Option D</label>
+            <input
+              type="text"
+              value={optionD}
+              onChange={(e) => setOptionD(e.target.value)}
+              required
+            />
+
+            <label>Correct Answer</label>
+            <select
+              value={correctAnswer}
+              onChange={(e) => setCorrectAnswer(e.target.value)}
+            >
+              <option value="A">Option A</option>
+              <option value="B">Option B</option>
+              <option value="C">Option C</option>
+              <option value="D">Option D</option>
+            </select>
+
+            <button type="submit">Add Question</button>
+          </form>
+
+          <h3>Existing Questions</h3>
+
+          {questions.length === 0 ? (
+            <p>No questions have been added to this quiz yet.</p>
+          ) : (
+            questions.map((question, index) => (
+              <div
+                className="instructor-question-card"
+                key={question.id}
+              >
+                <h3>Question {index + 1}</h3>
+                <p>{question.text}</p>
+
+                <p>A. {question.option_a}</p>
+                <p>B. {question.option_b}</p>
+                <p>C. {question.option_c}</p>
+                <p>D. {question.option_d}</p>
+
+                <p>
+                  Status:{" "}
+                  {question.is_active ? "Active" : "Archived"}
+                </p>
+
+                {question.is_active && (
+                  <button
+                    type="button"
+                    onClick={() => handleArchiveQuestion(question)}
+                  >
+                    Archive Question
+                  </button>
+                )}
+              </div>
+            ))
+          )}
+        </div>
+      )}
     </div>
   );
 }
