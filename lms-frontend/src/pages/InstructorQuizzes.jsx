@@ -81,16 +81,45 @@ function InstructorQuizzes() {
       );
     }
   };
-const handleEditQuiz = (quiz) => {
+   const handleEditQuiz = (quiz) => {
   setEditingQuizId(quiz.id);
   setSelectedCourse(String(quiz.course));
   setQuizTitle(quiz.title);
   setQuizDescription(quiz.description || "");
   setPassingScore(quiz.passing_score);
-  setIsPublished(quiz.is_published);
+  setIsPublished(quiz.is_published);   
 
   setError("");
   setSuccess("");
+};
+const handleUpdateQuiz = async (e) => {
+  e.preventDefault();
+
+  try {
+    setError("");
+    setSuccess("");
+
+    await updateQuiz(editingQuizId, {
+      course: Number(selectedCourse),
+      title: quizTitle,
+      description: quizDescription,
+      passing_score: Number(passingScore),
+      is_published: isPublished,
+    });
+
+    setEditingQuizId(null);
+    setQuizTitle("");
+    setQuizDescription("");
+    setPassingScore(50);
+    setIsPublished(false);
+
+    setSuccess("Quiz updated successfully!");
+    await loadData();
+  } catch (err) {
+    setError(
+      err.response?.data?.detail || "Unable to update the quiz."
+    );
+  }
 };
 
 
@@ -130,7 +159,7 @@ const handleEditQuiz = (quiz) => {
       <div className="instructor-quiz-form-section">
         <h2>Create a New Quiz</h2>
 
-        <form onSubmit={handleCreateQuiz}>
+        <form onSubmit={editingQuizId ? handleUpdateQuiz : handleCreateQuiz}>
           <label>Quiz Title</label>
           <input
             type="text"
