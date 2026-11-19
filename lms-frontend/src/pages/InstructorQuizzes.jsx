@@ -165,6 +165,44 @@ const handleOpenQuiz = async (quiz) => {
     setError("Unable to load questions for this quiz.");
   }
 };
+const handleCreateQuestion = async (e) => {
+  e.preventDefault();
+
+  if (!selectedQuiz) {
+    setError("Please select a quiz first.");
+    return;
+  }
+
+  try {
+    setError("");
+    setSuccess("");
+
+    await createQuestion(selectedQuiz.id, {
+      text: questionText,
+      option_a: optionA,
+      option_b: optionB,
+      option_c: optionC,
+      option_d: optionD,
+      correct_answer: correctAnswer,
+    });
+
+    setQuestionText("");
+    setOptionA("");
+    setOptionB("");
+    setOptionC("");
+    setOptionD("");
+    setCorrectAnswer("A");
+
+    const questionsData = await getQuizQuestions(selectedQuiz.id);
+    setQuestions(questionsData);
+
+    setSuccess("Question added successfully!");
+  } catch (err) {
+    setError(
+      err.response?.data?.detail || "Unable to add the question."
+    );
+  }
+};
 
 
   if (loading) {
