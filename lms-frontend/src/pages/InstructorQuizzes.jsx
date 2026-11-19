@@ -196,8 +196,8 @@ const handleUpdateQuiz = async (e) => {
           </label>
 
           <button type="submit" disabled={!selectedCourse}>
-            Create Quiz
-          </button>
+  {editingQuizId ? "Update Quiz" : "Create Quiz"}
+</button>
         </form>
       </div>
 
