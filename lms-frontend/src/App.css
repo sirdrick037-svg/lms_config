@@ -3291,5 +3291,58 @@
     width: 100%;
   }
 }
+/* Compact Instructor Quiz List */
 
+.compact-quiz-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  padding: 16px 20px;
+  background: #ffffff;
+  border: 1px solid #d5dfd3;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.compact-quiz-heading:hover {
+  background: #f7f5ef;
+}
+
+.compact-quiz-heading h3 {
+  margin: 0;
+  color: #315b4c;
+  font-size: 16px;
+}
+
+.compact-quiz-details {
+  padding: 18px 20px;
+  background: #f7f5ef;
+  border: 1px solid #d5dfd3;
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+}
+
+.compact-question-form {
+  margin-top: 15px;
+  padding: 20px;
+  background: #f7f5ef;
+  border-radius: 10px;
+}
+
+.compact-question-heading {
+  padding: 14px 18px;
+  background: #ffffff;
+  border: 1px solid #d5dfd3;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.compact-question-details {
+  padding: 15px 18px;
+  background: #f7f5ef;
+  border: 1px solid #d5dfd3;
+  border-radius: 0 0 8px 8px;
+}
 
