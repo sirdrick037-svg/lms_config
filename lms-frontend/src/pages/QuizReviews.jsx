@@ -13,15 +13,14 @@ function QuizReviews() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const [view, setView] = useState("pending");
 
-  // Fetch quiz submissions
   const fetchAttempts = async () => {
     try {
       setLoading(true);
       setError("");
 
       const data = await getQuizSubmissionsForReview();
-
       const results = Array.isArray(data)
         ? data
         : data.results || [];
@@ -37,7 +36,6 @@ function QuizReviews() {
       setMarks(initialMarks);
     } catch (err) {
       console.error("Error fetching submissions:", err);
-
       setError(
         err.response?.data?.detail ||
           "Failed to load quiz submissions."
@@ -51,7 +49,6 @@ function QuizReviews() {
     fetchAttempts();
   }, []);
 
-  // Update the mark entered for a student
   const handleMarkChange = (attemptId, value) => {
     setMarks((previousMarks) => ({
       ...previousMarks,
@@ -59,7 +56,6 @@ function QuizReviews() {
     }));
   };
 
-  // Award marks and submit the review
   const handleReview = async (attemptId) => {
     const enteredMark = marks[attemptId];
 
@@ -90,12 +86,9 @@ function QuizReviews() {
         )
       );
 
-      setMessage(
-        `Attempt #${attemptId} has been reviewed successfully.`
-      );
+      setMessage("Quiz submission reviewed successfully.");
     } catch (err) {
       console.error("Error reviewing quiz:", err);
-
       setError(
         err.response?.data?.detail ||
           "Failed to review this quiz attempt."
@@ -105,7 +98,16 @@ function QuizReviews() {
     }
   };
 
-  // Loading screen
+  const isReviewed = (attempt) =>
+    attempt.review_status === "PASS" ||
+    attempt.review_status === "FAIL";
+
+  const filteredAttempts = attempts.filter((attempt) =>
+    view === "pending"
+      ? !isReviewed(attempt)
+      : isReviewed(attempt)
+  );
+
   if (loading) {
     return (
       <div className="quiz-reviews-container">
@@ -116,57 +118,72 @@ function QuizReviews() {
 
   return (
     <div className="quiz-reviews-container">
-      {/* Header */}
       <div className="review-header">
         <div>
           <h1>Quiz Reviews</h1>
-          <p>Review submitted student quiz attempts.</p>
+          <p>Manage student quiz submissions and results.</p>
         </div>
 
-        <button
-          className="refresh-button"
-          onClick={fetchAttempts}
-        >
+        <button className="refresh-button" onClick={fetchAttempts}>
           Refresh
         </button>
       </div>
 
-      {/* Messages */}
-      {message && (
-        <p className="success-message">{message}</p>
-      )}
+      {message && <p className="success-message">{message}</p>}
+      {error && <p className="error-message">{error}</p>}
 
-      {error && (
-        <p className="error-message">{error}</p>
-      )}
+      <div className="review-tabs">
+        <button
+          className={view === "pending" ? "active" : ""}
+          onClick={() => {
+            setView("pending");
+            setError("");
+            setMessage("");
+          }}
+        >
+          Pending Reviews ({attempts.filter((a) => !isReviewed(a)).length})
+        </button>
 
-      {/* Quiz submissions */}
-      {attempts.length === 0 ? (
+        <button
+          className={view === "reviewed" ? "active" : ""}
+          onClick={() => {
+            setView("reviewed");
+            setError("");
+            setMessage("");
+          }}
+        >
+          Reviewed Submissions ({attempts.filter(isReviewed).length})
+        </button>
+      </div>
+
+      {filteredAttempts.length === 0 ? (
         <div className="empty-reviews">
-          <h3>No quiz submissions found</h3>
-          <p>Submitted quiz attempts will appear here.</p>
+          <h3>
+            {view === "pending"
+              ? "No pending quiz submissions"
+              : "No reviewed submissions"}
+          </h3>
+          <p>
+            {view === "pending"
+              ? "New student submissions awaiting grading will appear here."
+              : "Completed quiz reviews will appear here."}
+          </p>
         </div>
       ) : (
         <div className="review-list">
-          {attempts.map((attempt) => {
-            const isReviewed =
-              attempt.review_status === "PASS" ||
-              attempt.review_status === "FAIL";
+          {filteredAttempts.map((attempt) => {
+            const reviewed = isReviewed(attempt);
 
             return (
               <div className="review-card" key={attempt.id}>
-                {/* Student information */}
                 <div className="review-card-header">
                   <div>
                     <h2>{attempt.quiz_title || "Quiz"}</h2>
-
                     <p>
                       Student:{" "}
                       {attempt.student_username ||
                         `Student #${attempt.student}`}
                     </p>
-
-                    <p>Attempt ID: {attempt.id}</p>
                   </div>
 
                   <span
@@ -178,22 +195,17 @@ function QuizReviews() {
                   </span>
                 </div>
 
-                {/* Automatic score */}
                 <div className="review-score">
                   <strong>Automatic score:</strong>{" "}
                   {attempt.score ?? 0}%
                 </div>
 
-                {/* Student answers */}
                 <div className="review-answers">
                   <h3>Student Answers</h3>
 
-                  {attempt.answers && attempt.answers.length > 0 ? (
+                  {attempt.answers?.length > 0 ? (
                     attempt.answers.map((answer) => (
-                      <div
-                        className="review-answer"
-                        key={answer.id}
-                      >
+                      <div className="review-answer" key={answer.id}>
                         <h4>
                           {answer.question_text ||
                             `Question #${answer.question}`}
@@ -206,10 +218,7 @@ function QuizReviews() {
                             ["C", answer.option_c],
                             ["D", answer.option_d],
                           ].map(([letter, option]) => (
-                            <div
-                              className="answer-option"
-                              key={letter}
-                            >
+                            <div className="answer-option" key={letter}>
                               <strong>{letter}:</strong>{" "}
                               {option || "Option not available"}
                             </div>
@@ -232,13 +241,10 @@ function QuizReviews() {
                   )}
                 </div>
 
-                {/* Instructor grading */}
                 <div className="review-actions">
-                  {!isReviewed ? (
+                  {!reviewed ? (
                     <>
-                      <label>
-                        **Awarded Mark (%)**
-                      </label>
+                      <label>Awarded Mark (%)</label>
 
                       <input
                         type="number"
@@ -248,10 +254,7 @@ function QuizReviews() {
                         placeholder="Enter mark from 0 to 100"
                         value={marks[attempt.id] ?? ""}
                         onChange={(event) =>
-                          handleMarkChange(
-                            attempt.id,
-                            event.target.value
-                          )
+                          handleMarkChange(attempt.id, event.target.value)
                         }
                       />
 
@@ -267,24 +270,20 @@ function QuizReviews() {
                     </>
                   ) : (
                     <div className="final-review-result">
-                      <h3>
-                        Final Result: {attempt.review_status}
-                      </h3>
-
+                      <h3>Final Result: {attempt.review_status}</h3>
                       <p>
                         <strong>Awarded Mark:</strong>{" "}
-                        {attempt.reviewed_score}%
+                        {attempt.reviewed_score ?? "Not available"}%
                       </p>
-
                       <p>
                         <strong>Feedback:</strong>{" "}
-                        {attempt.instructor_feedback}
+                        {attempt.instructor_feedback ||
+                          "No feedback available."}
                       </p>
                     </div>
                   )}
                 </div>
 
-                {/* Review date */}
                 {attempt.reviewed_at && (
                   <p className="reviewed-date">
                     Reviewed on:{" "}
