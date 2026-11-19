@@ -63,10 +63,10 @@ class QuizListCreateView(generics.ListCreateAPIView):
             serializer.save()
             return
 
-        if (
-            user.role != "INSTRUCTOR"
-            or course.instructor_id != user.id
-        ):
+        if user.role != "INSTRUCTOR" or not (
+    course.instructor_id == user.id or
+    course.instructors.filter(id=user.id).exists()
+):
             raise PermissionDenied(
                 "You can only create quizzes for your own courses."
             )
@@ -92,8 +92,11 @@ class QuizDetailView(generics.RetrieveUpdateDestroyAPIView):
         if user.is_staff:
             return queryset
 
-        if user.role == "INSTRUCTOR":
-            return queryset.filter(course__instructor=user)
+        if user.role == "INSTRUCTOR":   
+            return queryset.filter(
+                Q(course__instructor=user) |
+                Q(course__instructors=user)
+            ).distinct()
 
         return queryset.filter(
             is_published=True,
