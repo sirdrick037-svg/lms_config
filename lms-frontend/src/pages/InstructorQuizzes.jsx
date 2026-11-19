@@ -19,6 +19,10 @@ function InstructorQuizzes() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [quizTitle, setQuizTitle] = useState("");
+const [quizDescription, setQuizDescription] = useState("");
+const [passingScore, setPassingScore] = useState(50);
+const [isPublished, setIsPublished] = useState(false);
 
   useEffect(() => {
     loadData();
