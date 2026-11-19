@@ -341,3 +341,74 @@
     padding: 16px;
   }
 }
+
+/* =================================
+   INSTRUCTOR GRADING
+================================= */
+
+.review-actions {
+  align-items: flex-end;
+}
+
+.review-actions label {
+  width: 100%;
+  color: #315b4c;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.review-actions input {
+  width: 220px;
+  max-width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #d5dfd3;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #243c35;
+  font-size: 15px;
+  outline: none;
+}
+
+.review-actions input:focus {
+  border-color: #315b4c;
+  box-shadow: 0 0 0 3px rgba(49, 91, 76, 0.12);
+}
+
+.review-actions input:disabled {
+  background: #f1f3ef;
+  cursor: not-allowed;
+}
+
+/* Final Grading Result */
+.final-review-result {
+  width: 100%;
+  padding: 22px;
+  background: #e9eee5;
+  border: 1px solid #d5dfd3;
+  border-left: 4px solid #315b4c;
+  border-radius: 10px;
+}
+
+.final-review-result h3 {
+  color: #315b4c;
+  margin-bottom: 15px;
+}
+
+.final-review-result p {
+  color: #243c35;
+  line-height: 1.7;
+}
+
+.final-review-result strong {
+  color: #315b4c;
+}
+
+@media (max-width: 600px) {
+  .review-actions input {
+    width: 100%;
+  }
+
+  .final-review-result {
+    padding: 18px;
+  }
+}
