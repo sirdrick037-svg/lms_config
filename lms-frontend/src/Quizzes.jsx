@@ -312,24 +312,27 @@ setSelectedReviewerId("");
 
           {questions.length === 0 ? (
             <p>No questions have been posted for this quiz yet.</p>
-          ) : result ? (
-            <>
-              <h3>Your Score: {result.score}%</h3>
+                    ) : result ? (
+            <div className="quiz-submitted-message">
+              <h3>Quiz Submitted Successfully!</h3>
 
-              <h3>
-                {result.passed
-                  ? "Congratulations! You passed!"
-                  : "You did not pass. Try again!"}
-              </h3>
+              <p>
+                Your answers have been submitted successfully
+                to your instructor.
+              </p>
 
-              {!result.passed && (
-                <button
-                  onClick={() => handleStartQuiz(selectedQuiz)}
-                >
-                  Retake Quiz
-                </button>
-              )}
-            </>
+              <p>
+                Your instructor will review your answers,
+                award your marks and provide feedback.
+              </p>
+
+              <p>
+                Your results will be available in your
+                student dashboard once the review is complete.
+              </p>
+
+              <strong>Status: Pending Review</strong>
+            </div>
           ) : (
             <>
               {lessonStats[selectedQuiz.id] && (
