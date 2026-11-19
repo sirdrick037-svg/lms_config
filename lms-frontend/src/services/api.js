@@ -140,6 +140,26 @@ export const deleteQuiz = async (quizId) => {
   const response = await api.delete(`assessments/quizzes/${quizId}/`);
   return response.data;
 };
+export const createQuestion = async (quizId, questionData) => {
+  const response = await api.post(
+    `assessments/quizzes/${quizId}/questions/`,
+    questionData
+  );
+  return response.data;
+};
+export const updateQuestion = async (questionId, questionData) => {
+  const response = await api.patch(
+    `assessments/questions/${questionId}/`,
+    questionData
+  );
+  return response.data;
+};
+export const deleteQuestion = async (questionId) => {
+  const response = await api.delete(
+    `assessments/questions/${questionId}/`
+  );
+  return response.data;
+};
 
 // Get questions for a specific quiz
 export const getQuizQuestions = async (quizId) => {
