@@ -198,6 +198,22 @@ const handleUpdateQuiz = async (e) => {
           <button type="submit" disabled={!selectedCourse}>
   {editingQuizId ? "Update Quiz" : "Create Quiz"}
 </button>
+{editingQuizId && (
+  <button
+    type="button"
+    onClick={() => {
+      setEditingQuizId(null);
+      setQuizTitle("");
+      setQuizDescription("");
+      setPassingScore(50);
+      setIsPublished(false);
+      setError("");
+      setSuccess("");
+    }}
+  >
+    Cancel
+  </button>
+)}
         </form>
       </div>
 
