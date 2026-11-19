@@ -128,6 +128,14 @@ export const getQuizzes = async () => {
   const response = await api.get("assessments/quizzes/");
   return response.data;
 };
+export const createQuiz = async (quizData) => {
+  const response = await api.post("assessments/quizzes/", quizData);
+  return response.data;
+};
+export const updateQuiz = async (quizId, quizData) => {
+  const response = await api.patch(`assessments/quizzes/${quizId}/`, quizData);
+  return response.data;
+};
 
 // Get questions for a specific quiz
 export const getQuizQuestions = async (quizId) => {
