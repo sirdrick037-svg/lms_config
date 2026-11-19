@@ -587,6 +587,11 @@ class QuizSubmissionReviewListView(generics.ListAPIView):
 # ADMIN AND INSTRUCTOR: PASS OR FAIL A QUIZ
 # --------------------------------------------------
 
+
+# --------------------------------------------------
+# ADMIN AND INSTRUCTOR: AWARD MARKS AND GENERATE FEEDBACK
+# --------------------------------------------------
+
 class ReviewQuizAttemptView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -594,12 +599,13 @@ class ReviewQuizAttemptView(APIView):
         request=QuizReviewSerializer,
         responses=QuizAttemptSerializer
     )
+    @transaction.atomic
     def patch(self, request, attempt_id):
         user = request.user
 
-        # Retrieve the submitted quiz attempt.
+        # Retrieve and lock the submitted quiz attempt.
         attempt = get_object_or_404(
-            QuizAttempt.objects.select_related(
+            QuizAttempt.objects.select_for_update().select_related(
                 "quiz__course",
                 "student",
                 "selected_reviewer"
@@ -624,22 +630,50 @@ class ReviewQuizAttemptView(APIView):
                 "This quiz has already been reviewed."
             )
 
-        # Validate the review decision.
+        # Validate the instructor's awarded mark.
         review_serializer = QuizReviewSerializer(
             data=request.data
         )
         review_serializer.is_valid(raise_exception=True)
 
-        decision = review_serializer.validated_data["review_status"]
+        awarded_score = review_serializer.validated_data[
+            "reviewed_score"
+        ]
 
-        # Save the review.
+        # Compare the awarded mark with the quiz passing score.
+        passing_score = attempt.quiz.passing_score
+        has_passed = awarded_score >= passing_score
+
+        # Generate encouraging feedback automatically.
+        if has_passed:
+            feedback = (
+                f"Congratulations! You scored {awarded_score}% "
+                f"and achieved the passing mark of {passing_score}%. "
+                "You have demonstrated a good understanding of the "
+                "course material. Keep up the excellent work!"
+            )
+            decision = "PASS"
+        else:
+            feedback = (
+                f"You scored {awarded_score}%, while the passing "
+                f"mark is {passing_score}%. Thank you for your effort! "
+                "Keep practising, revisit your lessons and continue "
+                "improving. Every step brings you closer to success!"
+            )
+            decision = "FAIL"
+
+        # Save the instructor's review and generated feedback.
+        attempt.reviewed_score = awarded_score
+        attempt.instructor_feedback = feedback
         attempt.review_status = decision
-        attempt.passed = decision == "PASS"
+        attempt.passed = has_passed
         attempt.reviewed_by = user
         attempt.reviewed_at = timezone.now()
 
         attempt.save(
             update_fields=[
+                "reviewed_score",
+                "instructor_feedback",
                 "review_status",
                 "passed",
                 "reviewed_by",
