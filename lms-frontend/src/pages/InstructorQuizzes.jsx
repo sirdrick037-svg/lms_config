@@ -121,6 +121,29 @@ const handleUpdateQuiz = async (e) => {
     );
   }
 };
+const handleDeleteQuiz = async (quizId) => {
+  const confirmed = window.confirm(
+    "Are you sure you want to delete this quiz? Its questions and attempts will also be deleted."
+  );
+
+  if (!confirmed) {
+    return;
+  }
+
+  try {
+    setError("");
+    setSuccess("");
+
+    await deleteQuiz(quizId);
+
+    setSuccess("Quiz deleted successfully!");
+    await loadData();
+  } catch (err) {
+    setError(
+      err.response?.data?.detail || "Unable to delete the quiz."
+    );
+  }
+};
 
 
   if (loading) {
