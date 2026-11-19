@@ -136,6 +136,10 @@ export const updateQuiz = async (quizId, quizData) => {
   const response = await api.patch(`assessments/quizzes/${quizId}/`, quizData);
   return response.data;
 };
+export const deleteQuiz = async (quizId) => {
+  const response = await api.delete(`assessments/quizzes/${quizId}/`);
+  return response.data;
+};
 
 // Get questions for a specific quiz
 export const getQuizQuestions = async (quizId) => {
