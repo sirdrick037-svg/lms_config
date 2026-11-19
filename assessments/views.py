@@ -198,6 +198,83 @@ class QuestionListCreateView(generics.ListCreateAPIView):
 
 
 # --------------------------------------------------
+# QUESTION DETAIL, UPDATE AND DELETE
+# --------------------------------------------------
+
+class QuestionDetailView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+
+        queryset = Question.objects.select_related(
+            "quiz", "quiz__course"
+        )
+
+        if user.is_staff:
+            return queryset
+
+        if user.role == "INSTRUCTOR":
+            return queryset.filter(
+                Q(quiz__course__instructor=user) |
+                Q(quiz__course__instructors=user)
+            ).distinct()
+
+        if user.role == "STUDENT":
+            return queryset.filter(
+                quiz__is_published=True,
+                quiz__course__is_published=True
+            )
+
+        return queryset.none()
+
+    def get_serializer_class(self):
+        if self.request.method in ["PUT", "PATCH"]:
+            return QuestionWriteSerializer
+
+        return QuestionSerializer
+
+    def _check_instructor(self, request, question):
+        user = request.user
+
+        if user.is_staff:
+            return
+
+        if user.role != "INSTRUCTOR":
+            raise PermissionDenied(
+                "You are not allowed to manage questions."
+            )
+
+        is_assigned = (
+            question.quiz.course.instructor_id == user.id or
+            question.quiz.course.instructors.filter(
+                id=user.id
+            ).exists()
+        )
+
+        if not is_assigned:
+            raise PermissionDenied(
+                "You can only manage questions for your assigned courses."
+            )
+
+    def update(self, request, *args, **kwargs):
+        question = self.get_object()
+        self._check_instructor(request, question)
+        return super().update(request, *args, **kwargs)
+
+    def partial_update(self, request, *args, **kwargs):
+        question = self.get_object()
+        self._check_instructor(request, question)
+        return super().partial_update(request, *args, **kwargs)
+
+    def destroy(self, request, *args, **kwargs):
+        question = self.get_object()
+        self._check_instructor(request, question)
+        return super().destroy(request, *args, **kwargs)
+
+
+
+# --------------------------------------------------
 # STUDENT QUIZ ATTEMPTS
 # --------------------------------------------------
 
