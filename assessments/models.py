@@ -36,6 +36,7 @@ class Question(models.Model):
         on_delete=models.CASCADE,
         related_name="questions",
     )
+    is_active = models.BooleanField(default=True)
     text = models.TextField()
     option_a = models.CharField(max_length=255)
     option_b = models.CharField(max_length=255)
