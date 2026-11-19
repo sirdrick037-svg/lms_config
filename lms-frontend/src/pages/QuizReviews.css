@@ -412,3 +412,41 @@
     padding: 18px;
   }
 }
+
+/* =================================
+   QUIZ REVIEW TABS
+================================= */
+
+.review-tabs {
+  display: flex;
+  gap: 12px;
+  margin: 25px 0;
+  flex-wrap: wrap;
+}
+
+.review-tabs button {
+  padding: 12px 20px;
+  border: 1px solid #d5dfd3;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #315b4c;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.review-tabs button:hover {
+  background: #e9eee5;
+}
+
+.review-tabs button.active {
+  background: #315b4c;
+  color: #ffffff;
+  border-color: #315b4c;
+}
+
+.review-tabs button:focus-visible {
+  outline: 3px solid rgba(49, 91, 76, 0.25);
+  outline-offset: 2px;
+}
