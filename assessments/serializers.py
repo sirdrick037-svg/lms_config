@@ -36,7 +36,6 @@ class QuestionWriteSerializer(serializers.ModelSerializer):
         read_only_fields = ["id", "quiz"]
 
 
-
 class QuizSerializer(serializers.ModelSerializer):
     questions = QuestionSerializer(many=True, read_only=True)
 
@@ -55,13 +54,11 @@ class QuizSerializer(serializers.ModelSerializer):
         read_only_fields = ["id", "created_at"]
 
 
-
 class AnswerSerializer(serializers.ModelSerializer):
     question_text = serializers.CharField(
         source="question.text",
         read_only=True
     )
-
     option_a = serializers.CharField(
         source="question.option_a",
         read_only=True
@@ -105,9 +102,9 @@ class AnswerSerializer(serializers.ModelSerializer):
         ]
 
 
-
 class QuizAttemptSerializer(serializers.ModelSerializer):
     answers = AnswerSerializer(many=True, read_only=True)
+
     student_username = serializers.CharField(
         source="student.username",
         read_only=True
@@ -117,15 +114,15 @@ class QuizAttemptSerializer(serializers.ModelSerializer):
         read_only=True
     )
     selected_reviewer_username = serializers.CharField(
-    source="selected_reviewer.username",
-    read_only=True,
-    allow_null=True,
-)
+        source="selected_reviewer.username",
+        read_only=True,
+        allow_null=True,
+    )
     reviewed_by_username = serializers.CharField(
-    source="reviewed_by.username",
-    read_only=True,
-    allow_null=True,
-)
+        source="reviewed_by.username",
+        read_only=True,
+        allow_null=True,
+    )
 
     class Meta:
         model = QuizAttempt
@@ -138,6 +135,8 @@ class QuizAttemptSerializer(serializers.ModelSerializer):
             "selected_reviewer",
             "selected_reviewer_username",
             "score",
+            "reviewed_score",
+            "instructor_feedback",
             "passed",
             "review_status",
             "reviewed_by",
@@ -147,13 +146,15 @@ class QuizAttemptSerializer(serializers.ModelSerializer):
             "submitted_at",
             "answers",
         ]
-
         read_only_fields = [
             "id",
             "student",
             "score",
+            "reviewed_score",
+            "instructor_feedback",
             "passed",
             "review_status",
+            "reviewed_by",
             "reviewed_by_username",
             "reviewed_at",
             "started_at",
@@ -162,7 +163,10 @@ class QuizAttemptSerializer(serializers.ModelSerializer):
             "selected_reviewer",
             "selected_reviewer_username",
         ]
+
+
 class QuizReviewSerializer(serializers.Serializer):
-    review_status = serializers.ChoiceField(
-        choices=["PASS", "FAIL"]
-    )        
+    reviewed_score = serializers.IntegerField(
+        min_value=0,
+        max_value=100
+    )
