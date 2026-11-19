@@ -206,6 +206,7 @@ class QuestionListCreateView(generics.ListCreateAPIView):
 # QUESTION DETAIL, UPDATE AND DELETE
 # --------------------------------------------------
 
+
 class QuestionDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
 
@@ -227,6 +228,7 @@ class QuestionDetailView(generics.RetrieveUpdateDestroyAPIView):
 
         if user.role == "STUDENT":
             return queryset.filter(
+                is_active=True,
                 quiz__is_published=True,
                 quiz__course__is_published=True
             )
@@ -234,7 +236,9 @@ class QuestionDetailView(generics.RetrieveUpdateDestroyAPIView):
         return queryset.none()
 
     def get_serializer_class(self):
-        if self.request.method in ["PUT", "PATCH"]:
+        user = self.request.user
+
+        if user.is_staff or user.role == "INSTRUCTOR":
             return QuestionWriteSerializer
 
         return QuestionSerializer
@@ -262,20 +266,40 @@ class QuestionDetailView(generics.RetrieveUpdateDestroyAPIView):
                 "You can only manage questions for your assigned courses."
             )
 
+    def _check_question_edit(self, request, question):
+        self._check_instructor(request, question)
+
+        if question.answers.exists():
+            changed_fields = set(request.data.keys()) - {"is_active"}
+
+            if changed_fields:
+                raise ValidationError(
+                    "This question has student submissions and cannot be "
+                    "edited. You can archive it and create a new question."
+                )
+
     def update(self, request, *args, **kwargs):
         question = self.get_object()
-        self._check_instructor(request, question)
+        self._check_question_edit(request, question)
         return super().update(request, *args, **kwargs)
 
     def partial_update(self, request, *args, **kwargs):
         question = self.get_object()
-        self._check_instructor(request, question)
+        self._check_question_edit(request, question)
         return super().partial_update(request, *args, **kwargs)
 
     def destroy(self, request, *args, **kwargs):
         question = self.get_object()
         self._check_instructor(request, question)
-        return super().destroy(request, *args, **kwargs)
+
+        question.is_active = False
+        question.save(update_fields=["is_active"])
+
+        return Response(
+            {"detail": "Question archived successfully."},
+            status=status.HTTP_200_OK
+        )
+
 
 
 
