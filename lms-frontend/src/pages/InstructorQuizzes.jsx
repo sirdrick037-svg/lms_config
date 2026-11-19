@@ -114,6 +114,53 @@ const [isPublished, setIsPublished] = useState(false);
         </select>
       </div>
 
+
+      <div className="instructor-quiz-form-section">
+        <h2>Create a New Quiz</h2>
+
+        <form onSubmit={handleCreateQuiz}>
+          <label>Quiz Title</label>
+          <input
+            type="text"
+            value={quizTitle}
+            onChange={(e) => setQuizTitle(e.target.value)}
+            placeholder="Enter quiz title"
+            required
+          />
+
+          <label>Quiz Description</label>
+          <textarea
+            value={quizDescription}
+            onChange={(e) => setQuizDescription(e.target.value)}
+            placeholder="Describe what the quiz covers"
+          />
+
+          <label>Passing Score (%)</label>
+          <input
+            type="number"
+            min="0"
+            max="100"
+            value={passingScore}
+            onChange={(e) => setPassingScore(e.target.value)}
+            required
+          />
+
+          <label className="quiz-publish-option">
+            <input
+              type="checkbox"
+              checked={isPublished}
+              onChange={(e) => setIsPublished(e.target.checked)}
+            />
+            Publish quiz
+          </label>
+
+          <button type="submit" disabled={!selectedCourse}>
+            Create Quiz
+          </button>
+        </form>
+      </div>
+
+
       <div className="instructor-quizzes-list">
         <h2>Existing Quizzes</h2>
 
