@@ -5,7 +5,7 @@ const api = axios.create({
   baseURL: "http://127.0.0.1:8000/api/",
 });
 
-// Automatically attach the logged-in student's token.
+// Automatically attach the latest access token.
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("access_token");
 
@@ -15,6 +15,69 @@ api.interceptors.request.use((config) => {
 
   return config;
 });
+
+// Automatically refresh expired access tokens.
+let refreshRequest = null;
+
+api.interceptors.response.use(
+  (response) => response,
+
+  async (error) => {
+    const originalRequest = error.config;
+
+    if (
+      error.response?.status === 401 &&
+      originalRequest &&
+      !originalRequest._retry &&
+      !originalRequest.url?.includes("auth/token/") &&
+      !originalRequest.url?.includes("auth/token/refresh/")
+    ) {
+      originalRequest._retry = true;
+
+      const refreshToken = localStorage.getItem("refresh_token");
+
+      if (!refreshToken) {
+        return Promise.reject(error);
+      }
+
+      try {
+        if (!refreshRequest) {
+          refreshRequest = axios.post(
+            "http://127.0.0.1:8000/api/auth/token/refresh/",
+            {
+              refresh: refreshToken,
+            }
+          );
+        }
+
+        const response = await refreshRequest;
+        const newAccessToken = response.data.access;
+
+        localStorage.setItem("access_token", newAccessToken);
+
+        refreshRequest = null;
+
+        originalRequest.headers.Authorization =
+          `Bearer ${newAccessToken}`;
+
+        return api(originalRequest);
+
+      } catch (refreshError) {
+        refreshRequest = null;
+
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
+        localStorage.removeItem("user");
+
+        window.location.href = "/login";
+
+        return Promise.reject(refreshError);
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);
 
 // Courses
 export const getCourses = async () => {
