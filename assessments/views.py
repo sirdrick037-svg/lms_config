@@ -45,7 +45,10 @@ class QuizListCreateView(generics.ListCreateAPIView):
             return queryset
 
         if user.role == "INSTRUCTOR":
-            return queryset.filter(course__instructor=user)
+            return queryset.filter(
+        Q(course__instructor=user) |
+        Q(course__instructors=user)
+    ).distinct()
 
         return queryset.filter(
             is_published=True,
