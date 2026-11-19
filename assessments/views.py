@@ -137,6 +137,14 @@ class QuizDetailView(generics.RetrieveUpdateDestroyAPIView):
     def destroy(self, request, *args, **kwargs):
         quiz = self.get_object()
         self._check_instructor(request, quiz)
+
+        if quiz.attempts.exists():
+            raise ValidationError(
+            "This quiz cannot be deleted because students have "
+            "attempted it. Keep it to preserve their submissions "
+            "and review results."
+        )
+
         return super().destroy(request, *args, **kwargs)
 
 
