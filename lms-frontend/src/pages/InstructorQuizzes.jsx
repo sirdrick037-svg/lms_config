@@ -23,6 +23,7 @@ function InstructorQuizzes() {
   const [quizDescription, setQuizDescription] = useState("");
   const [passingScore, setPassingScore] = useState(50);
   const [isPublished, setIsPublished] = useState(false);
+  const [editingQuizId, setEditingQuizId] = useState(null);
 
   useEffect(() => {
     loadData();
