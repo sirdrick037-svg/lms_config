@@ -281,6 +281,10 @@ const handleOpenQuiz = async (quiz) => {
     <button onClick={() => handleEditQuiz(quiz)}>
       Edit Quiz
     </button>
+    
+    <button onClick={() => handleOpenQuiz(quiz)}>
+  Manage Questions
+</button>
 
     <button onClick={() => handleDeleteQuiz(quiz.id)}>
       Delete Quiz
