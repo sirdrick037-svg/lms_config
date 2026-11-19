@@ -31,8 +31,9 @@ class QuestionWriteSerializer(serializers.ModelSerializer):
             "option_c",
             "option_d",
             "correct_answer",
+            "is_active",
         ]
-        read_only_fields = ["id","quiz"]
+        read_only_fields = ["id", "quiz"]
 
 
 
