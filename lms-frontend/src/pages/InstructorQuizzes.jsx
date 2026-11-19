@@ -317,6 +317,62 @@ const handleCreateQuestion = async (e) => {
   {selectedQuiz && (
   <div className="instructor-questions-section">
     <h2>Manage Questions: {selectedQuiz.title}</h2>
+    <form onSubmit={handleCreateQuestion}>
+  <h3>Add a New Question</h3>
+
+  <label>Question</label>
+  <textarea
+    value={questionText}
+    onChange={(e) => setQuestionText(e.target.value)}
+    placeholder="Enter your question"
+    required
+  />
+
+  <label>Option A</label>
+  <input
+    type="text"
+    value={optionA}
+    onChange={(e) => setOptionA(e.target.value)}
+    required
+  />
+
+  <label>Option B</label>
+  <input
+    type="text"
+    value={optionB}
+    onChange={(e) => setOptionB(e.target.value)}
+    required
+  />
+
+  <label>Option C</label>
+  <input
+    type="text"
+    value={optionC}
+    onChange={(e) => setOptionC(e.target.value)}
+    required
+  />
+
+  <label>Option D</label>
+  <input
+    type="text"
+    value={optionD}
+    onChange={(e) => setOptionD(e.target.value)}
+    required
+  />
+
+  <label>Correct Answer</label>
+  <select
+    value={correctAnswer}
+    onChange={(e) => setCorrectAnswer(e.target.value)}
+  >
+    <option value="A">Option A</option>
+    <option value="B">Option B</option>
+    <option value="C">Option C</option>
+    <option value="D">Option D</option>
+  </select>
+
+  <button type="submit">Add Question</button>
+</form>
 
     {questions.length === 0 ? (
       <p>No questions have been added to this quiz yet.</p>
