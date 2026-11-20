@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'courses',
     'enrollments',
     'assessments',
+    'contact',
     'rest_framework',
     'django_filters',
     'drf_spectacular',
