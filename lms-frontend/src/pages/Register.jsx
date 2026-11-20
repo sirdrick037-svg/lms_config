@@ -37,12 +37,15 @@ function Register() {
     username: "",
     email: "",
     password: "",
+    account_type: "STUDENT",
+    application_message: "",
   });
 
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -57,9 +60,18 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setSuccess("");
 
     if (formData.password !== confirmPassword) {
       setError("Your passwords do not match. Please check them.");
+      return;
+    }
+
+    if (
+      formData.account_type === "INSTRUCTOR" &&
+      !formData.application_message.trim()
+    ) {
+      setError("Please tell us why you want to become an instructor.");
       return;
     }
 
@@ -68,9 +80,17 @@ function Register() {
     try {
       await registerUser(formData);
 
-      navigate("/login", {
-        state: { registrationSuccess: true },
-      });
+      if (formData.account_type === "INSTRUCTOR") {
+        setSuccess(
+          "Your instructor application has been submitted successfully. " +
+          "An administrator will review your application. " +
+          "You will be notified once a decision has been made."
+        );
+      } else {
+        navigate("/login", {
+          state: { registrationSuccess: true },
+        });
+      }
     } catch (error) {
       console.error("Registration error:", error.response?.data);
 
@@ -80,6 +100,8 @@ function Register() {
         errors?.email?.[0] ||
         errors?.username?.[0] ||
         errors?.password?.[0] ||
+        errors?.application_message?.[0] ||
+        errors?.account_type?.[0] ||
         errors?.detail ||
         "Registration failed. Please try again."
       );
@@ -91,31 +113,31 @@ function Register() {
   return (
     <div className="auth-page">
 
-<div className="auth-intro">
-  <h1 className="auth-brand">
-    Skill<span>Nest</span>
-  </h1>
+      <div className="auth-intro">
+        <h1 className="auth-brand">
+          Skill<span>Nest</span>
+        </h1>
 
-  <p className="auth-tagline">LEARN • PRACTICE • GROW</p>
+        <p className="auth-tagline">LEARN • PRACTICE • GROW</p>
 
-  <div className="auth-intro-content">
-    <h2>Start Your Learning Journey</h2>
+        <div className="auth-intro-content">
+          <h2>Start Your Learning Journey</h2>
 
-    <p>
-      Join SkillNest and take the next step towards
-      building your knowledge and developing valuable skills.
-    </p>
+          <p>
+            Join SkillNest and take the next step towards
+            building your knowledge and developing valuable skills.
+          </p>
 
-    <div className="auth-benefits">
-      <p>✓ Explore quality learning materials</p>
-      <p>✓ Learn at your own pace</p>
-      <p>✓ Complete quizzes and track progress</p>
-      <p>✓ Work towards your learning goals</p>
-    </div>
+          <div className="auth-benefits">
+            <p>✓ Explore quality learning materials</p>
+            <p>✓ Learn at your own pace</p>
+            <p>✓ Complete quizzes and track progress</p>
+            <p>✓ Work towards your learning goals</p>
+          </div>
 
-    <h3>Your Future Starts Here.</h3>
-  </div>
-</div>
+          <h3>Your Future Starts Here.</h3>
+        </div>
+      </div>
 
       <div className="auth-card">
         <h1>Create Your Account</h1>
@@ -123,71 +145,120 @@ function Register() {
 
         {error && <p className="error-message">{error}</p>}
 
-        <form onSubmit={handleSubmit}>
-          <label>Username</label>
-          <input
-            type="text"
-            name="username"
-            placeholder="Choose a username"
-            value={formData.username}
-            onChange={handleChange}
-            required
-          />
+        {success && (
+          <div className="success-message">
+            <p>{success}</p>
+            <Link to="/login">Go to Login</Link>
+          </div>
+        )}
 
-          <label>Email Address</label>
-          <input
-            type="email"
-            name="email"
-            placeholder="Enter your email address"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-
-          <label>Password</label>
-          <div className="password-input-wrapper">
+        {!success && (
+          <form onSubmit={handleSubmit}>
+            <label>Username</label>
             <input
-              type={showPassword ? "text" : "password"}
-              name="password"
-              placeholder="Create a password (minimum 8 characters)"
-              value={formData.password}
+              type="text"
+              name="username"
+              placeholder="Choose a username"
+              value={formData.username}
               onChange={handleChange}
-              minLength={8}
               required
             />
-            <button
-              type="button"
-              className="password-toggle"
-              onClick={() => setShowPassword(!showPassword)}
-              aria-label={showPassword ? "Hide password" : "Show password"}
-            >
-              <EyeIcon crossed={!showPassword} />
-            </button>
-          </div>
 
-          <label>Confirm Password</label>
-          <div className="password-input-wrapper">
+            <label>Email Address</label>
             <input
-              type={showConfirmPassword ? "text" : "password"}
-              placeholder="Enter your password again"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              type="email"
+              name="email"
+              placeholder="Enter your email address"
+              value={formData.email}
+              onChange={handleChange}
               required
             />
-            <button
-              type="button"
-              className="password-toggle"
-              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-              aria-label={showConfirmPassword ? "Hide confirmation password" : "Show confirmation password"}
-            >
-              <EyeIcon crossed={!showConfirmPassword} />
-            </button>
-          </div>
 
-          <button type="submit" disabled={loading}>
-            {loading ? "Creating Account..." : "Create Account"}
-          </button>
-        </form>
+            <label>Account Type</label>
+            <select
+              name="account_type"
+              value={formData.account_type}
+              onChange={handleChange}
+              required
+            >
+              <option value="STUDENT">Student</option>
+              <option value="INSTRUCTOR">Instructor</option>
+            </select>
+
+            {formData.account_type === "INSTRUCTOR" && (
+              <>
+                <label>Why would you like to become an instructor?</label>
+                <textarea
+                  name="application_message"
+                  placeholder="Tell us briefly about your teaching experience, skills or areas of expertise."
+                  value={formData.application_message}
+                  onChange={handleChange}
+                  rows={4}
+                  required
+                />
+                <p>
+                  Your application will be reviewed by a SkillNest administrator.
+                </p>
+              </>
+            )}
+
+            <label>Password</label>
+            <div className="password-input-wrapper">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Create a password (minimum 8 characters)"
+                value={formData.password}
+                onChange={handleChange}
+                minLength={8}
+                required
+              />
+
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                <EyeIcon crossed={!showPassword} />
+              </button>
+            </div>
+
+            <label>Confirm Password</label>
+            <div className="password-input-wrapper">
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                placeholder="Enter your password again"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+              />
+
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() =>
+                  setShowConfirmPassword(!showConfirmPassword)
+                }
+                aria-label={
+                  showConfirmPassword
+                    ? "Hide confirmation password"
+                    : "Show confirmation password"
+                }
+              >
+                <EyeIcon crossed={!showConfirmPassword} />
+              </button>
+            </div>
+
+            <button type="submit" disabled={loading}>
+              {loading
+                ? "Submitting..."
+                : formData.account_type === "INSTRUCTOR"
+                  ? "Submit Application"
+                  : "Create Account"}
+            </button>
+          </form>
+        )}
 
         <div className="auth-link">
           <p>Already have a SkillNest account?</p>
