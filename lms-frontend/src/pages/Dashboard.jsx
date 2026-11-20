@@ -7,6 +7,8 @@ import {
   getLessonProgress,
   getLessons,
   getQuizAttempts,
+  getCourse,
+  sendInstructorMessage,
 } from "../services/api";
 
 function Dashboard() {
@@ -26,6 +28,14 @@ const studentInitial = studentName.charAt(0).toUpperCase();
   const [quizAttempts, setQuizAttempts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [courseDetails, setCourseDetails] = useState({});
+  const [activeContactCourse, setActiveContactCourse] = useState(null);
+  const [selectedInstructor, setSelectedInstructor] = useState("");
+  const [messageSubject, setMessageSubject] = useState("");
+  const [messageText, setMessageText] = useState("");
+  const [sendingMessage, setSendingMessage] = useState(false);
+  const [messageStatus, setMessageStatus] = useState("");
+  const [messageError, setMessageError] = useState("");
 
   useEffect(() => {
     const fetchDashboardData = async () => {
