@@ -66,7 +66,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/courses" element={<Courses />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Navigate to="/join" replace />} />
+            <Route path="/register" element={<Register />} />
             <Route path="/join" element={<JoinRequest />} />
             <Route path="/accept-invitation" element={<AcceptInvitation />} />
             <Route path="/courses/:id" element={<CourseDetails />} />
