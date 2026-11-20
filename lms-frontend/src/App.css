@@ -3515,4 +3515,63 @@
     padding: 22px;
   }
 }
+/* Student-to-Instructor Messaging Form */
+.instructor-message-form {
+  margin-top: 20px;
+  padding: 20px;
+  background: #f7f5ef;
+  border: 1px solid #e3e7e2;
+  border-radius: 12px;
+}
 
+.instructor-message-form h4 {
+  color: #315b4c;
+  margin-bottom: 18px;
+}
+
+.instructor-message-form label {
+  display: block;
+  margin: 12px 0 6px;
+  color: #243c35;
+  font-weight: 600;
+}
+
+.instructor-message-form input,
+.instructor-message-form select,
+.instructor-message-form textarea {
+  width: 100%;
+  padding: 11px;
+  border: 1px solid #d5ddd7;
+  border-radius: 7px;
+  background: #fff;
+  font: inherit;
+  box-sizing: border-box;
+}
+
+.instructor-message-form textarea {
+  resize: vertical;
+}
+
+.instructor-message-form button {
+  margin: 14px 8px 0 0;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 7px;
+  background: #315b4c;
+  color: #fff;
+  cursor: pointer;
+}
+
+.instructor-message-form button:hover {
+  background: #243c35;
+}
+
+.instructor-message-form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.instructor-message-form .success-message {
+  color: #315b4c;
+  font-weight: 600;
+}
