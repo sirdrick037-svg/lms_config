@@ -19,23 +19,15 @@ from .serializers import (
     JoinRequestSerializer,
     JoinRequestReviewSerializer,
     AdminUserSerializer,
+    RegisterSerializer,
 )
 from .services import create_invitation
 
 
-class RegisterView(APIView):
-    permission_classes = [AllowAny]
 
-    def post(self, request):
-        return Response(
-            {
-                "detail": (
-                    "Public registration is disabled. "
-                    "Please submit a join request or use an invitation link."
-                )
-            },
-            status=status.HTTP_403_FORBIDDEN,
-        )
+class RegisterView(generics.CreateAPIView):
+    serializer_class = RegisterSerializer
+    permission_classes = [AllowAny]
 
 
 class EmailTokenObtainPairView(TokenObtainPairView):
