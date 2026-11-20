@@ -56,6 +56,35 @@ const studentInitial = studentName.charAt(0).toUpperCase();
             getLessons(enrollment.course)
           )
         );
+        const courseData = await Promise.all(
+  enrollmentList.map((enrollment) =>
+    getCourse(enrollment.course)
+  )
+);
+
+const instructorDetails = {};
+
+courseData.forEach((course) => {
+  const instructors = course.instructors_details || [];
+
+  // Include the legacy instructor field if they are not
+  // already included in the assigned instructors list.
+  if (
+    course.instructor &&
+    !instructors.some(
+      (instructor) => instructor.id === course.instructor
+    )
+  ) {
+    instructors.push({
+      id: course.instructor,
+      username: course.instructor_username,
+    });
+  }
+
+  instructorDetails[course.id] = instructors;
+});
+
+setCourseDetails(instructorDetails);
 
         const allLessons = lessonData.flatMap((data) =>
           data.results || data
