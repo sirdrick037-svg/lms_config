@@ -314,6 +314,73 @@ const handleSendInstructorMessage = async (event) => {
 >
   Contact Instructor
 </button>
+{activeContactCourse === enrollment.course && (
+  <form
+    className="instructor-message-form"
+    onSubmit={handleSendInstructorMessage}
+  >
+    <h4>Send a Message to Your Instructor</h4>
+
+    {courseDetails[enrollment.course]?.length > 0 ? (
+      <>
+        <label>Select Instructor</label>
+        <select
+          value={selectedInstructor}
+          onChange={(e) => setSelectedInstructor(e.target.value)}
+          required
+        >
+          <option value="">Choose an instructor</option>
+          {courseDetails[enrollment.course].map((instructor) => (
+            <option key={instructor.id} value={instructor.id}>
+              {instructor.first_name || instructor.last_name
+                ? `${instructor.first_name || ""} ${instructor.last_name || ""}`.trim()
+                : instructor.username}
+            </option>
+          ))}
+        </select>
+
+        <label>Subject</label>
+        <input
+          type="text"
+          value={messageSubject}
+          onChange={(e) => setMessageSubject(e.target.value)}
+          placeholder="Enter message subject"
+          required
+        />
+
+        <label>Your Message</label>
+        <textarea
+          value={messageText}
+          onChange={(e) => setMessageText(e.target.value)}
+          placeholder="Describe the issue you need help with..."
+          rows="4"
+          required
+        />
+
+        {messageError && (
+          <p className="error-message">{messageError}</p>
+        )}
+
+        {messageStatus && (
+          <p className="success-message">{messageStatus}</p>
+        )}
+
+        <button type="submit" disabled={sendingMessage}>
+          {sendingMessage ? "Sending..." : "Send Message"}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveContactCourse(null)}
+        >
+          Close
+        </button>
+      </>
+    ) : (
+      <p>No assigned instructors are available for this course.</p>
+    )}
+  </form>
+)}
                       </div>
                     </article>
                   );
