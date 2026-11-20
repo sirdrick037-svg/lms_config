@@ -292,6 +292,11 @@ export const submitContactMessage = async (messageData) => {
   const response = await api.post("contact/", messageData);
   return response.data;
 };
+// Admin: Retrieve submitted contact messages
+export const getContactMessages = async () => {
+  const response = await api.get("contact/admin/");
+  return response.data;
+};
 
 
 export default api;
