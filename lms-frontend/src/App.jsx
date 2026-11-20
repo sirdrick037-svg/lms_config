@@ -21,6 +21,7 @@ import AcceptInvitation from "./pages/AcceptInvitation";
 import AdminJoinRequests from "./pages/AdminJoinRequests";
 import InstructorLessons from "./pages/InstructorLessons";
 import InstructorQuizzes from "./pages/InstructorQuizzes";
+import InstructorMessages from "./pages/InstructorMessages";
 
 import "./App.css";
 
@@ -75,6 +76,14 @@ function App() {
   element={
     <ProtectedRoute>
       <InstructorQuizzes />
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/instructor-messages"
+  element={
+    <ProtectedRoute>
+      <InstructorMessages />
     </ProtectedRoute>
   }
 />
