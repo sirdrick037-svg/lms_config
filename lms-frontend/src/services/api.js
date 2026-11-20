@@ -287,6 +287,11 @@ export const getAdminUsers = async () => {
   const response = await api.get("auth/admin/users/");
   return response.data;
 };
+// Public: Submit a contact message
+export const submitContactMessage = async (messageData) => {
+  const response = await api.post("contact/", messageData);
+  return response.data;
+};
 
 
 export default api;
