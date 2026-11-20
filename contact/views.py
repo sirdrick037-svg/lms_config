@@ -1,4 +1,4 @@
-
+from django.shortcuts import get_object_or_404
 from rest_framework import generics
 from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.exceptions import PermissionDenied, ValidationError
@@ -44,7 +44,7 @@ class InstructorMessageCreateView(generics.CreateAPIView):
                 "Please select a course and instructor."
             )
 
-        course = generics.get_object_or_404(
+        course = get_object_or_404(
             Course.objects.prefetch_related("instructors"),
             pk=course_id,
         )
