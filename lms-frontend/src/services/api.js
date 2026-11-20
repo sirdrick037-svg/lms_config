@@ -298,5 +298,21 @@ export const getContactMessages = async () => {
   return response.data;
 };
 
+// Student: Send a message to a course instructor
+export const sendInstructorMessage = async (messageData) => {
+  const response = await api.post(
+    "contact/instructor/send/",
+    messageData
+  );
+  return response.data;
+};
+
+// Instructor: Retrieve messages sent by students
+export const getInstructorMessages = async () => {
+  const response = await api.get("contact/instructor/");
+  return response.data;
+};
+
+
 
 export default api;
