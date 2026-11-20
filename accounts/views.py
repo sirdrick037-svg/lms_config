@@ -29,6 +29,31 @@ class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
     permission_classes = [AllowAny]
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        account_type = serializer.validated_data["account_type"]
+        serializer.save()
+
+        if account_type == "INSTRUCTOR":
+            return Response(
+                {
+                    "detail": (
+                        "Your instructor application has been submitted "
+                        "successfully. An administrator will review it."
+                    )
+                },
+                status=status.HTTP_201_CREATED,
+            )
+
+        return Response(
+            {
+                "detail": "Your student account has been created successfully."
+            },
+            status=status.HTTP_201_CREATED,
+        )
+
 
 class EmailTokenObtainPairView(TokenObtainPairView):
     serializer_class = EmailTokenObtainPairSerializer
