@@ -3702,3 +3702,53 @@
     font-size: 25px;
   }
 }
+/* REGISTRATION PAGE FIXES */
+
+.auth-card h1 {
+  font-size: 32px;
+  line-height: 1.25;
+  font-weight: 700;
+  margin: 0 0 15px;
+  text-align: center;
+  overflow-wrap: break-word;
+}
+
+.auth-card input,
+.auth-card select,
+.auth-card textarea {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 14px;
+  border: 1px solid #d8ded5;
+  border-radius: 8px;
+  background: #fbfcfa;
+  color: #243c35;
+  font-size: 15px;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.auth-card select {
+  height: 50px;
+  cursor: pointer;
+}
+
+.auth-card input:focus,
+.auth-card select:focus,
+.auth-card textarea:focus {
+  outline: none;
+  border-color: #315b4c;
+  box-shadow: 0 0 0 3px rgba(49, 91, 76, 0.10);
+}
+
+@media (max-width: 600px) {
+  .auth-card {
+    width: 100%;
+    padding: 28px 20px;
+  }
+
+  .auth-card h1 {
+    font-size: 29px;
+    line-height: 1.3;
+  }
+}
