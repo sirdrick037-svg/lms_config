@@ -84,6 +84,8 @@ courseData.forEach((course) => {
   instructorDetails[course.id] = instructors;
 });
 
+console.log("Course instructor details:", instructorDetails);
+
 setCourseDetails(instructorDetails);
 
         const allLessons = lessonData.flatMap((data) =>
