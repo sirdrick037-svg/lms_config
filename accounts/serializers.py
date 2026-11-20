@@ -16,18 +16,35 @@ from .models import UserInvitation
 User = get_user_model()
 
 
-class RegisterSerializer(serializers.ModelSerializer):
-    """Legacy registration serializer. We will disable its public endpoint."""
 
+class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         write_only=True,
         min_length=8,
         style={"input_type": "password"},
     )
 
+    account_type = serializers.ChoiceField(
+        choices=User.Role.choices,
+        write_only=True,
+    )
+
+    application_message = serializers.CharField(
+        required=False,
+        allow_blank=True,
+        write_only=True,
+    )
+
     class Meta:
         model = User
-        fields = ["id", "username", "email", "password"]
+        fields = [
+            "id",
+            "username",
+            "email",
+            "password",
+            "account_type",
+            "application_message",
+        ]
         read_only_fields = ["id"]
 
     def validate_email(self, value):
@@ -50,7 +67,30 @@ class RegisterSerializer(serializers.ModelSerializer):
 
         return value
 
+    def validate(self, attrs):
+        account_type = attrs.get("account_type")
+        message = attrs.get("application_message", "").strip()
+
+        if account_type == User.Role.INSTRUCTOR and not message:
+            raise serializers.ValidationError({
+                "application_message": (
+                    "Please explain briefly why you want to become an instructor."
+                )
+            })
+
+        return attrs
+
     def create(self, validated_data):
+        account_type = validated_data.pop("account_type")
+        application_message = validated_data.pop(
+            "application_message", ""
+        )
+
+        if account_type == User.Role.INSTRUCTOR:
+            raise serializers.ValidationError(
+                "Instructor applications must be submitted for admin approval."
+            )
+
         return User.objects.create_user(
             **validated_data,
             role=User.Role.STUDENT,
