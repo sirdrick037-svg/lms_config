@@ -40,6 +40,7 @@ function Header() {
             <Link to="/instructor-lessons">My Lessons</Link>
             <Link to="/instructor-quizzes">My Quizzes</Link>
             <Link to="/quiz-reviews">Quiz Reviews</Link>
+            <Link to="/instructor-messages">Student Messages</Link>
             <Link to="/contact">Contact Us</Link>
           </>
         ) : (
