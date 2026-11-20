@@ -10,6 +10,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import CourseDetails from "./pages/CourseDetails";
 import About from "./pages/About";
+import Contact from "./pages/Contact";
 import Dashboard from "./pages/Dashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -86,6 +87,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route path="/contact" element={<Contact />} />
             <Route
               path="/admin"
               element={
