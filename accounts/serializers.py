@@ -16,6 +16,7 @@ from .models import UserInvitation, JoinRequest
 User = get_user_model()
 
 
+
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         write_only=True,
@@ -94,17 +95,33 @@ class RegisterSerializer(serializers.ModelSerializer):
         )
 
         if account_type == User.Role.INSTRUCTOR:
-            return JoinRequest.objects.create(
-                name=validated_data["username"],
-                email=validated_data["email"],
-                requested_role=User.Role.INSTRUCTOR,
-                message=application_message,
-            )
+            username = validated_data["username"]
+            email = validated_data["email"]
+            password = validated_data["password"]
+
+            with transaction.atomic():
+                user = User.objects.create_user(
+                    username=username,
+                    email=email,
+                    password=password,
+                    role=User.Role.STUDENT,
+                    is_active=False,
+                )
+
+                JoinRequest.objects.create(
+                    name=username,
+                    email=email,
+                    requested_role=User.Role.INSTRUCTOR,
+                    message=application_message,
+                )
+
+            return user
 
         return User.objects.create_user(
             **validated_data,
             role=User.Role.STUDENT,
         )
+
 
 
 class AcceptInvitationSerializer(serializers.Serializer):
