@@ -150,13 +150,9 @@ function Login() {
         </form>
 
         <div className="auth-link">
-          <p>Don't have a SkillNest account yet?</p>
-          <p>
-            You need an invitation from our administrator before you can
-            register.
-          </p>
-          <Link to="/join">Request an Invitation</Link>
-        </div>
+  <p>Don't have a SkillNest account yet?</p>
+  <Link to="/register">Register Now</Link>
+</div>
       </div>
     </div>
   );
