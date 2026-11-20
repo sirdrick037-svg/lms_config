@@ -307,6 +307,13 @@ const handleSendInstructorMessage = async (event) => {
                           {courseStats.completed} of{" "}
                           {courseStats.total} lessons completed
                         </p>
+                        <button
+  type="button"
+  className="dashboard-btn"
+  onClick={() => handleContactInstructor(enrollment.course)}
+>
+  Contact Instructor
+</button>
                       </div>
                     </article>
                   );
