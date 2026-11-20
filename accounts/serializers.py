@@ -11,10 +11,9 @@ from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from .models import UserInvitation
+from .models import UserInvitation, JoinRequest
 
 User = get_user_model()
-
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -55,6 +54,14 @@ class RegisterSerializer(serializers.ModelSerializer):
                 "An account with this email already exists."
             )
 
+        if JoinRequest.objects.filter(
+            email__iexact=value,
+            status=JoinRequest.Status.PENDING,
+        ).exists():
+            raise serializers.ValidationError(
+                "You already have a pending instructor application."
+            )
+
         return value
 
     def validate_username(self, value):
@@ -87,8 +94,11 @@ class RegisterSerializer(serializers.ModelSerializer):
         )
 
         if account_type == User.Role.INSTRUCTOR:
-            raise serializers.ValidationError(
-                "Instructor applications must be submitted for admin approval."
+            return JoinRequest.objects.create(
+                name=validated_data["username"],
+                email=validated_data["email"],
+                requested_role=User.Role.INSTRUCTOR,
+                message=application_message,
             )
 
         return User.objects.create_user(
@@ -159,7 +169,6 @@ class AcceptInvitationSerializer(serializers.Serializer):
         attrs["invitation"] = invitation
         return attrs
 
-    
     def create(self, validated_data):
         with transaction.atomic():
             invitation = UserInvitation.objects.select_for_update().get(
@@ -196,8 +205,6 @@ class AcceptInvitationSerializer(serializers.Serializer):
             invitation.accepted_at = timezone.now()
             invitation.save(update_fields=["accepted_at"])
 
-        
-        # Notify the administrator that registration was completed
         admin = invitation.invited_by
 
         if admin and admin.email:
@@ -241,8 +248,6 @@ SkillNest Registration System
         return user
 
 
-
-
 class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
 
     def __init__(self, *args, **kwargs):
@@ -275,9 +280,6 @@ class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
         }
 
         return data
-
-
-from .models import JoinRequest
 
 
 class JoinRequestSerializer(serializers.ModelSerializer):
@@ -335,7 +337,6 @@ class JoinRequestSerializer(serializers.ModelSerializer):
         return attrs
 
 
-
 class JoinRequestReviewSerializer(serializers.Serializer):
     action = serializers.ChoiceField(
         choices=["approve", "reject"]
@@ -372,6 +373,8 @@ class JoinRequestReviewSerializer(serializers.Serializer):
             })
 
         return attrs
+
+
 class AdminUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -384,6 +387,4 @@ class AdminUserSerializer(serializers.ModelSerializer):
             "role",
             "is_active",
             "date_joined",
-        ]    
-
-    
+        ]
