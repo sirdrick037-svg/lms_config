@@ -103,6 +103,7 @@ class AdminJoinRequestListView(generics.ListAPIView):
 
 
 
+
 class JoinRequestReviewView(APIView):
     permission_classes = [IsAdminUser]
 
@@ -126,6 +127,7 @@ class JoinRequestReviewView(APIView):
         action = request_data["action"]
         admin_notes = request_data.get("admin_notes", "")
 
+        # REJECT APPLICATION
         if action == "reject":
             subject = "Update on your SkillNest application"
 
@@ -160,6 +162,15 @@ The SkillNest Team
                     status=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 )
 
+            pending_user = User.objects.filter(
+                email__iexact=join_request.email,
+                is_active=False,
+                role=User.Role.STUDENT,
+            ).first()
+
+            if pending_user:
+                pending_user.delete()
+
             join_request.status = JoinRequest.Status.REJECTED
             join_request.reviewed_by = request.user
             join_request.reviewed_at = timezone.now()
@@ -167,14 +178,15 @@ The SkillNest Team
             join_request.save()
 
             return Response(
-                {"detail": "Join request rejected and email sent."},
+                {"detail": "Application rejected and email sent."},
                 status=status.HTTP_200_OK,
             )
 
+        # APPROVE APPLICATION
         role = request_data["role"]
         course_ids = request_data.get("course_ids", [])
 
-        if role == "INSTRUCTOR" and not course_ids:
+        if role == User.Role.INSTRUCTOR and not course_ids:
             return Response(
                 {"detail": "Select at least one course for this instructor."},
                 status=status.HTTP_400_BAD_REQUEST,
@@ -184,35 +196,110 @@ The SkillNest Team
 
         courses = Course.objects.filter(id__in=course_ids)
 
-        if role == "INSTRUCTOR" and courses.count() != len(set(course_ids)):
-            return Response(
-                {"detail": "One or more selected courses do not exist."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+        if role == User.Role.INSTRUCTOR:
+            if courses.count() != len(set(course_ids)):
+                return Response(
+                    {"detail": "One or more selected courses do not exist."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
 
-        try:
-            invitation = create_invitation(
-                email=join_request.email,
-                role=role,
-                invited_by=request.user,
-                courses=courses,
-            )
-        except Exception:
-            return Response(
-                {
-                    "detail": (
-                        "The invitation could not be sent. "
-                        "The join request has not been approved."
-                    )
-                },
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            )
+            instructor = User.objects.filter(
+                email__iexact=join_request.email,
+                is_active=False,
+            ).first()
+
+            if not instructor:
+                return Response(
+                    {
+                        "detail": (
+                            "The pending instructor account was not found. "
+                            "Please check the application before approving."
+                        )
+                    },
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            instructor.role = User.Role.INSTRUCTOR
+            instructor.is_active = True
+            instructor.save(update_fields=["role", "is_active"])
+
+            for course in courses:
+                course.instructors.add(instructor)
+
+            subject = "Your SkillNest instructor application is approved!"
+
+            message = f"""
+Hello {instructor.username},
+
+Congratulations!
+
+Your application to become an instructor on SkillNest
+has been approved.
+
+Your instructor account is now active.
+
+You can log in directly using the email address and
+password you provided during registration.
+
+Login page: {settings.FRONTEND_URL}/login
+
+Welcome to the SkillNest teaching team!
+
+Kind regards,
+The SkillNest Team
+"""
+
+            try:
+                send_mail(
+                    subject,
+                    message,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [instructor.email],
+                    fail_silently=False,
+                )
+            except Exception:
+                instructor.is_active = False
+                instructor.role = User.Role.STUDENT
+                instructor.save(update_fields=["role", "is_active"])
+
+                for course in courses:
+                    course.instructors.remove(instructor)
+
+                return Response(
+                    {"detail": "Approval email could not be sent."},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                )
+
+        else:
+            try:
+                invitation = create_invitation(
+                    email=join_request.email,
+                    role=role,
+                    invited_by=request.user,
+                    courses=courses,
+                )
+            except Exception:
+                return Response(
+                    {"detail": "The invitation could not be sent."},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                )
 
         join_request.status = JoinRequest.Status.APPROVED
         join_request.reviewed_by = request.user
         join_request.reviewed_at = timezone.now()
         join_request.admin_notes = admin_notes
         join_request.save()
+
+        if role == User.Role.INSTRUCTOR:
+            return Response(
+                {
+                    "detail": (
+                        "Instructor approved, account activated, "
+                        "and approval email sent."
+                    )
+                },
+                status=status.HTTP_200_OK,
+            )
 
         return Response(
             {
@@ -221,6 +308,7 @@ The SkillNest Team
             },
             status=status.HTTP_200_OK,
         )
+
 
 
 
