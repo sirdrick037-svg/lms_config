@@ -108,7 +108,50 @@ setCourseDetails(instructorDetails);
 
     fetchDashboardData();
   }, []);
+  const handleContactInstructor = (courseId) => {
+  setActiveContactCourse(courseId);
+  setSelectedInstructor("");
+  setMessageSubject("");
+  setMessageText("");
+  setMessageStatus("");
+  setMessageError("");
+};
 
+const handleSendInstructorMessage = async (event) => {
+  event.preventDefault();
+
+  if (!selectedInstructor || !messageSubject.trim() || !messageText.trim()) {
+    setMessageError("Please complete all fields.");
+    return;
+  }
+
+  try {
+    setSendingMessage(true);
+    setMessageError("");
+    setMessageStatus("");
+
+    await sendInstructorMessage({
+      course: activeContactCourse,
+      instructor: Number(selectedInstructor),
+      subject: messageSubject.trim(),
+      message: messageText.trim(),
+    });
+
+    setMessageStatus("Your message has been sent successfully.");
+    setMessageSubject("");
+    setMessageText("");
+    setSelectedInstructor("");
+  } catch (err) {
+    console.error("Instructor message error:", err);
+
+    setMessageError(
+      err.response?.data?.detail ||
+      "Unable to send your message. Please try again."
+    );
+  } finally {
+    setSendingMessage(false);
+  }
+};
   const completedCourses = enrollments.filter((enrollment) => {
     const courseLessons = lessons.filter(
       (lesson) => lesson.course === enrollment.course
