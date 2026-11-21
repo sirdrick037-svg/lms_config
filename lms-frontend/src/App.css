@@ -3752,3 +3752,326 @@
     line-height: 1.3;
   }
 }
+
+/* =========================================
+   SKILLNEST PREMIUM LANDING PAGE
+   Scoped to homepage only
+========================================= */
+
+.home-page {
+  background: #f7f5ef;
+  color: #243c35;
+  overflow: hidden;
+}
+
+/* Hero section */
+.home-page .hero-section {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+  gap: 70px;
+  padding: 100px 9%;
+  min-height: 570px;
+  background:
+    radial-gradient(circle at 85% 20%, rgba(230, 181, 141, 0.22), transparent 28%),
+    linear-gradient(135deg, #f0f3eb 0%, #e5ece3 100%);
+}
+
+.home-page .hero-text {
+  max-width: 620px;
+}
+
+.home-page .hero-label {
+  display: inline-block;
+  padding: 9px 15px;
+  border-radius: 30px;
+  background: rgba(180, 107, 76, 0.10);
+  color: #a65e40;
+  font-size: 12px;
+  letter-spacing: 2px;
+}
+
+.home-page .hero-text h1 {
+  font-size: clamp(40px, 5vw, 64px);
+  line-height: 1.12;
+  letter-spacing: -2px;
+  margin: 25px 0;
+  color: #243c35;
+}
+
+.home-page .hero-text h1 span {
+  color: #b46b4c;
+}
+
+.home-page .hero-text p {
+  max-width: 520px;
+  font-size: 17px;
+  line-height: 1.9;
+  color: #718078;
+  margin-bottom: 35px;
+}
+
+.home-page .hero-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 28px;
+  border-radius: 9px;
+  background: #315b4c;
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 8px 20px rgba(49, 91, 76, 0.18);
+  transition: all 0.25s ease;
+}
+
+.home-page .hero-btn:hover {
+  background: #244537;
+  transform: translateY(-3px);
+  box-shadow: 0 12px 25px rgba(49, 91, 76, 0.23);
+}
+
+/* Hero visual */
+.home-page .hero-image {
+  position: relative;
+  min-height: 340px;
+  width: 100%;
+  max-width: 460px;
+  justify-self: center;
+  border-radius: 28px;
+  padding: 35px;
+  background: linear-gradient(145deg, #315b4c, #1f4035);
+  box-shadow: 0 25px 55px rgba(36, 60, 53, 0.20);
+}
+
+.home-page .learning-card {
+  max-width: 100%;
+  padding: 45px 25px;
+  background: rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 20px;
+  backdrop-filter: blur(8px);
+}
+
+.home-page .learning-icon {
+  color: #e6b58d;
+  font-size: 58px;
+}
+
+.home-page .learning-card h2 {
+  color: #fff;
+  font-size: 27px;
+  line-height: 1.3;
+}
+
+.home-page .learning-card p {
+  color: #e1e9e3;
+  line-height: 1.8;
+}
+
+/* Section headings */
+.home-page .courses-section,
+.home-page .why-section {
+  padding: 95px 8%;
+}
+
+.home-page .section-heading {
+  margin-bottom: 55px;
+}
+
+.home-page .section-heading span {
+  color: #b46b4c;
+  letter-spacing: 2.5px;
+}
+
+.home-page .section-heading h2 {
+  font-size: clamp(28px, 4vw, 40px);
+  letter-spacing: -1px;
+  margin: 15px 0;
+}
+
+.home-page .section-heading p {
+  color: #718078;
+  line-height: 1.8;
+}
+
+/* Course cards */
+.home-page .courses-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 25px;
+}
+
+.home-page .course-card {
+  position: relative;
+  padding: 32px;
+  min-height: 300px;
+  border: 1px solid #e9e7df;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 5px 20px rgba(36, 60, 53, 0.035);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.home-page .course-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 18px 35px rgba(36, 60, 53, 0.10);
+}
+
+.home-page .course-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: #edf2eb;
+  color: #b46b4c;
+  font-size: 27px;
+  margin-bottom: 22px;
+}
+
+.home-page .course-category {
+  display: inline-block;
+  color: #a65e40;
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.home-page .course-card h3 {
+  font-size: 20px;
+  line-height: 1.4;
+  margin: 12px 0;
+}
+
+.home-page .course-card p {
+  color: #718078;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.home-page .course-card-bottom {
+  margin-top: auto;
+  padding-top: 20px;
+  border-top: 1px solid #eeeae2;
+}
+
+.home-page .course-card-bottom button {
+  border-radius: 8px;
+  padding: 11px 15px;
+  background: #315b4c;
+  transition: all 0.2s ease;
+}
+
+.home-page .course-card-bottom button:hover {
+  background: #b46b4c;
+  transform: translateY(-2px);
+}
+
+/* View more courses */
+.home-page .outline-course-btn {
+  padding: 14px 27px;
+  border-radius: 9px;
+  transition: all 0.25s ease;
+}
+
+.home-page .outline-course-btn:hover {
+  background: #315b4c;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* Why SkillNest */
+.home-page .why-section {
+  background: #e9eee5;
+}
+
+.home-page .why-grid {
+  gap: 25px;
+}
+
+.home-page .why-grid > div {
+  padding: 35px 28px;
+  border: 1px solid rgba(49, 91, 76, 0.08);
+  border-radius: 17px;
+  box-shadow: 0 6px 20px rgba(36, 60, 53, 0.04);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.home-page .why-grid > div:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(36, 60, 53, 0.09);
+}
+
+.home-page .why-grid h3 {
+  font-size: 19px;
+  margin-bottom: 14px;
+}
+
+.home-page .why-grid p {
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+/* Course details popup */
+.home-page .course-modal {
+  border-radius: 20px;
+  padding: 45px;
+}
+
+.home-page .modal-close-btn {
+  border-radius: 8px;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+
+/* Responsive design */
+@media (max-width: 900px) {
+  .home-page .hero-section {
+    gap: 40px;
+    padding: 75px 7%;
+  }
+
+  .home-page .courses-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 650px) {
+  .home-page .hero-section {
+    grid-template-columns: 1fr;
+    padding: 65px 7%;
+    gap: 40px;
+  }
+
+  .home-page .hero-text h1 {
+    font-size: 39px;
+    letter-spacing: -1px;
+  }
+
+  .home-page .hero-image {
+    min-height: 270px;
+    padding: 22px;
+  }
+
+  .home-page .learning-card {
+    padding: 35px 20px;
+  }
+
+  .home-page .courses-section,
+  .home-page .why-section {
+    padding: 65px 7%;
+  }
+
+  .home-page .courses-grid,
+  .home-page .why-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .home-page .course-card {
+    min-height: 270px;
+  }
+
+  .home-page .course-modal {
+    padding: 35px 23px;
+  }
+}
