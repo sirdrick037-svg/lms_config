@@ -6090,3 +6090,248 @@ rgba(49, 91, 76, 0.12) 100%
     grid-template-columns: 1fr;
   }
 }
+
+/* ========================================
+   SKILLNEST - ADMIN JOIN REQUESTS
+======================================== */
+
+.admin-join-requests {
+  min-height: 100vh;
+  padding: 55px 8%;
+  background: #f7f5ef;
+  color: #243c35;
+}
+
+/* Back Button */
+.admin-join-requests .admin-back-button {
+  display: inline-block;
+  margin-bottom: 30px;
+  padding: 11px 18px;
+  border: 1.5px solid #315b4c;
+  border-radius: 10px;
+  color: #315b4c;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.admin-join-requests .admin-back-button:hover {
+  background: #315b4c;
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+/* Page Heading */
+.admin-join-requests > h1 {
+  margin-bottom: 12px;
+  color: #243c35;
+  font-size: clamp(30px, 4vw, 40px);
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.admin-join-requests > p {
+  margin-bottom: 30px;
+  color: #718078;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+/* Request Cards */
+.admin-join-requests .request-card {
+  margin-bottom: 25px;
+  padding: 32px;
+  background: #ffffff;
+  border: 1px solid rgba(49, 91, 76, 0.12);
+  border-left: 4px solid #315b4c;
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(36, 60, 53, 0.06);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.admin-join-requests .request-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 32px rgba(36, 60, 53, 0.1);
+}
+
+.admin-join-requests .request-card > h3 {
+  margin-bottom: 20px;
+  color: #315b4c;
+  font-size: 22px;
+  font-weight: 750;
+}
+
+.admin-join-requests .request-card > p {
+  margin: 12px 0;
+  color: #718078;
+  font-size: 14px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.admin-join-requests .request-card > p strong {
+  color: #243c35;
+}
+
+/* Review Area */
+.admin-join-requests .request-review {
+  margin-top: 28px;
+  padding-top: 25px;
+  border-top: 1px solid rgba(49, 91, 76, 0.15);
+}
+
+.admin-join-requests .request-review hr {
+  display: none;
+}
+
+.admin-join-requests .request-review h4 {
+  margin: 20px 0 15px;
+  color: #315b4c;
+  font-size: 17px;
+  font-weight: 750;
+}
+
+.admin-join-requests .request-review > label {
+  display: block;
+  margin: 18px 0 9px;
+  color: #243c35;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* Role Selection */
+.admin-join-requests .request-review > select {
+  width: 100%;
+  max-width: 420px;
+  padding: 13px 15px;
+  background: #f7f5ef;
+  color: #243c35;
+  border: 1px solid rgba(49, 91, 76, 0.2);
+  border-radius: 10px;
+  font-size: 14px;
+  outline: none;
+}
+
+.admin-join-requests .request-review select:focus,
+.admin-join-requests .request-review textarea:focus {
+  border-color: #315b4c;
+  box-shadow: 0 0 0 3px rgba(49, 91, 76, 0.1);
+}
+
+/* Instructor Course Selection */
+.admin-join-requests .request-review input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin-right: 9px;
+  accent-color: #315b4c;
+  cursor: pointer;
+}
+
+.admin-join-requests .request-review label:has(input[type="checkbox"]) {
+  display: block;
+  padding: 11px 14px;
+  margin: 8px 0 !important;
+  background: #f7f5ef;
+  border: 1px solid rgba(49, 91, 76, 0.1);
+  border-radius: 10px;
+  color: #52665c;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.admin-join-requests .request-review label:has(input[type="checkbox"]):hover {
+  background: #e8eee7;
+}
+
+/* Administrator Notes */
+.admin-join-requests .request-review textarea {
+  display: block;
+  width: 100%;
+  min-height: 100px;
+  padding: 14px;
+  background: #f7f5ef;
+  color: #243c35;
+  border: 1px solid rgba(49, 91, 76, 0.2);
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.7;
+  resize: vertical;
+  outline: none;
+}
+
+.admin-join-requests .request-review textarea::placeholder {
+  color: #9aa49e;
+}
+
+/* Review Errors */
+.admin-join-requests .request-review .error-message {
+  margin: 15px 0;
+  padding: 12px 15px;
+  background: #fbe9e5;
+  color: #a33e2c;
+  border-radius: 10px;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+/* Approve and Reject Buttons */
+.admin-join-requests .review-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.admin-join-requests .review-buttons button {
+  min-width: 125px;
+  padding: 12px 22px;
+  border: none;
+  border-radius: 10px;
+  color: #ffffff;
+  background: #315b4c;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.admin-join-requests .review-buttons button:first-child:hover:not(:disabled) {
+  background: #244638;
+  transform: translateY(-2px);
+}
+
+.admin-join-requests .review-buttons button:last-child {
+  background: #b46b4c;
+}
+
+.admin-join-requests .review-buttons button:last-child:hover:not(:disabled) {
+  background: #98543b;
+  transform: translateY(-2px);
+}
+
+.admin-join-requests .review-buttons button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 650px) {
+  .admin-join-requests {
+    padding: 40px 5%;
+  }
+
+  .admin-join-requests .request-card {
+    padding: 23px;
+  }
+
+  .admin-join-requests .review-buttons {
+    flex-direction: column;
+  }
+
+  .admin-join-requests .review-buttons button {
+    width: 100%;
+  }
+}
