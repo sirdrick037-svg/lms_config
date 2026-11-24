@@ -1,61 +1,55 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { getCourses } from "../services/api";
 
-const courses = [
-  {
-    title: "Python Programming",
-    category: "Programming",
-    description: "Learn Python from the basics to practical programming.",
-    level: "Beginner",
-    duration: "8 Weeks",
-    details: "Start your programming journey with Python. Learn variables, data types, conditions, loops, functions and object-oriented programming. You will also practise by creating small projects that help you develop real programming skills.",
-  },
-  {
-    title: "Database Management",
-    category: "Technology",
-    description: "Understand databases, SQL and data management.",
-    level: "Intermediate",
-    duration: "6 Weeks",
-    details: "Learn how databases work and how information is stored and organised. Explore SQL, database design, tables, relationships and queries. By the end, you will understand how to manage and retrieve data efficiently.",
-  },
-  {
-    title: "Cybersecurity",
-    category: "Security",
-    description: "Discover network security and online protection.",
-    level: "Beginner",
-    duration: "7 Weeks",
-    details: "Discover the world of cybersecurity. Learn about online threats, malware, phishing, passwords, network protection and safe internet practices. Understand how individuals and organisations protect their information.",
-  },
-  {
-    title: "JavaScript Fundamentals",
-    category: "Programming",
-    description: "Learn to create interactive and dynamic websites.",
-    level: "Beginner",
-    duration: "8 Weeks",
-    details: "Explore JavaScript from the beginning. Learn variables, functions, arrays, objects, events and DOM manipulation. Practise building interactive web pages and understand how JavaScript powers modern websites.",
-  },
-  {
-    title: "Web Development",
-    category: "Programming",
-    description: "Learn how to design and build modern websites.",
-    level: "Beginner",
-    duration: "10 Weeks",
-    details: "Build your web development skills using HTML, CSS and JavaScript. Learn how to structure web pages, style layouts, make websites responsive and create attractive user experiences.",
-  },
-  {
-    title: "Computer Networks",
-    category: "Technology",
-    description: "Understand how computers communicate with each other.",
-    level: "Intermediate",
-    duration: "6 Weeks",
-    details: "Study computer networking concepts including IP addresses, network devices, protocols, network topologies and internet communication. Develop an understanding of how computer networks operate.",
-  },
-];
+// Choose an icon based on the actual course title or category.
+function getCourseIcon(course) {
+  const text = `${course.title || ""} ${course.category || ""}`.toLowerCase();
+
+  if (text.includes("python")) return "🐍";
+  if (text.includes("database") || text.includes("sql")) return "🗄️";
+  if (text.includes("cyber") || text.includes("security")) return "🛡️";
+  if (text.includes("javascript")) return "🟨";
+  if (text.includes("web")) return "🌐";
+  if (text.includes("network")) return "🔗";
+  if (text.includes("design")) return "🎨";
+  if (text.includes("programming") || text.includes("coding")) return "💻";
+  if (text.includes("computer") || text.includes("technology")) return "🖥️";
+
+  return "📘";
+}
 
 function Home() {
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [showAll, setShowAll] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(null);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const courseData = await getCourses();
+
+        const allCourses = Array.isArray(courseData)
+          ? courseData
+          : courseData.results || [];
+
+        // Only show published courses on the homepage.
+        setCourses(
+          allCourses.filter((course) => course.is_published)
+        );
+      } catch (err) {
+        console.error("Homepage course loading error:", err);
+        setError("Unable to load courses. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCourses();
+  }, []);
 
   const displayedCourses = showAll ? courses : courses.slice(0, 3);
 
@@ -97,42 +91,65 @@ function Home() {
           <p>Choose a subject that interests you and start learning.</p>
         </div>
 
-        <div className="courses-grid">
-          {displayedCourses.map((course) => (
-            <article className="course-card" key={course.title}>
-              <div className="course-icon">✦</div>
+        {loading && (
+          <p className="no-courses">Loading courses...</p>
+        )}
 
-              <span className="course-category">
-                {course.category}
-              </span>
+        {error && (
+          <p className="error-message">{error}</p>
+        )}
 
-              <h3>{course.title}</h3>
+        {!loading && !error && courses.length === 0 && (
+          <p className="no-courses">
+            No published courses are available right now.
+            Please check back soon.
+          </p>
+        )}
 
-              <p>{course.description}</p>
+        {!loading && !error && courses.length > 0 && (
+          <>
+            <div className="courses-grid">
+              {displayedCourses.map((course) => (
+                <article className="course-card" key={course.id}>
+                  <div className="course-icon">
+                    {getCourseIcon(course)}
+                  </div>
 
-              <div className="course-card-bottom">
-                <span>{course.level}</span>
+                  <span className="course-category">
+                    {course.category || "COURSE"}
+                  </span>
 
+                  <h3>{course.title}</h3>
+
+                  <p>{course.description}</p>
+
+                  <div className="course-card-bottom">
+                    <span>{course.level || "Explore and learn"}</span>
+
+                    <button
+                      type="button"
+                      onClick={() => setSelectedCourse(course)}
+                    >
+                      Learn More <span>→</span>
+                    </button>
+                  </div>
+                </article>
+              ))}
+            </div>
+
+            {courses.length > 3 && (
+              <div className="all-courses">
                 <button
                   type="button"
-                  onClick={() => setSelectedCourse(course)}
+                  className="outline-course-btn"
+                  onClick={() => setShowAll(!showAll)}
                 >
-                  Learn More <span>→</span>
+                  {showAll ? "Show Less" : "View More Courses"}
                 </button>
               </div>
-            </article>
-          ))}
-        </div>
-
-        <div className="all-courses">
-          <button
-            type="button"
-            className="outline-course-btn"
-            onClick={() => setShowAll(!showAll)}
-          >
-            {showAll ? "Show Less" : "View More Courses"}
-          </button>
-        </div>
+            )}
+          </>
+        )}
       </section>
 
       {selectedCourse && (
@@ -154,19 +171,26 @@ function Home() {
             </button>
 
             <span className="modal-category">
-              {selectedCourse.category}
+              {selectedCourse.category || "COURSE"}
             </span>
 
             <h2>{selectedCourse.title}</h2>
 
             <p className="modal-description">
-              {selectedCourse.details}
+              {selectedCourse.details || selectedCourse.description}
             </p>
 
-            <div className="modal-info">
-              <span>Level: {selectedCourse.level}</span>
-              <span>Duration: {selectedCourse.duration}</span>
-            </div>
+            {(selectedCourse.level || selectedCourse.duration) && (
+              <div className="modal-info">
+                {selectedCourse.level && (
+                  <span>Level: {selectedCourse.level}</span>
+                )}
+
+                {selectedCourse.duration && (
+                  <span>Duration: {selectedCourse.duration}</span>
+                )}
+              </div>
+            )}
 
             <button
               type="button"
