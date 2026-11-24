@@ -256,12 +256,20 @@
 }
 
 .learning-card {
-  background: white;
-  padding: 55px 35px;
-  border-radius: 20px;
+  background: rgba(247, 245, 239, 0.94);
+  padding: 40px 28px;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-radius: 28px;
   text-align: center;
-  box-shadow: 0 15px 45px rgba(23, 54, 93, 0.12);
+  box-shadow: 0 25px 60px rgba(36, 60, 53, 0.18);
   max-width: 340px;
+  backdrop-filter: blur(12px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.learning-card:hover {
+  transform: translateY(-7px);
+  box-shadow: 0 32px 70px rgba(36, 60, 53, 0.23);
 }
 
 .learning-icon {
