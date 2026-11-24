@@ -383,14 +383,14 @@
   margin: 0 0 22px;
 }
 
-.course-card-bottom {
+.home-page .course-card-bottom {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 10px;
   margin-top: 25px;
   padding-top: 18px;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid rgba(49, 91, 76, 0.13);
 }
 
 .course-card-bottom span {
