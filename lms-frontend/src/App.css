@@ -3773,8 +3773,14 @@
   padding: 100px 9%;
   min-height: 570px;
   background:
-    radial-gradient(circle at 85% 20%, rgba(230, 181, 141, 0.22), transparent 28%),
-    linear-gradient(135deg, #f0f3eb 0%, #e5ece3 100%);
+  linear-gradient(
+    90deg,
+    rgba(247, 245, 239, 0.94) 0%,
+    rgba(247, 245, 239, 0.82) 50%,
+    rgba(49, 91, 76, 0.35) 100%
+  ),
+  url("https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=1920&q=85")
+    center/cover no-repeat;
 }
 
 .home-page .hero-text {
