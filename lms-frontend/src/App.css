@@ -5366,3 +5366,354 @@ rgba(49, 91, 76, 0.12) 100%
     flex: 1;
   }
 }
+
+/* Premium SkillNest Instructor Quizzes */
+.instructor-quizzes-page {
+  min-height: 100vh;
+  padding-bottom: 85px;
+  background: #f7f5ef;
+  color: #243c35;
+}
+
+.instructor-quizzes-page .instructor-quizzes-hero {
+  padding: 80px 8%;
+  text-align: center;
+  background: linear-gradient(120deg, #315b4c, #243c35);
+  color: #f7f5ef;
+}
+
+.instructor-quizzes-page .instructor-quizzes-hero h1 {
+  margin-bottom: 15px;
+  font-size: clamp(34px, 5vw, 48px);
+  letter-spacing: -1.2px;
+}
+
+.instructor-quizzes-page .instructor-quizzes-hero p {
+  color: rgba(247, 245, 239, 0.85);
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.instructor-quizzes-page > .error-message,
+.instructor-quizzes-page > .success-message {
+  max-width: 1050px;
+  margin: 25px auto;
+  padding: 15px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.instructor-quizzes-page > .error-message {
+  background: #fbe9e5;
+  color: #a33e2c;
+}
+
+.instructor-quizzes-page > .success-message {
+  background: #e2eee5;
+  color: #315b4c;
+}
+
+.instructor-quizzes-page .instructor-quiz-course-selector,
+.instructor-quizzes-page .instructor-quiz-form-section,
+.instructor-quizzes-page .instructor-quizzes-list,
+.instructor-quizzes-page .instructor-questions-section {
+  max-width: 1050px;
+  margin: 35px auto;
+  padding: 35px;
+  background: #ffffff;
+  border: 1px solid rgba(49, 91, 76, 0.1);
+  border-radius: 22px;
+  box-shadow: 0 10px 30px rgba(36, 60, 53, 0.06);
+}
+
+.instructor-quizzes-page label {
+  display: block;
+  margin: 16px 0 9px;
+  color: #315b4c;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.instructor-quizzes-page input:not([type="checkbox"]),
+.instructor-quizzes-page select,
+.instructor-quizzes-page textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 13px 15px;
+  border: 1px solid rgba(49, 91, 76, 0.18);
+  border-radius: 11px;
+  background: #f7f5ef;
+  color: #243c35;
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.instructor-quizzes-page input:focus,
+.instructor-quizzes-page select:focus,
+.instructor-quizzes-page textarea:focus {
+  border-color: #315b4c;
+  box-shadow: 0 0 0 3px rgba(49, 91, 76, 0.1);
+}
+
+.instructor-quizzes-page textarea {
+  min-height: 110px;
+  resize: vertical;
+  line-height: 1.8;
+}
+
+.instructor-quizzes-page .instructor-quiz-form-section > button,
+.instructor-quizzes-page form button,
+.instructor-quizzes-page .instructor-quiz-actions button,
+.instructor-quizzes-page .instructor-questions-section > button,
+.instructor-quizzes-page .compact-question-details button {
+  padding: 12px 19px;
+  border: none;
+  border-radius: 10px;
+  background: #315b4c;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.instructor-quizzes-page button:hover:not(:disabled) {
+  background: #b46b4c;
+  transform: translateY(-2px);
+}
+
+.instructor-quizzes-page button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.instructor-quizzes-page .instructor-quiz-form-section > button {
+  margin-bottom: 15px;
+}
+
+.instructor-quizzes-page .instructor-quiz-form-section h2,
+.instructor-quizzes-page .instructor-quizzes-list > h2,
+.instructor-quizzes-page .instructor-questions-section h2 {
+  margin-bottom: 22px;
+  color: #243c35;
+  font-size: 26px;
+  letter-spacing: -0.5px;
+}
+
+.instructor-quizzes-page .quiz-publish-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0;
+  color: #315b4c;
+}
+
+.instructor-quizzes-page .quiz-publish-option input {
+  width: 17px;
+  height: 17px;
+  accent-color: #315b4c;
+}
+
+.instructor-quizzes-page .instructor-quiz-form-section form > button {
+  margin: 12px 10px 0 0;
+}
+
+.instructor-quizzes-page .instructor-quiz-card {
+  margin-top: 17px;
+  overflow: hidden;
+  background: #f7f5ef;
+  border: 1px solid rgba(49, 91, 76, 0.13);
+  border-radius: 16px;
+  transition: box-shadow 0.25s ease;
+}
+
+.instructor-quizzes-page .instructor-quiz-card:hover {
+  box-shadow: 0 9px 22px rgba(36, 60, 53, 0.07);
+}
+
+.instructor-quizzes-page .compact-quiz-heading,
+.instructor-quizzes-page .compact-question-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  padding: 22px 25px;
+  cursor: pointer;
+}
+
+.instructor-quizzes-page .compact-quiz-heading h3 {
+  margin-bottom: 8px;
+  color: #243c35;
+  font-size: 18px;
+}
+
+.instructor-quizzes-page .compact-quiz-heading p {
+  color: #718078;
+  font-size: 13px;
+}
+
+.instructor-quizzes-page .compact-quiz-heading > span,
+.instructor-quizzes-page .compact-question-heading > span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #e8eee7;
+  color: #315b4c;
+  font-size: 21px;
+  font-weight: 700;
+}
+
+.instructor-quizzes-page .compact-quiz-details {
+  padding: 22px 25px;
+  border-top: 1px solid rgba(49, 91, 76, 0.12);
+}
+
+.instructor-quizzes-page .compact-quiz-details > p {
+  color: #718078;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.instructor-quizzes-page .instructor-quiz-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.instructor-quizzes-page .instructor-quiz-actions button:last-child {
+  background: #fbe9e5;
+  color: #a33e2c;
+}
+
+.instructor-quizzes-page .instructor-quiz-actions button:last-child:hover {
+  background: #a33e2c;
+  color: #ffffff;
+}
+
+.instructor-quizzes-page .instructor-questions-section > p {
+  margin-bottom: 20px;
+  color: #718078;
+  font-size: 15px;
+}
+
+.instructor-quizzes-page .compact-question-form {
+  margin: 25px 0;
+  padding: 22px;
+  background: #e8eee7;
+  border-radius: 15px;
+}
+
+.instructor-quizzes-page .compact-question-form summary {
+  color: #315b4c;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.instructor-quizzes-page .compact-question-form form {
+  margin-top: 20px;
+}
+
+.instructor-quizzes-page .compact-question-form form button {
+  margin-top: 18px;
+}
+
+.instructor-quizzes-page .instructor-questions-section > h3 {
+  margin: 30px 0 18px;
+  color: #243c35;
+  font-size: 20px;
+}
+
+.instructor-quizzes-page .instructor-question-card {
+  margin-top: 13px;
+  overflow: hidden;
+  background: #f7f5ef;
+  border: 1px solid rgba(49, 91, 76, 0.12);
+  border-radius: 14px;
+}
+
+.instructor-quizzes-page .compact-question-heading {
+  padding: 18px 20px;
+}
+
+.instructor-quizzes-page .compact-question-heading strong {
+  color: #243c35;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.instructor-quizzes-page .compact-question-details {
+  padding: 20px;
+  border-top: 1px solid rgba(49, 91, 76, 0.12);
+}
+
+.instructor-quizzes-page .compact-question-details p {
+  margin-bottom: 12px;
+  color: #718078;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.instructor-quizzes-page .compact-question-details p:last-of-type {
+  margin-bottom: 18px;
+}
+
+.instructor-quizzes-page .compact-question-details button {
+  background: #fbe9e5;
+  color: #a33e2c;
+}
+
+.instructor-quizzes-page .compact-question-details button:hover {
+  background: #a33e2c;
+  color: #ffffff;
+}
+
+@media (max-width: 1150px) {
+  .instructor-quizzes-page .instructor-quiz-course-selector,
+  .instructor-quizzes-page .instructor-quiz-form-section,
+  .instructor-quizzes-page .instructor-quizzes-list,
+  .instructor-quizzes-page .instructor-questions-section {
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+
+  .instructor-quizzes-page > .error-message,
+  .instructor-quizzes-page > .success-message {
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+}
+
+@media (max-width: 600px) {
+  .instructor-quizzes-page .instructor-quizzes-hero {
+    padding: 60px 6%;
+  }
+
+  .instructor-quizzes-page .instructor-quiz-course-selector,
+  .instructor-quizzes-page .instructor-quiz-form-section,
+  .instructor-quizzes-page .instructor-quizzes-list,
+  .instructor-quizzes-page .instructor-questions-section {
+    padding: 25px 20px;
+  }
+
+  .instructor-quizzes-page .compact-quiz-heading,
+  .instructor-quizzes-page .compact-question-heading {
+    padding: 17px;
+  }
+
+  .instructor-quizzes-page .instructor-quiz-actions {
+    flex-direction: column;
+  }
+
+  .instructor-quizzes-page .instructor-quiz-actions button {
+    width: 100%;
+  }
+}
