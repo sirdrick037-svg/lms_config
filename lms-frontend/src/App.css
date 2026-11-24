@@ -7034,3 +7034,321 @@ rgba(49, 91, 76, 0.12) 100%
     padding: 20px;
   }
 }
+
+/* ========================================
+   SKILLNEST - PREMIUM AUTHENTICATION PAGES
+   REGISTRATION
+======================================== */
+
+.auth-page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+  background: #f7f5ef;
+  color: #243c35;
+}
+
+/* Left Introduction Panel */
+.auth-page .auth-intro {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 65px 10%;
+  background: linear-gradient(145deg, #315b4c, #243c35);
+  color: #f7f5ef;
+}
+
+.auth-page .auth-brand {
+  margin-bottom: 8px;
+  color: #f7f5ef;
+  font-size: 43px;
+  font-weight: 850;
+  letter-spacing: -2px;
+}
+
+.auth-page .auth-brand span {
+  color: #e6b58d;
+}
+
+.auth-page .auth-tagline {
+  color: #e6b58d;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+}
+
+.auth-page .auth-intro-content {
+  max-width: 500px;
+  margin-top: 75px;
+}
+
+.auth-page .auth-intro-content h2 {
+  margin-bottom: 20px;
+  color: #f7f5ef;
+  font-size: clamp(32px, 4vw, 46px);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -1.2px;
+}
+
+.auth-page .auth-intro-content > p {
+  color: rgba(247, 245, 239, 0.82);
+  font-size: 15px;
+  line-height: 1.9;
+}
+
+.auth-page .auth-benefits {
+  display: grid;
+  gap: 15px;
+  margin: 30px 0;
+}
+
+.auth-page .auth-benefits p {
+  color: #f7f5ef;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.auth-page .auth-intro-content h3 {
+  margin-top: 35px;
+  color: #e6b58d;
+  font-size: 21px;
+  font-weight: 700;
+}
+
+/* Registration Card */
+.auth-page .auth-card {
+  width: 100%;
+  max-width: 600px;
+  align-self: center;
+  justify-self: center;
+  padding: 45px;
+  margin: 45px 25px;
+  background: #ffffff;
+  border: 1px solid rgba(49, 91, 76, 0.1);
+  border-radius: 25px;
+  box-shadow: 0 18px 50px rgba(36, 60, 53, 0.09);
+}
+
+.auth-page .auth-card > h1 {
+  margin-bottom: 12px;
+  color: #243c35;
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.8px;
+}
+
+.auth-page .auth-card > p {
+  margin-bottom: 25px;
+  color: #718078;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+/* Form Labels */
+.auth-page .auth-card form > label {
+  display: block;
+  margin: 17px 0 8px;
+  color: #315b4c;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+/* Form Inputs */
+.auth-page .auth-card form > input,
+.auth-page .auth-card form > select,
+.auth-page .auth-card form > textarea,
+.auth-page .password-input-wrapper input {
+  width: 100%;
+  padding: 13px 15px;
+  background: #f7f5ef;
+  color: #243c35;
+  border: 1px solid rgba(49, 91, 76, 0.18);
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.auth-page .auth-card form > input:focus,
+.auth-page .auth-card form > select:focus,
+.auth-page .auth-card form > textarea:focus,
+.auth-page .password-input-wrapper input:focus {
+  border-color: #315b4c;
+  box-shadow: 0 0 0 3px rgba(49, 91, 76, 0.1);
+}
+
+.auth-page .auth-card form > textarea {
+  resize: vertical;
+  min-height: 110px;
+  line-height: 1.7;
+}
+
+.auth-page .auth-card form > input::placeholder,
+.auth-page .auth-card form > textarea::placeholder,
+.auth-page .password-input-wrapper input::placeholder {
+  color: #9aa49e;
+}
+
+/* Instructor Application Information */
+.auth-page .auth-card form > label + textarea + p {
+  margin-top: 9px;
+  color: #718078;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+/* Password Input and Visibility */
+.auth-page .password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.auth-page .password-input-wrapper input {
+  padding-right: 52px;
+}
+
+.auth-page .password-toggle {
+  position: absolute;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  background: transparent;
+  color: #718078;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.auth-page .password-toggle:hover {
+  color: #315b4c;
+}
+
+/* Submit Button */
+.auth-page .auth-card form > button[type="submit"] {
+  width: 100%;
+  margin-top: 28px;
+  padding: 15px;
+  background: #315b4c;
+  color: #ffffff;
+  border: none;
+  border-radius: 11px;
+  font-size: 14px;
+  font-weight: 750;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.auth-page .auth-card form > button[type="submit"]:hover:not(:disabled) {
+  background: #b46b4c;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(180, 107, 76, 0.18);
+}
+
+.auth-page .auth-card form > button[type="submit"]:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Login Link */
+.auth-page .auth-link {
+  margin-top: 28px;
+  padding-top: 22px;
+  border-top: 1px solid rgba(49, 91, 76, 0.12);
+  text-align: center;
+}
+
+.auth-page .auth-link p {
+  margin-bottom: 8px;
+  color: #718078;
+  font-size: 13px;
+}
+
+.auth-page .auth-link a {
+  color: #315b4c;
+  font-size: 14px;
+  font-weight: 750;
+  text-decoration: none;
+}
+
+.auth-page .auth-link a:hover {
+  color: #b46b4c;
+}
+
+/* Success and Error Messages */
+.auth-page .error-message {
+  padding: 13px 15px;
+  margin: 15px 0;
+  background: #fbe9e5;
+  color: #a33e2c;
+  border-radius: 10px;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.auth-page .success-message {
+  padding: 20px;
+  margin: 20px 0;
+  background: #e8eee7;
+  color: #315b4c;
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.auth-page .success-message a {
+  display: inline-block;
+  margin-top: 12px;
+  color: #315b4c;
+  font-weight: 750;
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .auth-page {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-page .auth-intro {
+    padding: 50px 8%;
+  }
+
+  .auth-page .auth-intro-content {
+    margin-top: 35px;
+  }
+
+  .auth-page .auth-card {
+    margin: 35px 20px;
+    width: calc(100% - 40px);
+  }
+}
+
+@media (max-width: 550px) {
+  .auth-page .auth-intro {
+    padding: 40px 7%;
+  }
+
+  .auth-page .auth-brand {
+    font-size: 35px;
+  }
+
+  .auth-page .auth-intro-content {
+    margin-top: 30px;
+  }
+
+  .auth-page .auth-card {
+    padding: 28px 22px;
+    margin: 25px 15px;
+    width: calc(100% - 30px);
+  }
+
+  .auth-page .auth-card > h1 {
+    font-size: 26px;
+  }
+}
