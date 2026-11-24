@@ -707,20 +707,24 @@
   font-size: 14px;
 }
 
-.course-card-bottom button {
+.home-page .course-card-bottom button {
   background: #315b4c;
-  color: white;
+  color: #f7f5ef;
   border: none;
-  border-radius: 6px;
-  padding: 10px 14px;
+  border-radius: 10px;
+  padding: 11px 17px;
   cursor: pointer;
   font-size: 13px;
   font-weight: 600;
+  transition: all 0.3s ease;
 }
 
-.course-card-bottom button:hover {
+.home-page .course-card-bottom button:hover {
   background: #b46b4c;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(180, 107, 76, 0.2);
 }
+
 
 .all-courses {
   text-align: center;
