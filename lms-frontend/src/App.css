@@ -6750,3 +6750,287 @@ rgba(49, 91, 76, 0.12) 100%
     grid-template-columns: 1fr;
   }
 }
+
+/* ========================================
+   SKILLNEST - COURSE DETAILS PAGE
+======================================== */
+
+.course-details-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 75px 6%;
+  background:
+    radial-gradient(circle at top left, #e8eee7 0%, transparent 38%),
+    #f7f5ef;
+  color: #243c35;
+}
+
+.course-details-page .course-details-card {
+  width: 100%;
+  max-width: 900px;
+  padding: 50px;
+  background: #ffffff;
+  border: 1px solid rgba(49, 91, 76, 0.12);
+  border-radius: 26px;
+  box-shadow: 0 18px 50px rgba(36, 60, 53, 0.09);
+}
+
+/* Page Labels */
+.course-details-page .course-details-label {
+  display: inline-block;
+  margin-bottom: 18px;
+  padding: 7px 14px;
+  background: #e8eee7;
+  color: #315b4c;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+/* Course Heading */
+.course-details-page .course-details-card > h1 {
+  margin-bottom: 20px;
+  color: #243c35;
+  font-size: clamp(30px, 4vw, 43px);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -1px;
+}
+
+.course-details-page .course-details-description {
+  margin-bottom: 30px;
+  color: #718078;
+  font-size: 15px;
+  line-height: 1.9;
+  white-space: pre-wrap;
+}
+
+/* Course Information */
+.course-details-page .course-details-info {
+  padding: 25px;
+  margin-bottom: 28px;
+  background: #f7f5ef;
+  border: 1px solid rgba(49, 91, 76, 0.1);
+  border-radius: 16px;
+}
+
+.course-details-page .course-details-info p {
+  margin: 10px 0;
+  color: #718078;
+  font-size: 14px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.course-details-page .course-details-info strong {
+  color: #315b4c;
+  font-weight: 750;
+}
+
+.course-details-page .course-details-info ul {
+  padding-left: 22px;
+  margin: 12px 0 20px;
+  color: #718078;
+  font-size: 14px;
+  line-height: 1.9;
+}
+
+/* Section Headings */
+.course-details-page .course-details-card > h2 {
+  margin: 30px 0 20px;
+  color: #243c35;
+  font-size: 25px;
+  font-weight: 800;
+}
+
+/* Divider */
+.course-details-page .course-details-card > hr {
+  margin: 30px 0;
+  border: none;
+  border-top: 1px solid rgba(49, 91, 76, 0.14);
+}
+
+/* Enrollment and Payment */
+.course-details-page .payment-section {
+  padding: 28px;
+  margin: 20px 0;
+  background: #f7f5ef;
+  border: 1px solid rgba(49, 91, 76, 0.12);
+  border-radius: 17px;
+}
+
+.course-details-page .payment-section > p {
+  margin-bottom: 20px;
+  color: #718078;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.course-details-page .payment-section label {
+  display: block;
+  margin-bottom: 9px;
+  color: #315b4c;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.course-details-page .payment-section input {
+  display: block;
+  width: 100%;
+  max-width: 450px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  background: #ffffff;
+  color: #243c35;
+  border: 1px solid rgba(49, 91, 76, 0.2);
+  border-radius: 10px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.course-details-page .payment-section input:focus {
+  border-color: #315b4c;
+  box-shadow: 0 0 0 3px rgba(49, 91, 76, 0.1);
+}
+
+.course-details-page .payment-section input:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* Action Buttons */
+.course-details-page .enroll-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 13px 22px;
+  margin: 10px 0;
+  background: #315b4c;
+  color: #ffffff;
+  border: none;
+  border-radius: 11px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.course-details-page .enroll-btn:hover:not(:disabled) {
+  background: #b46b4c;
+  transform: translateY(-2px);
+  box-shadow: 0 7px 18px rgba(180, 107, 76, 0.18);
+}
+
+.course-details-page .enroll-btn:disabled {
+  background: #718078;
+  cursor: not-allowed;
+  opacity: 0.75;
+}
+
+/* Course Lessons */
+.course-details-page .course-lessons-list {
+  display: grid;
+  gap: 18px;
+  margin: 25px 0;
+}
+
+.course-details-page .course-lesson-item {
+  padding: 25px;
+  background: #f7f5ef;
+  border: 1px solid rgba(49, 91, 76, 0.12);
+  border-left: 4px solid #315b4c;
+  border-radius: 16px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.course-details-page .course-lesson-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(36, 60, 53, 0.07);
+}
+
+.course-details-page .course-lesson-item span {
+  color: #b46b4c;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.course-details-page .course-lesson-item h3 {
+  margin: 10px 0;
+  color: #243c35;
+  font-size: 19px;
+  font-weight: 750;
+}
+
+.course-details-page .course-lesson-item p {
+  margin-bottom: 12px;
+  color: #718078;
+  font-size: 14px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* Enrollment Messages */
+.course-details-page .enrollment-message {
+  padding: 15px 18px;
+  margin: 22px 0;
+  background: #e8eee7;
+  color: #315b4c;
+  border-radius: 11px;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+/* Back to Courses */
+.course-details-page .login-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 25px;
+  padding: 12px 20px;
+  background: transparent;
+  color: #315b4c;
+  border: 1.5px solid #315b4c;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.course-details-page .login-btn:hover {
+  background: #315b4c;
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 650px) {
+  .course-details-page {
+    padding: 40px 5%;
+  }
+
+  .course-details-page .course-details-card {
+    padding: 28px 22px;
+    border-radius: 20px;
+  }
+
+  .course-details-page .course-details-info,
+  .course-details-page .payment-section {
+    padding: 20px;
+  }
+
+  .course-details-page .course-details-card > h2 {
+    font-size: 22px;
+  }
+
+  .course-details-page .course-lesson-item {
+    padding: 20px;
+  }
+}
