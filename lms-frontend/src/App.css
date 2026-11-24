@@ -315,11 +315,20 @@
 }
 
 .course-card {
-  padding: 30px;
-  border: 1px solid #e2e8f0;
-  border-radius: 14px;
-  background: white;
-  transition: 0.3s;
+  padding: 32px;
+  border: 1px solid rgba(49, 91, 76, 0.12);
+  border-radius: 22px;
+  background: linear-gradient(145deg, #ffffff 0%, #f7f5ef 100%);
+  box-shadow: 0 8px 25px rgba(36, 60, 53, 0.06);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.course-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 18px 38px rgba(36, 60, 53, 0.13);
+  border-color: rgba(49, 91, 76, 0.3);
 }
 
 .course-card:hover {
