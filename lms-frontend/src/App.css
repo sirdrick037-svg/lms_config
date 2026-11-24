@@ -292,6 +292,10 @@
 .why-section {
   padding: 85px 8%;
 }
+.home-page .courses-section {
+  background: #f7f5ef;
+  padding: 95px 8%;
+}
 
 .home-page .section-heading {
   text-align: center;
