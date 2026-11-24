@@ -462,9 +462,12 @@
   box-shadow: 0 18px 38px rgba(36, 60, 53, 0.12);
 }
 
-.why-grid h3 {
-  color: #17365d;
+.home-page .why-grid h3 {
+  color: #243c35;
+  font-size: 20px;
+  font-weight: 700;
   margin-bottom: 15px;
+  letter-spacing: -0.3px;
 }
 
 .why-grid p {
