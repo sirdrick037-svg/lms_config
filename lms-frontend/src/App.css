@@ -262,7 +262,7 @@
   border-radius: 28px;
   text-align: center;
   box-shadow: 0 25px 60px rgba(36, 60, 53, 0.18);
-  max-width: 340px;
+  max-width: 300px;
   backdrop-filter: blur(12px);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
