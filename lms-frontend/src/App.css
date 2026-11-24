@@ -731,23 +731,25 @@
   margin-top: 40px;
 }
 
-.outline-course-btn {
+.home-page .outline-course-btn {
   display: inline-block;
   background: transparent;
   color: #315b4c;
-  border: 1px solid #315b4c;
-  border-radius: 7px;
-  padding: 13px 25px;
-  font-size: 15px;
-  font-weight: 600;
+  border: 1.5px solid #315b4c;
+  border-radius: 12px;
+  padding: 14px 30px;
+  font-size: 14px;
+  font-weight: 700;
   cursor: pointer;
   text-decoration: none;
-  transition: 0.3s;
+  transition: all 0.3s ease;
 }
 
-.outline-course-btn:hover {
+.home-page .outline-course-btn:hover {
   background: #315b4c;
-  color: white;
+  color: #f7f5ef;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(49, 91, 76, 0.18);
 }
 
 .why-section {
