@@ -4158,3 +4158,49 @@ rgba(49, 91, 76, 0.12) 100%
     padding: 35px 23px;
   }
 }
+
+/* Premium homepage course cards */
+.home-page .courses-grid {
+  align-items: stretch;
+}
+
+.home-page .course-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 330px;
+  height: 100%;
+  padding: 30px;
+  border: 1px solid rgba(49, 91, 76, 0.12);
+  border-radius: 24px;
+  background: linear-gradient(145deg, #ffffff 0%, #f7f5ef 100%);
+  box-shadow: 0 8px 28px rgba(36, 60, 53, 0.07);
+  transition: transform 0.3s ease, box-shadow 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.home-page .course-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(36, 60, 53, 0.13);
+  border-color: rgba(49, 91, 76, 0.3);
+}
+
+.home-page .course-card h3 {
+  min-height: 58px;
+  margin: 12px 0;
+  color: #243c35;
+  font-size: 21px;
+  font-weight: 750;
+  line-height: 1.4;
+}
+
+.home-page .course-card p {
+  flex-grow: 1;
+  color: #718078;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.home-page .course-card-bottom {
+  margin-top: auto;
+  padding-top: 20px;
+}
