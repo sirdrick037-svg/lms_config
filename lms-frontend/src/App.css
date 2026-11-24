@@ -375,10 +375,12 @@
   letter-spacing: -0.4px;
 }
 
-.course-card p {
-  color: #64748b;
-  line-height: 1.7;
+.home-page .course-card p {
+  color: #718078;
+  font-size: 14px;
+  line-height: 1.8;
   min-height: 55px;
+  margin: 0 0 22px;
 }
 
 .course-card-bottom {
