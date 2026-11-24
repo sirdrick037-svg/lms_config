@@ -4204,3 +4204,145 @@ rgba(49, 91, 76, 0.12) 100%
   margin-top: auto;
   padding-top: 20px;
 }
+
+/* Premium SkillNest navigation */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
+  padding: 18px 7%;
+  background: rgba(247, 245, 239, 0.96);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(49, 91, 76, 0.1);
+  box-shadow: 0 5px 22px rgba(36, 60, 53, 0.05);
+}
+
+.header .logo {
+  color: #315b4c;
+  font-size: 27px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.header .navbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 25px;
+  flex-wrap: wrap;
+}
+
+.header .navbar a {
+  position: relative;
+  color: #243c35;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.25s ease;
+}
+
+.header .navbar a:hover {
+  color: #b46b4c;
+}
+
+.header .navbar a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -7px;
+  width: 0;
+  height: 2px;
+  background: #b46b4c;
+  transition: width 0.25s ease;
+}
+
+.header .navbar a:hover::after {
+  width: 100%;
+}
+
+.header .header-buttons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  white-space: nowrap;
+}
+
+.header .login-btn,
+.header .register-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 20px;
+  border-radius: 11px;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.header .login-btn {
+  color: #315b4c;
+  background: transparent;
+  border: 1.5px solid #315b4c;
+}
+
+.header .login-btn:hover {
+  color: #ffffff;
+  background: #315b4c;
+}
+
+.header .register-btn {
+  color: #ffffff;
+  background: #315b4c;
+  border: 1.5px solid #315b4c;
+}
+
+.header .register-btn:hover {
+  background: #b46b4c;
+  border-color: #b46b4c;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 900px) {
+  .header {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .header .navbar {
+    order: 3;
+    width: 100%;
+    gap: 18px;
+  }
+}
+
+@media (max-width: 600px) {
+  .header {
+    padding: 16px 5%;
+    gap: 16px;
+  }
+
+  .header .navbar {
+    gap: 14px;
+  }
+
+  .header .navbar a {
+    font-size: 13px;
+  }
+
+  .header .header-buttons {
+    gap: 8px;
+  }
+
+  .header .login-btn,
+  .header .register-btn {
+    padding: 9px 13px;
+  }
+}
