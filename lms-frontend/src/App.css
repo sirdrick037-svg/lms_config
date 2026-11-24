@@ -4729,3 +4729,368 @@ rgba(49, 91, 76, 0.12) 100%
     padding: 30px 25px;
   }
 }
+
+/* Premium SkillNest Student Dashboard */
+.dashboard-page {
+  min-height: 100vh;
+  padding-bottom: 80px;
+  background: #f7f5ef;
+  color: #243c35;
+}
+
+.dashboard-page .dashboard-welcome {
+  padding: 75px 8%;
+  background: linear-gradient(120deg, #315b4c, #243c35);
+  color: #f7f5ef;
+}
+
+.dashboard-page .dashboard-welcome > span {
+  color: #e6b58d;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.dashboard-page .dashboard-welcome h1 {
+  margin: 18px 0 12px;
+  font-size: clamp(32px, 5vw, 46px);
+  letter-spacing: -1.2px;
+}
+
+.dashboard-page .dashboard-welcome p {
+  color: rgba(247, 245, 239, 0.85);
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.dashboard-page .dashboard-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  padding: 0 8%;
+  margin-top: -28px;
+  position: relative;
+}
+
+.dashboard-page .dashboard-card {
+  padding: 28px;
+  background: #ffffff;
+  border: 1px solid rgba(49, 91, 76, 0.1);
+  border-radius: 20px;
+  box-shadow: 0 12px 30px rgba(36, 60, 53, 0.07);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dashboard-page .dashboard-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 35px rgba(36, 60, 53, 0.12);
+}
+
+.dashboard-page .stats-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+  border-radius: 14px;
+  background: #e8eee7;
+  color: #315b4c;
+  font-size: 23px;
+}
+
+.dashboard-page .stats-courses .stats-icon::before {
+  content: "📚";
+}
+
+.dashboard-page .stats-completed .stats-icon::before {
+  content: "✓";
+  font-weight: 800;
+}
+
+.dashboard-page .stats-payments .stats-icon::before {
+  content: "💳";
+}
+
+.dashboard-page .dashboard-card h3 {
+  margin-bottom: 10px;
+  color: #718078;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.dashboard-page .dashboard-card h2 {
+  margin: 0 0 6px;
+  color: #315b4c;
+  font-size: 34px;
+  font-weight: 800;
+}
+
+.dashboard-page .dashboard-card p {
+  color: #718078;
+  font-size: 13px;
+}
+
+.dashboard-page .dashboard-content {
+  margin: 55px 8% 0;
+  padding: 35px;
+  background: #ffffff;
+  border: 1px solid rgba(49, 91, 76, 0.1);
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(36, 60, 53, 0.05);
+}
+
+.dashboard-page .dashboard-content > h2 {
+  margin-bottom: 28px;
+  color: #243c35;
+  font-size: 27px;
+  font-weight: 750;
+  letter-spacing: -0.6px;
+}
+
+.dashboard-page .dashboard-content > p {
+  color: #718078;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.dashboard-page .courses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+  align-items: stretch;
+}
+
+.dashboard-page .course-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 28px;
+  background: linear-gradient(145deg, #ffffff, #f7f5ef);
+  border: 1px solid rgba(49, 91, 76, 0.12);
+  border-radius: 20px;
+  box-shadow: 0 7px 22px rgba(36, 60, 53, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dashboard-page .course-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 32px rgba(36, 60, 53, 0.11);
+}
+
+.dashboard-page .course-card h3 {
+  margin: 18px 0 12px;
+  color: #243c35;
+  font-size: 20px;
+  line-height: 1.4;
+}
+
+.dashboard-page .course-card > p {
+  color: #718078;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.dashboard-page .course-category {
+  display: inline-block;
+  width: fit-content;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: #e8eee7;
+  color: #315b4c;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+}
+
+.dashboard-page .course-completion-badge,
+.dashboard-page .quiz-status {
+  display: inline-block;
+  width: fit-content;
+  margin-top: 12px;
+  padding: 7px 11px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+}
+
+.dashboard-page .course-completion-badge.completed,
+.dashboard-page .quiz-status.pass {
+  background: #e2eee5;
+  color: #315b4c;
+}
+
+.dashboard-page .course-completion-badge.in-progress,
+.dashboard-page .quiz-status.pending {
+  background: #fff0dc;
+  color: #9a642d;
+}
+
+.dashboard-page .quiz-status.fail {
+  background: #fbe9e5;
+  color: #a33e2c;
+}
+
+.dashboard-page .course-progress {
+  margin-top: auto;
+  padding-top: 20px;
+}
+
+.dashboard-page .progress-info {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+  color: #718078;
+  font-size: 13px;
+}
+
+.dashboard-page .progress-info strong {
+  color: #315b4c;
+}
+
+.dashboard-page .progress-bar {
+  width: 100%;
+  height: 9px;
+  overflow: hidden;
+  border-radius: 20px;
+  background: #e8eee7;
+}
+
+.dashboard-page .progress-fill {
+  height: 100%;
+  border-radius: 20px;
+  background: linear-gradient(90deg, #315b4c, #8ba997);
+  transition: width 0.4s ease;
+}
+
+.dashboard-page .course-progress > p {
+  margin-top: 10px;
+  color: #718078;
+  font-size: 12px;
+}
+
+.dashboard-page .dashboard-btn {
+  display: inline-block;
+  margin-top: 18px;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 10px;
+  background: #315b4c;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.dashboard-page .dashboard-btn:hover {
+  background: #b46b4c;
+  transform: translateY(-2px);
+}
+
+.dashboard-page .instructor-message-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+  padding: 20px;
+  background: #e8eee7;
+  border-radius: 15px;
+}
+
+.dashboard-page .instructor-message-form h4 {
+  color: #315b4c;
+  font-size: 16px;
+}
+
+.dashboard-page .instructor-message-form label {
+  color: #315b4c;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.dashboard-page .instructor-message-form input,
+.dashboard-page .instructor-message-form select,
+.dashboard-page .instructor-message-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  border: 1px solid rgba(49, 91, 76, 0.2);
+  border-radius: 10px;
+  background: #ffffff;
+  color: #243c35;
+  font: inherit;
+  font-size: 14px;
+}
+
+.dashboard-page .instructor-message-form input:focus,
+.dashboard-page .instructor-message-form select:focus,
+.dashboard-page .instructor-message-form textarea:focus {
+  outline: none;
+  border-color: #315b4c;
+  box-shadow: 0 0 0 3px rgba(49, 91, 76, 0.1);
+}
+
+.dashboard-page .instructor-message-form textarea {
+  resize: vertical;
+}
+
+.dashboard-page .instructor-message-form button {
+  padding: 12px 16px;
+  border: none;
+  border-radius: 10px;
+  background: #315b4c;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.dashboard-page .instructor-message-form button:hover:not(:disabled) {
+  background: #b46b4c;
+}
+
+.dashboard-page .instructor-message-form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.dashboard-page .success-message {
+  color: #315b4c;
+  font-size: 13px;
+}
+
+.dashboard-page .error-message {
+  color: #a33e2c;
+  font-size: 13px;
+}
+
+@media (max-width: 800px) {
+  .dashboard-page .dashboard-stats {
+    grid-template-columns: 1fr;
+    margin-top: 25px;
+  }
+
+  .dashboard-page .dashboard-content {
+    margin: 35px 5% 0;
+    padding: 25px 20px;
+  }
+}
+
+@media (max-width: 500px) {
+  .dashboard-page .dashboard-welcome {
+    padding: 55px 6%;
+  }
+
+  .dashboard-page .dashboard-stats {
+    padding: 0 6%;
+  }
+
+  .dashboard-page .courses-grid {
+    grid-template-columns: 1fr;
+  }
+}
