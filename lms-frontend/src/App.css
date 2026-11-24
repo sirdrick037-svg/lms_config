@@ -7352,3 +7352,300 @@ rgba(49, 91, 76, 0.12) 100%
     font-size: 26px;
   }
 }
+
+/* ========================================
+   SKILLNEST - PREMIUM INVITATION REQUEST
+======================================== */
+
+.join-request-page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+  background: #f7f5ef;
+  color: #243c35;
+}
+
+/* Left Information Panel */
+.join-request-page .join-intro {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 65px 10%;
+  background: linear-gradient(145deg, #315b4c, #243c35);
+  color: #f7f5ef;
+}
+
+.join-request-page .join-brand {
+  margin-bottom: 8px;
+  color: #ffffff;
+  font-size: 43px;
+  font-weight: 850;
+  letter-spacing: -2px;
+}
+
+.join-request-page .join-brand span {
+  color: #e6b58d;
+}
+
+.join-request-page .join-tagline {
+  color: #e6b58d;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+}
+
+.join-request-page .join-intro-content {
+  max-width: 500px;
+  margin-top: 75px;
+}
+
+.join-request-page .join-eyebrow {
+  color: #e6b58d;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.join-request-page .join-intro-content h2 {
+  margin: 20px 0;
+  color: #ffffff;
+  font-size: clamp(32px, 4vw, 45px);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -1px;
+}
+
+.join-request-page .join-intro-content > p {
+  color: rgba(247, 245, 239, 0.82);
+  font-size: 15px;
+  line-height: 1.9;
+}
+
+.join-request-page .join-benefits {
+  display: grid;
+  gap: 15px;
+  margin: 30px 0;
+}
+
+.join-request-page .join-benefits p {
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.join-request-page .join-intro-content h3 {
+  margin-top: 35px;
+  color: #e6b58d;
+  font-size: 21px;
+}
+
+/* Invitation Form Card */
+.join-request-page .join-request-container {
+  width: 100%;
+  max-width: 600px;
+  align-self: center;
+  justify-self: center;
+  padding: 45px;
+  margin: 45px 25px;
+  background: #ffffff;
+  border: 1px solid rgba(49, 91, 76, 0.1);
+  border-radius: 23px;
+  box-shadow: 0 18px 50px rgba(36, 60, 53, 0.09);
+}
+
+.join-request-page .join-request-container > h1 {
+  margin-bottom: 13px;
+  color: #243c35;
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.8px;
+}
+
+.join-request-page .join-request-container > p:not(.join-note) {
+  margin-bottom: 25px;
+  color: #718078;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+/* Form Labels */
+.join-request-page .join-request-container form label {
+  display: block;
+  margin: 17px 0 8px;
+  color: #315b4c;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+/* Form Fields */
+.join-request-page .join-request-container form input,
+.join-request-page .join-request-container form select,
+.join-request-page .join-request-container form textarea {
+  display: block;
+  width: 100%;
+  padding: 13px 15px;
+  background: #f7f5ef;
+  color: #243c35;
+  border: 1px solid rgba(49, 91, 76, 0.18);
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.join-request-page .join-request-container form input:focus,
+.join-request-page .join-request-container form select:focus,
+.join-request-page .join-request-container form textarea:focus {
+  border-color: #315b4c;
+  box-shadow: 0 0 0 3px rgba(49, 91, 76, 0.1);
+}
+
+.join-request-page .join-request-container form textarea {
+  min-height: 120px;
+  resize: vertical;
+  line-height: 1.7;
+}
+
+.join-request-page .join-request-container form input::placeholder,
+.join-request-page .join-request-container form textarea::placeholder {
+  color: #9aa49e;
+}
+
+/* Submit Button */
+.join-request-page .join-request-container form button[type="submit"] {
+  width: 100%;
+  padding: 15px;
+  margin-top: 28px;
+  background: #315b4c;
+  color: #ffffff;
+  border: none;
+  border-radius: 11px;
+  font-size: 14px;
+  font-weight: 750;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.join-request-page .join-request-container form button[type="submit"]:hover:not(:disabled) {
+  background: #b46b4c;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(180, 107, 76, 0.18);
+}
+
+.join-request-page .join-request-container form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Success Notification */
+.join-request-page .success-toast {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  padding: 17px;
+  margin: 20px 0;
+  background: #e8eee7;
+  border: 1px solid #d7e4d5;
+  border-radius: 12px;
+}
+
+.join-request-page .success-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 27px;
+  height: 27px;
+  background: #315b4c;
+  color: #ffffff;
+  border-radius: 50%;
+  font-weight: 800;
+}
+
+.join-request-page .success-toast strong {
+  color: #315b4c;
+  font-size: 13px;
+}
+
+.join-request-page .success-toast p {
+  margin-top: 7px;
+  color: #47584f;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.join-request-page .success-toast button {
+  margin-left: auto;
+  background: transparent;
+  color: #718078;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+/* Error Message */
+.join-request-page .error-message {
+  padding: 13px 15px;
+  margin: 15px 0;
+  background: #fbe9e5;
+  color: #a33e2c;
+  border-radius: 10px;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+/* Administrator Note */
+.join-request-page .join-note {
+  margin-top: 23px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(49, 91, 76, 0.12);
+  color: #718078;
+  font-size: 12px;
+  line-height: 1.7;
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .join-request-page {
+    grid-template-columns: 1fr;
+  }
+
+  .join-request-page .join-intro {
+    padding: 50px 8%;
+  }
+
+  .join-request-page .join-intro-content {
+    margin-top: 35px;
+  }
+
+  .join-request-page .join-request-container {
+    width: calc(100% - 40px);
+    margin: 35px 20px;
+  }
+}
+
+@media (max-width: 550px) {
+  .join-request-page .join-intro {
+    padding: 40px 7%;
+  }
+
+  .join-request-page .join-brand {
+    font-size: 35px;
+  }
+
+  .join-request-page .join-intro-content {
+    margin-top: 30px;
+  }
+
+  .join-request-page .join-request-container {
+    width: calc(100% - 30px);
+    padding: 28px 22px;
+    margin: 25px 15px;
+  }
+
+  .join-request-page .join-request-container > h1 {
+    font-size: 26px;
+  }
+}
