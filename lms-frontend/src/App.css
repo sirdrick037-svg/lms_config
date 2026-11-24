@@ -293,19 +293,31 @@
   padding: 85px 8%;
 }
 
-.section-heading {
+.home-page .section-heading {
   text-align: center;
-  margin-bottom: 45px;
+  margin-bottom: 50px;
 }
 
-.section-heading h2 {
-  color: #17365d;
-  font-size: 32px;
-  margin: 15px 0;
+.home-page .section-heading h2 {
+  color: #243c35;
+  font-size: 36px;
+  font-weight: 750;
+  letter-spacing: -1px;
+  margin: 12px 0;
 }
 
-.section-heading p {
-  color: #64748b;
+.home-page .section-heading span {
+  color: #b46b4c;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.home-page .section-heading p {
+  color: #718078;
+  font-size: 15px;
+  line-height: 1.7;
 }
 
 .courses-grid {
