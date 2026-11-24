@@ -5094,3 +5094,275 @@ rgba(49, 91, 76, 0.12) 100%
     grid-template-columns: 1fr;
   }
 }
+
+/* Premium SkillNest Instructor Lessons */
+.instructor-lessons-page {
+  min-height: 100vh;
+  padding-bottom: 85px;
+  background: #f7f5ef;
+  color: #243c35;
+}
+
+.instructor-lessons-page .instructor-lessons-hero {
+  padding: 80px 8%;
+  text-align: center;
+  background: linear-gradient(120deg, #315b4c, #243c35);
+  color: #f7f5ef;
+}
+
+.instructor-lessons-page .instructor-lessons-hero span {
+  color: #e6b58d;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.instructor-lessons-page .instructor-lessons-hero h1 {
+  margin: 18px 0;
+  font-size: clamp(34px, 5vw, 48px);
+  letter-spacing: -1.2px;
+}
+
+.instructor-lessons-page .instructor-lessons-hero p {
+  max-width: 650px;
+  margin: 0 auto;
+  color: rgba(247, 245, 239, 0.85);
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.instructor-lessons-page > .error-message,
+.instructor-lessons-page > .success-message {
+  max-width: 1050px;
+  margin: 25px auto;
+  padding: 15px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.instructor-lessons-page > .error-message {
+  background: #fbe9e5;
+  color: #a33e2c;
+}
+
+.instructor-lessons-page > .success-message {
+  background: #e2eee5;
+  color: #315b4c;
+}
+
+.instructor-lessons-page .instructor-course-selector,
+.instructor-lessons-page .instructor-lesson-form-section,
+.instructor-lessons-page .instructor-existing-lessons,
+.instructor-lessons-page .instructor-lessons-empty {
+  max-width: 1050px;
+  margin: 35px auto;
+  padding: 35px;
+  background: #ffffff;
+  border: 1px solid rgba(49, 91, 76, 0.1);
+  border-radius: 22px;
+  box-shadow: 0 10px 30px rgba(36, 60, 53, 0.06);
+}
+
+.instructor-lessons-page .instructor-course-selector label,
+.instructor-lessons-page .instructor-lesson-form-section form label {
+  display: block;
+  margin: 18px 0 9px;
+  color: #315b4c;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.instructor-lessons-page .instructor-course-selector label {
+  margin-top: 0;
+}
+
+.instructor-lessons-page .instructor-course-selector select,
+.instructor-lessons-page .instructor-lesson-form-section input,
+.instructor-lessons-page .instructor-lesson-form-section textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 16px;
+  border: 1px solid rgba(49, 91, 76, 0.18);
+  border-radius: 11px;
+  background: #f7f5ef;
+  color: #243c35;
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.instructor-lessons-page .instructor-course-selector select:focus,
+.instructor-lessons-page .instructor-lesson-form-section input:focus,
+.instructor-lessons-page .instructor-lesson-form-section textarea:focus {
+  border-color: #315b4c;
+  box-shadow: 0 0 0 3px rgba(49, 91, 76, 0.1);
+}
+
+.instructor-lessons-page .instructor-course-selector > p {
+  margin-top: 15px;
+  color: #718078;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.instructor-lessons-page .instructor-lesson-form-section h2,
+.instructor-lessons-page .instructor-existing-lessons h2,
+.instructor-lessons-page .instructor-lessons-empty h2 {
+  margin-bottom: 12px;
+  color: #243c35;
+  font-size: 26px;
+  letter-spacing: -0.5px;
+}
+
+.instructor-lessons-page .instructor-lesson-form-section > p,
+.instructor-lessons-page .instructor-lessons-empty p {
+  margin-bottom: 25px;
+  color: #718078;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.instructor-lessons-page .instructor-lesson-form-section textarea {
+  resize: vertical;
+  min-height: 180px;
+  line-height: 1.8;
+}
+
+.instructor-lessons-page .instructor-lesson-form-section button,
+.instructor-lessons-page .instructor-lesson-actions button,
+.instructor-lessons-page .instructor-lessons-empty .learn-more-btn {
+  display: inline-block;
+  padding: 13px 20px;
+  border: none;
+  border-radius: 10px;
+  background: #315b4c;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.instructor-lessons-page .instructor-lesson-form-section button {
+  margin: 18px 10px 0 0;
+}
+
+.instructor-lessons-page .instructor-lesson-form-section button:hover:not(:disabled),
+.instructor-lessons-page .instructor-lesson-actions button:hover:not(:disabled),
+.instructor-lessons-page .instructor-lessons-empty .learn-more-btn:hover {
+  background: #b46b4c;
+  transform: translateY(-2px);
+}
+
+.instructor-lessons-page button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.instructor-lessons-page .instructor-lessons-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 22px;
+  margin-top: 25px;
+}
+
+.instructor-lessons-page .instructor-lesson-card {
+  display: flex;
+  flex-direction: column;
+  padding: 27px;
+  min-width: 0;
+  background: linear-gradient(145deg, #ffffff, #f7f5ef);
+  border: 1px solid rgba(49, 91, 76, 0.12);
+  border-radius: 18px;
+  box-shadow: 0 7px 22px rgba(36, 60, 53, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.instructor-lessons-page .instructor-lesson-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(36, 60, 53, 0.1);
+}
+
+.instructor-lessons-page .instructor-lesson-card > span {
+  width: fit-content;
+  padding: 7px 12px;
+  border-radius: 20px;
+  background: #e8eee7;
+  color: #315b4c;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.7px;
+}
+
+.instructor-lessons-page .instructor-lesson-card h3 {
+  margin: 18px 0 12px;
+  color: #243c35;
+  font-size: 20px;
+  line-height: 1.4;
+}
+
+.instructor-lessons-page .instructor-lesson-card > p {
+  flex: 1;
+  color: #718078;
+  font-size: 14px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.instructor-lessons-page .instructor-lesson-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(49, 91, 76, 0.12);
+}
+
+.instructor-lessons-page .instructor-lesson-actions button:last-child {
+  background: #fbe9e5;
+  color: #a33e2c;
+}
+
+.instructor-lessons-page .instructor-lesson-actions button:last-child:hover:not(:disabled) {
+  background: #a33e2c;
+  color: #ffffff;
+}
+
+.instructor-lessons-page .instructor-lessons-empty {
+  text-align: center;
+}
+
+@media (max-width: 1150px) {
+  .instructor-lessons-page .instructor-course-selector,
+  .instructor-lessons-page .instructor-lesson-form-section,
+  .instructor-lessons-page .instructor-existing-lessons,
+  .instructor-lessons-page .instructor-lessons-empty {
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+}
+
+@media (max-width: 600px) {
+  .instructor-lessons-page .instructor-lessons-hero {
+    padding: 60px 6%;
+  }
+
+  .instructor-lessons-page .instructor-course-selector,
+  .instructor-lessons-page .instructor-lesson-form-section,
+  .instructor-lessons-page .instructor-existing-lessons,
+  .instructor-lessons-page .instructor-lessons-empty {
+    padding: 25px 20px;
+  }
+
+  .instructor-lessons-page .instructor-lessons-list {
+    grid-template-columns: 1fr;
+  }
+
+  .instructor-lessons-page .instructor-lesson-actions button {
+    flex: 1;
+  }
+}
