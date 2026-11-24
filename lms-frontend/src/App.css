@@ -470,9 +470,11 @@
   letter-spacing: -0.3px;
 }
 
-.why-grid p {
-  color: #64748b;
-  line-height: 1.7;
+.home-page .why-grid p {
+  color: #718078;
+  font-size: 14px;
+  line-height: 1.8;
+  margin: 0;
 }
 
 /* Responsive homepage */
